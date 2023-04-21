@@ -2793,7 +2793,8 @@ class _VideoScreenState extends State<VideoScreen> {
                                                                             'V' +
                                                                             '${listOfSectionData[widget.courseName][editIndex].length}' +
                                                                             '$randomNumber',
-                                                                        'url': addVideoUrl.text,
+                                                                        'weburl': addVideoUrl.text,
+                                                                        'url': '',
                                                                         'type': 'video',
                                                                         'offline': false,
                                                                         'demo': false,
@@ -3233,7 +3234,8 @@ class _VideoScreenState extends State<VideoScreen> {
                                                                   [sectionIndex]["videos"]
                                                               [subsectionIndex]["id"]
                                                           .toString());
-                                                } else if (listOfSectionData[widget
+                                                }
+                                                else if (listOfSectionData[widget
                                                                     .courseName]
                                                                 [sectionIndex]
                                                             ["videos"][
@@ -3461,7 +3463,8 @@ class _VideoScreenState extends State<VideoScreen> {
                                                                               listOfSectionData[widget.courseName][sectionIndex]["videos"][subsectionIndex]["name"]
                                                                                   .toString()
                                                                           : listOfSectionData[widget.courseName][sectionIndex]["videos"][subsectionIndex]["type"] == "resume"
-                                                                                              ? listOfSectionData[widget.courseName][sectionIndex]["videos"][subsectionIndex]["name"].toString():"Assignment : " +
+                                                                                              ? listOfSectionData[widget.courseName][sectionIndex]["videos"][subsectionIndex]["name"].toString():
+                                                                  "Assignment : " +
                                                                               listOfSectionData[widget.courseName][sectionIndex]["videos"][subsectionIndex]["name"].toString(),
                                                                             
                                                                   style: TextStyle(
@@ -3525,8 +3528,7 @@ class _VideoScreenState extends State<VideoScreen> {
                                                                         [
                                                                         "type"] ==
                                                                     "video"
-                                                            ? PopupMenuButton<
-                                                                    int>(
+                                                            ? PopupMenuButton<int>(
                                                                 onSelected:
                                                                     (item) {
                                                                   if (item ==
@@ -3553,10 +3555,8 @@ class _VideoScreenState extends State<VideoScreen> {
                                                                         () {
                                                                       updateVideoName =
                                                                           false;
-                                                                      editIndex =
-                                                                          sectionIndex;
-                                                                      deleteVideoIndex =
-                                                                          subsectionIndex;
+                                                                      editIndex = sectionIndex;
+                                                                      deleteVideoIndex = subsectionIndex;
                                                                     });
                                                                     listOfSectionData[widget.courseName][editIndex]
                                                                             [
@@ -3675,6 +3675,55 @@ class _VideoScreenState extends State<VideoScreen> {
                                                                               child: Text('Update video URL')),
                                                                         ])
                                                             : SizedBox(),
+                                                        role == 'mentor' &&
+                                                            listOfSectionData[widget.courseName][sectionIndex]["videos"]
+                                                            [
+                                                            subsectionIndex]
+                                                            [
+                                                            "type"] ==
+                                                                "assignment" ? PopupMenuButton<
+                                                            int>(
+                                                          onSelected: (item) {
+                                                            if (item == 1) {
+                                                              setState(
+                                                                      () {
+                                                                    updateVideoName = false;
+                                                                    editIndex = sectionIndex;
+                                                                    deleteVideoIndex = subsectionIndex;
+                                                                  });
+                                                              listOfSectionData[widget.courseName][editIndex]
+                                                              ['videos'].removeAt(deleteVideoIndex);
+
+                                                              try {
+                                                                FirebaseFirestore
+                                                                    .instance
+                                                                    .collection(
+                                                                    'courses')
+                                                                    .doc(widget
+                                                                    .cID)
+                                                                    .update({
+                                                                  'curriculum1':
+                                                                  {
+                                                                    widget.courseName:
+                                                                    listOfSectionData[widget.courseName],
+                                                                  }
+                                                                }).whenComplete(() =>
+                                                                    Fluttertoast.showToast(msg: 'Assignment deleted'));
+
+                                                                streamVideoData();
+                                                              } catch (e) {
+                                                                print(e
+                                                                    .toString());
+                                                              }
+                                                            }
+                                                          },
+                                                          itemBuilder: (context) =>
+                                                          [
+                                                            PopupMenuItem<int>(
+                                                                value: 1,
+                                                                child: Text('Delete assignment')),
+                                                          ],
+                                                        ): SizedBox(),
                                                       ],
                                                     ),
                                                   ))),
