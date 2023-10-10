@@ -44,7 +44,8 @@ class _InstructionspageWidgetState extends State<InstructionspageWidget> {
             print(i.quizname);
             print(widget.quizdata['name']);
             try {
-              if (widget.courseName != 'SQL For Data Science') {
+              if (widget.courseName != 'SQL For Data Science' &&
+                  widget.courseName != 'Python For Data science') {
                 print('joifweofwoefjowjeof1');
                 if (widget.courseName == i!.courseName) {
                   var quiznameNumbers =

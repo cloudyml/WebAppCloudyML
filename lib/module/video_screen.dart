@@ -137,6 +137,23 @@ class _VideoScreenState extends State<VideoScreen> {
             quizScore = 0;
             quizNameExistsInList = false;
           }
+        }else if(widget.courseName == 'Python For Data science'){
+           if (quizname == quizName) {
+            print('ijwefijwojefl8');
+            setState(() {
+              print('ijwefijwojefl9');
+              quizScore = item['quizScore'];
+              print('ijwefijwojefl10');
+              quizNameExistsInList = true;
+              print('ijwefijwojefl $quizScore');
+            });
+            print('ijwefijwojefl11');
+            break;
+          } else {
+            print('ijwefijwojefl12');
+            quizScore = 0;
+            quizNameExistsInList = false;
+          }
         } else {
           if (quiznameNumbers == quiznamenumbercount) {
             print('ijwefijwojefl8');
@@ -318,6 +335,15 @@ class _VideoScreenState extends State<VideoScreen> {
                 var quiznamenumbercount =
                     name['quizname'].replaceAll(RegExp(r'[^0-9]'), '');
                 if (widget.courseName == 'SQL For Data Science') {
+                  if (courseQuizList[i]['videos'][j]['name'] ==
+                      name['quizname']) {
+                    setState(() {
+                      quizScoreMap[courseQuizList[i]['videos'][j]['name']] =
+                          name['quizScore'].toStringAsFixed(2);
+                    });
+                  }
+                }else if(widget.courseName == 'Python For Data science'){
+
                   if (courseQuizList[i]['videos'][j]['name'] ==
                       name['quizname']) {
                     setState(() {
