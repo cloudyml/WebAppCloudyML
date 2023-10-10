@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'dart:html' as html;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
+import 'package:fluttertoast/fluttertoast.dart';
 //import 'package:flutter_sound_lite/public/flutter_sound_recorder.dart';
 import 'package:microphone/microphone.dart';
+import 'package:ntp/ntp.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:audioplayers/audioplayers.dart';
@@ -159,12 +161,13 @@ class _ChatPageState extends State<ChatPage> {
       _focusNode.unfocus();
       String data = await _textController.text.toString();
       _textController.clear();
-      DateTime time1 = await fetchTimeInIndia();
+        final time = DateTime.now();
+     // DateTime time1 = await fetchTimeInIndia();
 
       print(time);
-      print(time1.toString());
+     // print(time1.toString());
       updatelast();
-      updatetime(time1, data);
+      updatetime(time, data);
       final post = await _firestore
           .collection("groups")
           .doc(idcurr)
@@ -173,7 +176,7 @@ class _ChatPageState extends State<ChatPage> {
         'message': data,
         'role': role,
         'sendBy': namecurrent,
-        'time': time1,
+        'time': time,
         'studentid': id,
         'type': 'text'
       });
@@ -213,14 +216,12 @@ class _ChatPageState extends State<ChatPage> {
               final TaskSnapshot snapshot = await uploadTask;
               final downloadUrl = await snapshot.ref.getDownloadURL();
               final time = DateTime.now();
-              // Add message to Firestore
-              updatelast();
-              DateTime time1 = await fetchTimeInIndia();
-
+             
+              updatelast();  
               print(time);
-              print(time1.toString());
+             // print(time.toString());
               updatelast();
-              updatetime(time1, "image");
+              updatetime(time, "image");
               _firestore
                   .collection("groups")
                   .doc(idcurr)
@@ -230,7 +231,7 @@ class _ChatPageState extends State<ChatPage> {
                 'role': role,
                 'sendBy': namecurrent,
                 'link': downloadUrl,
-                'time': time1,
+                'time': time,
                 'studentid': id,
                 'type': 'image'
               });
@@ -274,12 +275,13 @@ class _ChatPageState extends State<ChatPage> {
               final downloadUrl = await snapshot.ref.getDownloadURL();
               final time = DateTime.now();
               // Add message to Firestore
-              DateTime time1 = await fetchTimeInIndia();
+              //  final time = DateTime.now();
+             // DateTime time1 = await fetchTimeInIndia();
 
               print(time);
-              print(time1.toString());
+           //   print(time1.toString());
               updatelast();
-              updatetime(time1, "video");
+              updatetime(time, "video");
 
               _firestore
                   .collection("groups")
@@ -290,7 +292,7 @@ class _ChatPageState extends State<ChatPage> {
                 'role': role,
                 'sendBy': namecurrent,
                 'link': downloadUrl,
-                'time': time1,
+                'time': time,
                 'studentid': id,
                 'type': 'video'
               });
@@ -304,8 +306,7 @@ class _ChatPageState extends State<ChatPage> {
   Future<void> _pickFileany() async {
     html.FileUploadInputElement uploadInput = html.FileUploadInputElement();
     uploadInput.multiple = false;
-    uploadInput.accept =
-        ''; // Modify the accepted file types as needed
+    uploadInput.accept = ''; // Modify the accepted file types as needed
     uploadInput.click();
 
     uploadInput.onChange.listen((e) async {
@@ -330,12 +331,12 @@ class _ChatPageState extends State<ChatPage> {
             final TaskSnapshot snapshot = await uploadTask;
             final downloadUrl = await snapshot.ref.getDownloadURL();
             final time = DateTime.now();
-            DateTime time1 = await fetchTimeInIndia();
+          //  DateTime time1 = await fetchTimeInIndia();
 
             print(time);
-            print(time1.toString());
+            print(time.toString());
             updatelast();
-            updatetime(time1, "file");
+            updatetime(time, "file");
             _firestore
                 .collection("groups")
                 .doc(idcurr)
@@ -345,7 +346,7 @@ class _ChatPageState extends State<ChatPage> {
               'role': role,
               'sendBy': namecurrent,
               'link': downloadUrl,
-              'time': time1,
+              'time': time,
               'studentid': id,
               'type': 'file'
             });
@@ -432,19 +433,19 @@ class _ChatPageState extends State<ChatPage> {
         print('File uploaded: $downloadUrl');
         // final time = DateTime.now();
         // Add message to Firestore
-
-        DateTime time1 = await fetchTimeInIndia();
+        final time = DateTime.now();
+      //  DateTime time1 = await fetchTimeInIndia();
         Duration tt = await _calculateDuration();
         //  print(time);
-        print(time1.toString());
+     //   print(time1.toString());
         updatelast();
-        updatetime(time1, "audio note");
+        updatetime(time, "audio note");
         _firestore.collection("groups").doc(idcurr).collection("chats").add({
           'message': '${DateTime.now()}.mp3',
           'role': role,
           'sendBy': namecurrent,
           'link': downloadUrl,
-          'time': time1,
+          'time': time,
           'studentid': id,
           'duration':
               '${tt.inHours}:${tt.inMinutes.remainder(60)}:${tt.inSeconds.remainder(60)}',
@@ -456,8 +457,7 @@ class _ChatPageState extends State<ChatPage> {
         print('Error uploading file: $e');
         throw 'Failed to upload recording';
       }
-    }
-    else{
+    } else {
       return "not valid";
     }
   }
@@ -653,10 +653,39 @@ class _ChatPageState extends State<ChatPage> {
     return role;
   }
 
+  Future<void> checkDeviceTime() async {
+    try {
+      final now = DateTime.now();
+      final ntpTime = await NTP.now();
+      final timeDifference = ntpTime.difference(now).inSeconds.abs();
+
+      // Define a threshold for time difference (e.g., 30 seconds) to consider as incorrect.
+      final timeThreshold = 30;
+
+      if (timeDifference > timeThreshold) {
+        // Device time is incorrect, show a popup to correct it.
+        showTimeCorrectionPopup();
+      }
+    } catch (e) {
+      print('Error checking device time: $e');
+    }
+  }
+
+  void showTimeCorrectionPopup() {
+    Fluttertoast.showToast(
+      msg: 'Your device time is incorrect. Please correct it.',
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.CENTER,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+    );
+  }
+
   List<String>? myList;
   @override
   void initState() {
     super.initState();
+    checkDeviceTime();
     _keyboard = RawKeyboard.instance;
     _keyboard.addListener(_handleKeyPress);
     loadrole();
@@ -1126,7 +1155,7 @@ class _ChatPageState extends State<ChatPage> {
                                       final messageSender = message['sendBy'];
                                       final messageType = message['type'];
                                       final messagetime = message['time'];
-                                        final mid = message.id;
+                                      final mid = message.id;
                                       final gid = idcurr;
                                       final messageid =
                                           data.containsKey('studentid')
@@ -1140,8 +1169,8 @@ class _ChatPageState extends State<ChatPage> {
                                           : "";
 
                                       final messageBubble = MessageBubble(
-                                         mid: mid,
-                              gid: gid!,
+                                        mid: mid,
+                                        gid: gid!,
                                         message: messageText,
                                         sender: messageSender,
                                         timestamp: messagetime,
@@ -1251,7 +1280,7 @@ class MessageBubble extends StatefulWidget {
   final String type;
   final Timestamp timestamp;
   final String link;
-    final String mid;
+  final String mid;
   final String gid;
   //final Duration recording;
   final bool isURL;
@@ -1324,7 +1353,7 @@ class _MessageBubbleState extends State<MessageBubble> {
 
     // Set the download attribute to specify the filename
     anchorElement.download = '';
-     anchorElement.target = '_blank';
+    anchorElement.target = '_blank';
 
     // Simulate a click on the anchor element to trigger the download
     anchorElement.click();
@@ -1335,7 +1364,7 @@ class _MessageBubbleState extends State<MessageBubble> {
 
     // Set the download attribute to specify the filename
     anchorElement.download = '';
-     anchorElement.target = '_blank';
+    anchorElement.target = '_blank';
 
     // Simulate a click on the anchor element to trigger the download
     anchorElement.click();
@@ -1454,15 +1483,15 @@ class _MessageBubbleState extends State<MessageBubble> {
                                         copyText(widget.message);
                                       },
                                     ),
-                                     IconButton(
-                                          icon: Icon(
-                                            Icons.delete,
-                                            color: Colors.red[700],
-                                          ),
-                                          onPressed: () {
-                                           deletemessage(widget.mid);
-                                          },
-                                        ),
+                                    IconButton(
+                                      icon: Icon(
+                                        Icons.delete,
+                                        color: Colors.red[700],
+                                      ),
+                                      onPressed: () {
+                                        deletemessage(widget.mid);
+                                      },
+                                    ),
                                   ],
                                 ),
                               ],
@@ -1484,17 +1513,17 @@ class _MessageBubbleState extends State<MessageBubble> {
                                     copyText(widget.message);
                                   },
                                 ),
-                                   widget.isMe
-                                      ? IconButton(
-                                          icon: Icon(
-                                            Icons.delete,
-                                            color: Colors.red[700],
-                                          ),
-                                          onPressed: () {
-                                       deletemessage(widget.mid);
-                                          },
-                                        ):
-                                        SizedBox()
+                                widget.isMe
+                                    ? IconButton(
+                                        icon: Icon(
+                                          Icons.delete,
+                                          color: Colors.red[700],
+                                        ),
+                                        onPressed: () {
+                                          deletemessage(widget.mid);
+                                        },
+                                      )
+                                    : SizedBox()
                               ],
                             )
                       : widget.type == 'image'
@@ -1517,42 +1546,38 @@ class _MessageBubbleState extends State<MessageBubble> {
                                 ),
                                 SizedBox(height: 8.0),
                                 Row(
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 100),
-                                                child: TextButton(
-                                                  child:
-                                                      Text('View in Gallery'),
-                                                  onPressed: () {
-                                                    _downloadAndOpenVideo(
-                                                        widget.link);
-                                                  },
-                                                ),
-                                              ),
-                                              widget.isMe
-                                                  ? IconButton(
-                                                      icon: Icon(
-                                                        Icons.delete,
-                                                        color: Colors.red[700],
-                                                      ),
-                                                      onPressed: () {
-                                                        deletemessage(
-                                                            widget.mid);
-                                                      },
-                                                    )
-                                                  : SizedBox()
-                                            ],
-                                          ),
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 100),
+                                      child: TextButton(
+                                        child: Text('View in Gallery'),
+                                        onPressed: () {
+                                          _downloadAndOpenVideo(widget.link);
+                                        },
+                                      ),
+                                    ),
+                                    widget.isMe
+                                        ? IconButton(
+                                            icon: Icon(
+                                              Icons.delete,
+                                              color: Colors.red[700],
+                                            ),
+                                            onPressed: () {
+                                              deletemessage(widget.mid);
+                                            },
+                                          )
+                                        : SizedBox()
+                                  ],
+                                ),
                               ],
                             )
                           : widget.type == 'audio'
                               ? Container(
                                   width: 300,
                                   child: AudioPlayerWidget(
-                                      isMe: widget.isMe,
-                                     mid: widget.mid,
-                                        gid: widget.gid,
+                                    isMe: widget.isMe,
+                                    mid: widget.mid,
+                                    gid: widget.gid,
                                     audioUrl: widget.link,
                                     //     recording: widget.recording
                                   ),
@@ -1575,18 +1600,17 @@ class _MessageBubbleState extends State<MessageBubble> {
                                                   widget.link);
                                             },
                                           ),
-                                             widget.isMe
-                                                  ? IconButton(
-                                                      icon: Icon(
-                                                        Icons.delete,
-                                                        color: Colors.red[700],
-                                                      ),
-                                                      onPressed: () {
-                                                        deletemessage(
-                                                            widget.mid);
-                                                      },
-                                                    )
-                                                  : SizedBox()
+                                          widget.isMe
+                                              ? IconButton(
+                                                  icon: Icon(
+                                                    Icons.delete,
+                                                    color: Colors.red[700],
+                                                  ),
+                                                  onPressed: () {
+                                                    deletemessage(widget.mid);
+                                                  },
+                                                )
+                                              : SizedBox()
                                         ],
                                       ),
                                     )
@@ -1623,18 +1647,17 @@ class _MessageBubbleState extends State<MessageBubble> {
                                                   widget.link, widget.message);
                                             },
                                           ),
-                                           widget.isMe
-                                                  ? IconButton(
-                                                      icon: Icon(
-                                                        Icons.delete,
-                                                        color: Colors.red[700],
-                                                      ),
-                                                      onPressed: () {
-                                                        deletemessage(
-                                                            widget.mid);
-                                                      },
-                                                    )
-                                                  : SizedBox()
+                                          widget.isMe
+                                              ? IconButton(
+                                                  icon: Icon(
+                                                    Icons.delete,
+                                                    color: Colors.red[700],
+                                                  ),
+                                                  onPressed: () {
+                                                    deletemessage(widget.mid);
+                                                  },
+                                                )
+                                              : SizedBox()
                                         ],
                                       ),
                                     ),
@@ -1654,7 +1677,8 @@ class _MessageBubbleState extends State<MessageBubble> {
       ],
     );
   }
-   void deletemessage(String mid) {
+
+  void deletemessage(String mid) {
     FirebaseFirestore.instance
         .collection("groups")
         .doc(widget.gid)
@@ -1665,22 +1689,24 @@ class _MessageBubbleState extends State<MessageBubble> {
       SnackBar(content: Text('Message Deleted')),
     );
   }
-
 }
 
 class AudioPlayerWidget extends StatefulWidget {
   final String audioUrl;
-   final String mid;
+  final String mid;
   final String gid;
   final bool isMe;
   //final Duration recording;
-  const AudioPlayerWidget({
-    Key? key,
-    required this.audioUrl,
-     required this.mid, required this.gid,required this.isMe
-    
-    //required this.recording
-  }) : super(key: key);
+  const AudioPlayerWidget(
+      {Key? key,
+      required this.audioUrl,
+      required this.mid,
+      required this.gid,
+      required this.isMe
+
+      //required this.recording
+      })
+      : super(key: key);
 
   @override
   _AudioPlayerWidgetState createState() => _AudioPlayerWidgetState();
@@ -1792,18 +1818,18 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
                   Text('/'),
                   SizedBox(width: 10),
                   Text(_formatDuration(_totalDuration)),
-                        widget.isMe
-                  ? IconButton(
-                      icon: Icon(
-                        Icons.delete,
-                        color: Colors.red[700],
-                       // size: 10,
-                      ),
-                      onPressed: () {
-                        deletemessage(widget.mid);
-                      },
-                    )
-                  : SizedBox()
+                  widget.isMe
+                      ? IconButton(
+                          icon: Icon(
+                            Icons.delete,
+                            color: Colors.red[700],
+                            // size: 10,
+                          ),
+                          onPressed: () {
+                            deletemessage(widget.mid);
+                          },
+                        )
+                      : SizedBox()
                 ],
               ),
             ],
@@ -1826,7 +1852,8 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
       ),
     );
   }
-   void deletemessage(String mid) {
+
+  void deletemessage(String mid) {
     FirebaseFirestore.instance
         .collection("groups")
         .doc(widget.gid)

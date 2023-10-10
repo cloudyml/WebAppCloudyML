@@ -313,7 +313,7 @@ class _QuizPageState extends State<QuizPage> {
 
   bool submitvalue = false;
 
-    bool listsHaveSameElements(List<dynamic> list1, List<dynamic> list2) {
+  bool listsHaveSameElements(List<dynamic> list1, List<dynamic> list2) {
     if (list1.length != list2.length) {
       return false;
     }
@@ -343,7 +343,7 @@ class _QuizPageState extends State<QuizPage> {
       print("lll002: $quizdata");
 
       for (var i in quizdata) {
-       print(i['question']);
+        print(i['question']);
         print(i['answeredValue']);
         print(i['answerIndex']);
         if (i['answer'].length > 1) {
@@ -369,7 +369,7 @@ class _QuizPageState extends State<QuizPage> {
       var unanswered = 0;
       print("dsfosweweweeeeeeeee");
       for (var i in quizdata) {
-         print(i['question']);
+        print(i['question']);
         print(i['answeredValue']);
 
         try {
@@ -384,7 +384,6 @@ class _QuizPageState extends State<QuizPage> {
           } else {
             if (i['answeredValue'] == null) {
               unanswered += 1;
-              
             }
           }
         } catch (e) {
@@ -394,7 +393,7 @@ class _QuizPageState extends State<QuizPage> {
       var wronganswered = 0;
       print("ijofijweio");
       for (var i in quizdata) {
-                print(i['question']);
+        print(i['question']);
         var answeredvaluelist = [i['answeredValue']];
         try {
           if (i['answer'].length > 1) {
@@ -775,6 +774,92 @@ class _QuizPageState extends State<QuizPage> {
         }
       }
     });
+    try {
+      quizdata[questionindex]["OptionsImage"]['A'];
+      setState(() {
+        showimagea = true;
+      });
+      if (quizdata[questionindex]["OptionsImage"]['A'] == '' ||
+          quizdata[questionindex]["OptionsImage"]['A'] == null) {
+        setState(() {
+          showimagea = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        showimagea = false;
+      });
+      print("error: $e");
+    }
+
+    try {
+      quizdata[questionindex]["OptionsImage"]['B'];
+      setState(() {
+        showimageb = true;
+      });
+      if (quizdata[questionindex]["OptionsImage"]['B'] == '' ||
+          quizdata[questionindex]["OptionsImage"]['B'] == null) {
+        setState(() {
+          showimageb = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        showimageb = false;
+      });
+      print("error: $e");
+    }
+
+    try {
+      quizdata[questionindex]["OptionsImage"]['C'];
+      setState(() {
+        showimagec = true;
+      });
+      if (quizdata[questionindex]["OptionsImage"]['C'] == '' ||
+          quizdata[questionindex]["OptionsImage"]['C'] == null) {
+        setState(() {
+          showimagec = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        showimagec = false;
+      });
+      print("error: $e");
+    }
+
+    try {
+      quizdata[questionindex]["OptionsImage"]['D'];
+      try {
+        print(
+            "tghrthrt  ${quizdata[questionindex]["question"].toString().split("(--image--)")[1]}");
+        setState(() {
+          showquestion = true;
+        });
+      } catch (e) {
+        setState(() {
+          showquestion = false;
+        });
+        print("eifjwgvygvu $e");
+      }
+      print("eifjweoj ${quizdata[questionindex]["OptionsImage"]['D']}");
+      setState(() {
+        showimaged = true;
+      });
+
+      if (quizdata[questionindex]["OptionsImage"]['D'] == '' ||
+          quizdata[questionindex]["OptionsImage"]['D'] == null) {
+        setState(() {
+          showimaged = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        showimaged = false;
+      });
+      print("error: $e");
+    }
+
     countParameter("save");
   }
 

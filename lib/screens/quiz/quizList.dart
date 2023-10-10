@@ -462,7 +462,7 @@ bool onExpandedQuizNameExistsInList = false;
                             MaterialPageRoute(
                                 builder: (context) =>
                                     InstructionspageWidget(
-                                        quizdata)),
+                                        quizdata, widget.courseName)),
                           ).then((value) {
                             getScoreOfAllQuiz();
                           });

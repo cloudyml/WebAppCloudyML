@@ -6,7 +6,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+
+import 'addnewcourse_controller.dart';
 
 class AddNewCourseScreen extends StatefulWidget {
   const AddNewCourseScreen({Key? key}) : super(key: key);
@@ -49,6 +52,7 @@ class _AddNewCourseScreenState extends State<AddNewCourseScreen> {
   final descriptionOfCourse = TextEditingController();
   final duration = TextEditingController();
   final videosCount = TextEditingController();
+  List<String> listOfCourse = [];
   bool autoValidate = true;
   bool isItCombo = false;
   bool isItDemo = false;
@@ -96,6 +100,17 @@ class _AddNewCourseScreenState extends State<AddNewCourseScreen> {
     }
   }
 
+  List<String> courseNames = [];
+  List<String> courseIds = [];
+
+  final addController = Get.put(AddController());
+
+
+
+
+final selectedIndex = 0.obs;
+  Set<int> selectedIndices = Set<int>().obs;
+
 
   @override
   void initState() {
@@ -104,6 +119,7 @@ class _AddNewCourseScreenState extends State<AddNewCourseScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final List<bool> _selected = List.generate(courseNames.length, (i) => false);
     return Scaffold(
         appBar: AppBar(
           title: Text('Add new course'),
@@ -225,7 +241,6 @@ class _AddNewCourseScreenState extends State<AddNewCourseScreen> {
                         width: Adaptive.w(40),
                         child: TextFormField(
                           controller: descriptionOfCourse,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           // validator: (value) {
                           //   if (value == null || value.isEmpty) {
                           //     return 'Please enter description of Course';
@@ -239,7 +254,6 @@ class _AddNewCourseScreenState extends State<AddNewCourseScreen> {
                         width: Adaptive.w(40),
                         child: TextFormField(
                           controller: duration,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           // validator: (value) {
                           //   if (value == null || value.isEmpty) {
                           //     return 'Please enter duration of Course';
@@ -253,7 +267,6 @@ class _AddNewCourseScreenState extends State<AddNewCourseScreen> {
                         width: Adaptive.w(40),
                         child: TextFormField(
                           controller: videosCount,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           inputFormatters: [
                             FilteringTextInputFormatter.digitsOnly,
                             IntegerInputFormatter()
@@ -295,15 +308,58 @@ class _AddNewCourseScreenState extends State<AddNewCourseScreen> {
                             style: textStyle,
                           ),
                           Spacer(),
-                          CupertinoSwitch(
-                              value: isItCombo,
-                              onChanged: (value) {
-                                isItCombo = value;
-                                setState(() {});
-                              }),
+                          Obx(
+                                  () {
+                              return Switch(
+                                  value: addController.isItCombo.value,
+                                  onChanged: (value) {
+                                    addController.getCoursesIds();
+                                    addController.getBools(courseNames);
+                                    addController.checkIfCombo(!addController.isItCombo.value);
+                                    setState(() {
+
+                                    });
+                                  });
+                            }
+                          ),
                         ],
                       ),
                     ),
+                    addController.isItCombo.isTrue ?  SizedBox(
+                      width: Adaptive.w(40),
+                      child: GetBuilder<AddController>(
+                        builder: (controller) {
+
+                          return Column(
+                            children: List.generate(controller.courseNames.length, (index) {
+                              final isSelected = selectedIndices.contains(index);
+                              return ListTile(
+                                tileColor: isSelected ? Colors.blue : Colors.white,
+                                title: Text(controller.courseNames[index]),
+                                subtitle: Text(controller.courseIds[index]),
+                                onTap: () {
+                                  setState(() {
+                                    if (isSelected) {
+                                      selectedIndices.remove(index);
+                                    } else {
+                                      selectedIndices.add(index);
+                                    }
+                                  });
+
+
+                                  List<int> newList = selectedIndices.toList();
+                                   newList.forEach((element) {listOfCourse.add(controller.courseIds[element]);});
+                                  Set<String> mySetWithoutDuplicates = Set.from(listOfCourse);
+                                  List<String> myListWithoutDuplicates = mySetWithoutDuplicates.toList();
+                                  listOfCourse = myListWithoutDuplicates;
+
+                                },
+                              );
+                            }),
+                          );
+                        }
+                      ),
+                    ) : Container(),
                     verticalBox,
                     SizedBox(
                       width: Adaptive.w(40),
@@ -315,7 +371,7 @@ class _AddNewCourseScreenState extends State<AddNewCourseScreen> {
                             style: textStyle,
                           ),
                           Spacer(),
-                          CupertinoSwitch(
+                          Switch(
                               value: isItDemo,
                               onChanged: (value) {
                                 isItDemo = value;
@@ -335,7 +391,7 @@ class _AddNewCourseScreenState extends State<AddNewCourseScreen> {
                             style: textStyle,
                           ),
                           Spacer(),
-                          CupertinoSwitch(
+                          Switch(
                               value: isItPaid,
                               onChanged: (value) {
                                 isItPaid = value;
@@ -355,7 +411,7 @@ class _AddNewCourseScreenState extends State<AddNewCourseScreen> {
                             style: textStyle,
                           ),
                           Spacer(),
-                          CupertinoSwitch(
+                          Switch(
                               value: show,
                               onChanged: (value) {
                                 show = value;
@@ -375,7 +431,7 @@ class _AddNewCourseScreenState extends State<AddNewCourseScreen> {
                             style: textStyle,
                           ),
                           Spacer(),
-                          CupertinoSwitch(
+                          Switch(
                               value: isItTrialCourse,
                               onChanged: (value) {
                                 isItTrialCourse = value;
@@ -391,15 +447,13 @@ class _AddNewCourseScreenState extends State<AddNewCourseScreen> {
                         MaterialButton(
                           minWidth: 45.sp,
                           onPressed: () async {
-                            if (formKey.currentState!.validate()) {
-                              print(
-                                  'Working on validation ${formKey.currentState!.validate()}');
+                            if (formKey.currentState!.validate() && uploadedFile != null) {
+                              print('Working on validation ${formKey.currentState!.validate()}');
                               await addCourse();
                               clearFields();
                               Fluttertoast.showToast(msg: 'Course updated');
                             } else {
-                              print(
-                                  'Validation failed ${formKey.currentState!.validate()}');
+                              print('Validation failed ${formKey.currentState!.validate()}');
                             }
                           },
                           height: 22.sp,
@@ -449,13 +503,12 @@ class _AddNewCourseScreenState extends State<AddNewCourseScreen> {
             'Amount_Payablepay': amountPayable.text,
             'Course Price': coursePrice.text,
             'Discount': discountPrice.text,
-            'combo': isItCombo,
+            'combo': addController.isItCombo.value,
             'courseContent': 'video',
             'created by': 'Akash Raj',
             'curriculum': {},
-            'courses': [
-              courseIDE.text,
-            ],
+            'courses': listOfCourse,
+
             'curriculum1': {
               courseName.text: [
                 {
@@ -499,6 +552,8 @@ class _AddNewCourseScreenState extends State<AddNewCourseScreen> {
             'videosCount': int.parse(videosCount.text),
           });
           await docRef.update({'docid': docRef.id});
+          addController.courseNames.value  = [];
+          addController.courseIds.value  = [];
         }
       } catch (e) {
         print('addCourse $e');

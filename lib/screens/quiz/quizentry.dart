@@ -12,7 +12,7 @@ class QuizentrypageWidget extends StatefulWidget {
   final quizNameExistsInList;
   final ontap;
   QuizentrypageWidget(this.quizdata,
-      {Key? key, this.quizScore, this.quizNameExistsInList,this.ontap})
+      {Key? key, this.quizScore, this.quizNameExistsInList, this.ontap})
       : super(key: key);
 
   @override
@@ -37,11 +37,18 @@ class _QuizentrypageWidgetState extends State<QuizentrypageWidget> {
 //       print('quiz taken error $e');
 // }
 // }
+  var score = '0';
 
   @override
   void initState() {
     super.initState();
     // checkIfQuizIsAttempted();
+    print('widget.quizscore ${widget.quizScore}');
+    try {
+      score = widget.quizScore.toStringAsFixed(2).toString();
+    } catch (e) {
+      score = '-';
+    }
   }
 
   @override
@@ -192,7 +199,7 @@ class _QuizentrypageWidgetState extends State<QuizentrypageWidget> {
                                   Align(
                                     alignment: AlignmentDirectional(0, -0.9),
                                     child: Text(
-                                      '${widget.quizScore}',
+                                      '${score}',
                                       style: FlutterFlowTheme.of(context)
                                           .bodyText1
                                           .override(
@@ -210,8 +217,7 @@ class _QuizentrypageWidgetState extends State<QuizentrypageWidget> {
                             child: Align(
                               alignment: AlignmentDirectional(0, 0.35),
                               child: GestureDetector(
-
-                                  onTap: widget.ontap,
+                                onTap: widget.ontap,
                                 // onTap: () {
                                 //   print("dlksl");
                                 //   Navigator.push(
@@ -251,7 +257,7 @@ class _QuizentrypageWidgetState extends State<QuizentrypageWidget> {
                             ),
                           ),
                           globals.role == "mentor"
-                          // true
+                              // true
                               ? Expanded(
                                   child: GestureDetector(
                                     onTap: () {
