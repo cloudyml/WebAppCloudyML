@@ -447,6 +447,11 @@ final selectedIndex = 0.obs;
                         MaterialButton(
                           minWidth: 45.sp,
                           onPressed: () async {
+
+                            if(uploadedFile == null || uploadedFile!.isEmpty) {
+                              Fluttertoast.showToast(msg: 'Please upload an image.');
+                            }
+
                             if (formKey.currentState!.validate() && uploadedFile != null) {
                               print('Working on validation ${formKey.currentState!.validate()}');
                               await addCourse();
