@@ -44,15 +44,14 @@ class _InstructionspageWidgetState extends State<InstructionspageWidget> {
             print(i.quizname);
             print(widget.quizdata['name']);
             try {
-              if (widget.courseName != 'SQL For Data Science' &&
-                  widget.courseName != 'Python For Data science') {
-                print('joifweofwoefjowjeof1');
-                if (widget.courseName == i!.courseName) {
-                  var quiznameNumbers =
-                      i!.quizname.replaceAll(RegExp(r'[^0-9]'), '');
-                  var quiznamenumbercount =
-                      widget.quizdata['name'].replaceAll(RegExp(r'[^0-9]'), '');
-                  if (quiznameNumbers == quiznamenumbercount) {
+              print('joifweofwoefjowjeof1');
+              if (widget.courseName == i!.courseName) {
+                var quiznameNumbers =
+                    i!.quizname.replaceAll(RegExp(r'[^0-9]'), '');
+                var quiznamenumbercount =
+                    widget.quizdata['name'].replaceAll(RegExp(r'[^0-9]'), '');
+                if (quiznameNumbers == '') {
+                  if (widget.quizdata['name'] == i!.quizname) {
                     attemptingquizforthefirsttime = false;
                     print("quiz found");
                     print("quiz cleared ppppppppppppp ${i.quizCleared}");
@@ -107,60 +106,59 @@ class _InstructionspageWidgetState extends State<InstructionspageWidget> {
                       }
                     }
                   }
-                }
-              } else {
-                print('joifweofwoefjowjeof');
-                if (i!.quizname == widget.quizdata['name']) {
-                  attemptingquizforthefirsttime = false;
-                  print("quiz found");
-                  print("quiz cleared ppppppppppppp ${i.quizCleared}");
-                  if (i.quizCleared == true) {
-                    print("quiz cleared ppppppppppppp");
-                    Toast.show('You have already aced this quiz!');
-                    globals.quizCleared = true;
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => QuizPage(widget.quizdata)));
-                  } else {
-                    // condition for quiz not cleared
-                    print("quiz not cleared");
-                    // condition for course quiz
-                    if (i.quizlevel == "courselevel") {
-                      if (i.quizAttemptGapForCourseQuiz!
-                              .compareTo(DateTime.now()) <
-                          0) {
-                        print("quiz attempt gap over");
-                        print(i.quizAttemptGapForCourseQuiz);
-                        print(DateTime.now());
-                        // navigate to quiz page
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    QuizPage(widget.quizdata)));
+                } else {
+                  if (quiznameNumbers == quiznamenumbercount) {
+                    attemptingquizforthefirsttime = false;
+                    print("quiz found");
+                    print("quiz cleared ppppppppppppp ${i.quizCleared}");
+                    if (i.quizCleared == true) {
+                      print("quiz cleared ppppppppppppp");
+                      Toast.show('You have already aced this quiz!');
+                      globals.quizCleared = true;
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => QuizPage(widget.quizdata)));
+                    } else {
+                      // condition for quiz not cleared
+                      print("quiz not cleared");
+                      // condition for course quiz
+                      if (i.quizlevel == "courselevel") {
+                        if (i.quizAttemptGapForCourseQuiz!
+                                .compareTo(DateTime.now()) <
+                            0) {
+                          print("quiz attempt gap over");
+                          print(i.quizAttemptGapForCourseQuiz);
+                          print(DateTime.now());
+                          // navigate to quiz page
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      QuizPage(widget.quizdata)));
+                        } else {
+                          print("quiz attempt gap not over");
+                          Toast.show(
+                            'You can attempt this quiz after ${i.quizAttemptGapForCourseQuiz}',
+                          );
+                        }
                       } else {
                         print("quiz attempt gap not over");
-                        Toast.show(
-                          'You can attempt this quiz after ${i.quizAttemptGapForCourseQuiz}',
-                        );
-                      }
-                    } else {
-                      print("quiz attempt gap not over");
-                      // condition for modular quiz
-                      if (i.quizAttemptGapForModularQuiz!
-                              .compareTo(DateTime.now()) <
-                          0) {
-                        // navigate to quiz page
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    QuizPage(widget.quizdata)));
-                      } else {
-                        print('quiz attempt gap not over');
-                        Toast.show(
-                            'You can attempt this quiz after ${i.quizAttemptGapForModularQuiz}');
+                        // condition for modular quiz
+                        if (i.quizAttemptGapForModularQuiz!
+                                .compareTo(DateTime.now()) <
+                            0) {
+                          // navigate to quiz page
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      QuizPage(widget.quizdata)));
+                        } else {
+                          print('quiz attempt gap not over');
+                          Toast.show(
+                              'You can attempt this quiz after ${i.quizAttemptGapForModularQuiz}');
+                        }
                       }
                     }
                   }

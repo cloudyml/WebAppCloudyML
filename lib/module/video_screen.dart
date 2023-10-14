@@ -120,8 +120,8 @@ class _VideoScreenState extends State<VideoScreen> {
         var quiznamenumbercount = quizName.replaceAll(RegExp(r'[^0-9]'), '');
         print('ijwefijwojefl7 $quiznameNumbers');
         print('ijwefijwojefl7 $quiznamenumbercount');
-        if (widget.courseName == 'SQL For Data Science') {
-          if (quizname == quizName) {
+        if(quiznameNumbers == ''){
+ if (quizname == quizName) {
             print('ijwefijwojefl8');
             setState(() {
               print('ijwefijwojefl9');
@@ -137,24 +137,8 @@ class _VideoScreenState extends State<VideoScreen> {
             quizScore = 0;
             quizNameExistsInList = false;
           }
-        }else if(widget.courseName == 'Python For Data science'){
-           if (quizname == quizName) {
-            print('ijwefijwojefl8');
-            setState(() {
-              print('ijwefijwojefl9');
-              quizScore = item['quizScore'];
-              print('ijwefijwojefl10');
-              quizNameExistsInList = true;
-              print('ijwefijwojefl $quizScore');
-            });
-            print('ijwefijwojefl11');
-            break;
-          } else {
-            print('ijwefijwojefl12');
-            quizScore = 0;
-            quizNameExistsInList = false;
-          }
-        } else {
+        }
+       else {
           if (quiznameNumbers == quiznamenumbercount) {
             print('ijwefijwojefl8');
             setState(() {
@@ -329,21 +313,15 @@ class _VideoScreenState extends State<VideoScreen> {
         for (var j = 0; j < courseQuizList[i]['videos'].length; j++) {
           if (courseQuizList[i]['videos'][j]['type'] == 'quiz') {
             for (var name in userQuizTrack['quiztrack']) {
+
               if (widget.courseName == name['courseName']) {
                 var quiznameNumbers = courseQuizList[i]['videos'][j]['name']
                     .replaceAll(RegExp(r'[^0-9]'), '');
+                    print("eeeeeeeeeeeeeeeeeeeeeeeeeeee: ${quiznameNumbers.runtimeType}");
                 var quiznamenumbercount =
                     name['quizname'].replaceAll(RegExp(r'[^0-9]'), '');
-                if (widget.courseName == 'SQL For Data Science') {
-                  if (courseQuizList[i]['videos'][j]['name'] ==
-                      name['quizname']) {
-                    setState(() {
-                      quizScoreMap[courseQuizList[i]['videos'][j]['name']] =
-                          name['quizScore'].toStringAsFixed(2);
-                    });
-                  }
-                }else if(widget.courseName == 'Python For Data science'){
 
+                if(quiznameNumbers == ''){
                   if (courseQuizList[i]['videos'][j]['name'] ==
                       name['quizname']) {
                     setState(() {
@@ -351,7 +329,7 @@ class _VideoScreenState extends State<VideoScreen> {
                           name['quizScore'].toStringAsFixed(2);
                     });
                   }
-                } else {
+                }else {
                   if (quiznameNumbers == quiznamenumbercount) {
                     setState(() {
                       quizScoreMap[courseQuizList[i]['videos'][j]['name']] =
