@@ -40,12 +40,14 @@ class _AssignmentsState extends State<Assignments> {
     final searchResults = [].obs;
     final isLoading = false.obs;
     final isError = false.obs;
+    final initialData = true.obs;
 
     Future<RxList> searchEmailInFirestore(String email) async {
       final results = [].obs;
 
       try {
         isLoading.value = true;
+        initialData.value = false;
         FirebaseFirestore firestore = FirebaseFirestore.instance;
         // Query the collection for documents with the matching email
         QuerySnapshot querySnapshot = await firestore
@@ -99,14 +101,21 @@ class _AssignmentsState extends State<Assignments> {
                                 searchResults.value = results;
                                 isLoading.value = false;
                                 isError.value = results.isEmpty;
+                                emailSearchController.value.clear();
                               });
+                            } else if(initialData.isFalse) {
+                              initialData.value = true;
                             } else {
                               showSnackbar(context, 'Please enter an email.');
                             }
                           },
-                          icon: Icon(
-                            Icons.search,
-                            color: MyColors.primaryColor,
+                          icon: Obx(
+                                  () {
+                              return Icon(
+                                initialData.isTrue ? Icons.search : Icons.close,
+                                color: MyColors.primaryColor,
+                              );
+                            }
                           ))),
                 ),
               ),
@@ -115,11 +124,122 @@ class _AssignmentsState extends State<Assignments> {
         ],
       ),
 
-      body: Obx(() {
-        return isLoading.isTrue ?
+      body:  Obx(() {
+        return initialData.isTrue ? SingleChildScrollView(
+          child: Container(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Container(
+                    child: Center(
+                      child: Row(
+                        children: [
+                          Expanded(
+                              flex: 1,
+                              child: Text(
+                                "Sr. No",
+                                style: headerTextStyle,
+                              )),
+                          Expanded(
+                              flex: 1,
+                              child:
+                              Text("Student Name", style: headerTextStyle)),
+                          Expanded(
+                              flex: 1,
+                              child:
+                              Text("Submitted file", style: headerTextStyle)),
+                          Expanded(
+                              flex: 1,
+                              child: Text("Date of submission",
+                                  style: headerTextStyle)),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 8.0 * verticalScale),
+                  child: SingleChildScrollView(
+                    child: Container(
+                        width: screenWidth,
+                        height: screenHeight,
+                        child: StreamBuilder(
+                          stream: FirebaseFirestore.instance
+                              .collection("assignment")
+                              .snapshots(),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<QuerySnapshot> snapshot) {
+                            if (snapshot.hasData) {
+                              return ListView.builder(
+                                itemCount: snapshot.data!.docs.length,
+                                itemBuilder: (context, index) {
+                                  //timestamp conversion to date
+                                  Timestamp t = snapshot.data!.docs[index]
+                                  ["date of submission"];
+                                  DateTime date = t.toDate();
+                                  return Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: Container(
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                              flex: 1,
+                                              child: Text("${index}.",
+                                                  style: textStyle)),
+                                          Expanded(
+                                            flex: 1,
+                                            child: Text(
+                                                snapshot.data!.docs[index]
+                                                ["name"] != null || snapshot.data!.docs[index]
+                                                ["name"] != '' ? snapshot.data!.docs[index]
+                                                ["name"] : 'No name',
+                                                style: textStyle),
+                                          ),
+                                          Expanded(
+                                            flex: 1,
+                                            child: InkWell(
+                                              hoverColor: Colors.blueAccent,
+                                              onTap: () {
+                                                launch(snapshot.data!.docs[index]
+                                                ["link"]);
+                                              },
+                                              child: Text(
+                                                  snapshot.data!.docs[index]
+                                                  ["filename"],
+                                                  style: textStyle),
+                                            ),
+                                          ),
+                                          Expanded(
+                                              flex: 1,
+                                              child: Text(
+                                                  DateFormat('yyyy-MM-dd')
+                                                      .format(date),
+                                                  style: textStyle)),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            } else if(snapshot.hasError) {
+                              return Container(child: Text('There is an error.'),);
+                            } else if(!snapshot.hasData) {
+                              return Center(child: CircularProgressIndicator());
+                            }
+                            return Container();
+                          },
+                        )),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ) :
+          isLoading.isTrue ?
             Center(child: CircularProgressIndicator(color: MyColors.primaryColor,),)
             : isError.isTrue ?
-        Center(
+                Center(
             child: Text('No results found for ${emailSearchController.value.text}'))
             : ListView.builder(
           itemCount: searchResults.length,
@@ -149,7 +269,7 @@ class _AssignmentsState extends State<Assignments> {
         );
       }),
 
-      // body: SingleChildScrollView(
+       // SingleChildScrollView(
       //   child: Container(
       //     child: Column(
       //       children: [
