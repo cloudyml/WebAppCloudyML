@@ -175,8 +175,7 @@ class _StudentReviewScreenState extends State<StudentReviewScreen> {
                                           physics: BouncingScrollPhysics(),
                                           itemBuilder: (context, index) {
                                             reviews.sort((a, b) {
-                                              return b.date!
-                                                  .compareTo(a.date!);
+                                              return b.date!.compareTo(a.date!);
                                             });
                                             return index == 0
                                                 ? Column(
@@ -320,13 +319,19 @@ class _StudentReviewScreenState extends State<StudentReviewScreen> {
                                                                     MainAxisSize
                                                                         .min,
                                                                 children: [
-                                                                  Text(
-                                                                    'Add Your Review',
-                                                                    style: TextStyle(
-                                                                        fontSize:
-                                                                            12,
-                                                                        color: Colors
-                                                                            .deepPurpleAccent),
+                                                                  Padding(
+                                                                    padding:
+                                                                        const EdgeInsets
+                                                                            .all(
+                                                                            8.0),
+                                                                    child: Text(
+                                                                      'Add Your Review',
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              13,
+                                                                          color:
+                                                                              Colors.deepPurpleAccent),
+                                                                    ),
                                                                   ),
                                                                   SizedBox(
                                                                       width: 8),
