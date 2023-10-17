@@ -23,6 +23,7 @@ import 'package:cloudyml_app2/screens/groups_list.dart';
 import 'package:cloudyml_app2/screens/quiz/quizList.dart';
 import 'package:cloudyml_app2/screens/quiz/quiz_new_combo_course.dart';
 import 'package:cloudyml_app2/screens/splash.dart';
+import 'package:cloudyml_app2/screens/student_review/review_screen.dart';
 import 'package:cloudyml_app2/store.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -30,6 +31,7 @@ import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import '../authentication_screens/phone_auth.dart';
 import '../catalogue_screen.dart';
+import 'dart:html' as html;
 import '../combo/feature_courses.dart';
 import '../combo/trialfeatutr.dart';
 import '../international_payment_screen.dart';
@@ -47,6 +49,7 @@ import '../screens/quiz/quiz_panel.dart';
 import '../screens/quiz/quizentry.dart';
 import '../screens/quiz/quizesofenrolledcourses.dart';
 import '../screens/review_screen/review_screen.dart';
+import '../screens/student_review/postReviewScreen.dart';
 import 'login_state_check.dart';
 
 class MyRouter {
@@ -58,21 +61,41 @@ class MyRouter {
       refreshListenable: loginState,
       redirect: (context, GoRouterState state) {
         final loggedIn = loginState.loggedIn;
+
         final goingToLogin = state.location == ('/login');
 
         // final dc = state.location == ('/comboPaymentPortal?cID=aEGX6kMfHzQrVgP3WCwU');
 
         // final pc=state.location==('/featuredCourses?cID=aEGX6kMfHzQrVgP3WCwU&courseName=Data+Science+%26+Analytics+Placement+Assurance+Program&id=0&coursePrice=9999');
-
-        if (!loggedIn && !goingToLogin) {
-          return ('/');
-        } else if (loggedIn && goingToLogin) {
-          return ('/home');
+        String currentURL = html.window.location.href;
+        print('currentURL: $currentURL');
+        if (currentURL.contains("/students/review")) {
+          return ('/students/review');
         } else {
-          return null;
+          if (!loggedIn && !goingToLogin) {
+            return ('/');
+          } else if (loggedIn && goingToLogin) {
+            return ('/home');
+          } else {
+            return null;
+          }
         }
       },
       routes: <RouteBase>[
+        GoRoute(
+          name: 'review',
+          path: '/students/review',
+          pageBuilder: (context, state) {
+            return MaterialPage(child: StudentReviewScreen());
+          },
+        ),
+        GoRoute(
+          name: 'add_review',
+          path: '/add_review',
+          pageBuilder: (context, state) {
+            return MaterialPage(child: PostReviewScreen());
+          },
+        ),
         GoRoute(
             path: '/',
             pageBuilder: (context, state) {
