@@ -1005,7 +1005,7 @@ Widget customMenuBar(BuildContext context) {
                 } else if (value == 'My Profile') {
                   GoRouter.of(context).pushReplacementNamed('myAccount');
                 } else if (value == 'Students Review') {
-                  GoRouter.of(context).pushReplacement('/students/review');
+                  GoRouter.of(context).pushReplacement('/reviews');
                 } else if (value == 'Logout') {
                   logOut(context);
                   saveLoginOutState(context);

@@ -293,12 +293,10 @@ class _Review1State extends State<ReviewsScreen> {
                           ),
                         )),
                       ),
-
                       SizedBox(
                         height: 25,
                       ),
                       Container(
-                        // height: screenHeight * 0.81 * verticalScale,
                         height: containerHeight,
                         width: screenWidth,
                         padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
