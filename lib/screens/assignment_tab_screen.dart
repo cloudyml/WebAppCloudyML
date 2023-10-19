@@ -69,9 +69,9 @@ class _AssignmentsState extends State<Assignments> {
 
   @override
   void initState() {
-    // assignmentController.fetchAllDocuments().then((value) {
-    //   finalListOfAllData.value = value;
-    // });
+    assignmentController.fetchAllDocuments().then((value) {
+      finalListOfAllData.value = value;
+    });
     super.initState();
   }
 
@@ -259,94 +259,6 @@ class _AssignmentsState extends State<Assignments> {
                   ),
                 ),
               )
-
-            // SingleChildScrollView(
-            //         child: Container(
-            //           child: Column(
-            //             children: [
-            //               finalListOfAllData.isEmpty ? Container(
-            //                 height: Adaptive.h(50),
-            //                 width: Adaptive.w(100),
-            //                 child: Center(child: CircularProgressIndicator()),
-            //               ) : Container(
-            //                 width: Adaptive.w(100),
-            //                 child: DataTable(
-            //                     columnSpacing: 6,
-            //                     horizontalMargin: 6,
-            //                     showCheckboxColumn: true,
-            //                     dataTextStyle: TextStyle(fontSize: 11.sp),
-            //                     border: TableBorder(
-            //                         horizontalInside:
-            //                         BorderSide(color: Colors.black),
-            //                         verticalInside:
-            //                         BorderSide(color: Colors.black)),
-            //                     columns: [
-            //                       DataColumn(
-            //                         label: Text('Sr. No'),
-            //                       ),
-            //                       DataColumn(
-            //                         label: Text('Mark as reviewed'),
-            //                       ),
-            //                       DataColumn(
-            //                         label: Text('Student Name'),
-            //                       ),
-            //                       DataColumn(
-            //                         label: Text('Student Email'),
-            //                       ),
-            //                       DataColumn(
-            //                         label: Text('Submitted file'),
-            //                       ),
-            //                       DataColumn(
-            //                         label: Text('Date of submission'),
-            //                       ),
-            //                     ],
-            //                     rows: List<DataRow>.generate(
-            //                         finalListOfAllData.length, (index) {
-            //                       // timestamp conversion to date
-            //
-            //                       Timestamp t = finalListOfAllData[index]
-            //                       ["date of submission"];
-            //                       DateTime date = t.toDate();
-            //                       return DataRow(cells: [
-            //                         DataCell(
-            //                             Text('${index+1}', style: textStyle)),
-            //                         DataCell(Checkbox(
-            //                           onChanged: (value) {
-            //
-            //                             if(finalListOfAllData[index]['reviewed'] != null) {
-            //                               finalListOfAllData[index]['reviewed'] = !finalListOfAllData[index]['reviewed'];
-            //                             } else {
-            //                               finalListOfAllData[index]['reviewed'] = true;
-            //                             }
-            //
-            //                             assignmentController.toggleReview(
-            //                                 finalListOfAllData[index]['documentId'],
-            //                                 finalListOfAllData[index]['reviewed']
-            //                             );
-            //                             setState(() {
-            //
-            //                             });
-            //                           },
-            //                           value: finalListOfAllData[index]['reviewed'] != null ? finalListOfAllData[index]['reviewed'] : false,
-            //                         )),
-            //                         DataCell(SelectableText(
-            //                             finalListOfAllData[index]['email'] != null ? '${finalListOfAllData[index]['email']}' : 'null')),
-            //                         DataCell(Text(
-            //                             finalListOfAllData[index]['name'] != null? '${finalListOfAllData[index]['name']}' : 'null')),
-            //                         DataCell(InkWell(
-            //                             onTap: () {
-            //                               launch(finalListOfAllData[index]["link"]);
-            //                             },
-            //                             child: Text(
-            //                                 finalListOfAllData[index]['filename'] != null ? '${finalListOfAllData[index]['filename']}' : 'null'))),
-            //                         DataCell(Text('$date')),
-            //                       ]);
-            //                     })),
-            //               )
-            //             ],
-            //           ),
-            //         ),
-            //       )
             : isLoading.isTrue
                 ? Center(
                     child: CircularProgressIndicator(
@@ -377,8 +289,26 @@ class _AssignmentsState extends State<Assignments> {
                                 launch(result['link']);
                               },
                               enableFeedback: true,
-                              leading:
-                                  Icon(Icons.download_for_offline_outlined),
+                              leading: Checkbox(
+                                  onChanged: (value) {
+                                    if (result['reviewed'] !=
+                                        null) {
+                                      result['reviewed'] =
+                                      !result
+                                      ['reviewed'];
+                                    } else {
+                                      result['reviewed'] =
+                                      true;
+                                    }
+                                    print('result ${result['documentId']}');
+                                    assignmentController.toggleReview(
+                                        result['documentId'],
+                                        result['reviewed']);
+                                    setState(() {});
+                                  },
+                                  value:  result['reviewed'] != null
+                                  ? result['reviewed'] : false
+                              ),
                               trailing: result["date of submission"] != null
                                   ? Text(DateFormat('yyyy-MM-dd').format(date))
                                   : Text('No date'),

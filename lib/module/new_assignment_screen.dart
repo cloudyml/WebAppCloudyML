@@ -162,6 +162,7 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
         "filename": fileName!,
         "link": '',
         // "note": noteText.text,
+        "reviewed": false,
         'assignmentName': widget.assignmentName,
       });
 
