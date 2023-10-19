@@ -28,7 +28,10 @@ class AssignmentScreen extends StatefulWidget {
       this.assignmentSolutionVideo,
       this.assignmentTrackBoolMap,
       this.assignmentDescription,
-      this.showDescription})
+      this.showDescription,
+        this.userEmail,
+        this.userName
+      })
       : super(key: key);
 
   final courseData;
@@ -42,6 +45,8 @@ class AssignmentScreen extends StatefulWidget {
   final assignmentSolutionVideo;
   final assignmentTrackBoolMap;
   final showDescription;
+  final userEmail;
+  final userName;
 
   @override
   State<AssignmentScreen> createState() => _AssignmentScreenState();
@@ -150,8 +155,8 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
           .child(fileName!);
 
       var sentData = await _reference.collection('assignment').add({
-        "email": FirebaseAuth.instance.currentUser?.email,
-        "name": FirebaseAuth.instance.currentUser?.displayName,
+        "email": widget.userEmail ?? '',
+        "name": widget.userName ?? '',
         "student id": FirebaseAuth.instance.currentUser?.uid,
         "date of submission": FieldValue.serverTimestamp(),
         "filename": fileName!,
