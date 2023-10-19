@@ -170,7 +170,9 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
 
       final TaskSnapshot downloadUrl = await uploadTask;
       final String fileURL = (await downloadUrl.ref.getDownloadURL());
-      await sentData.update({"link": fileURL});
+      await sentData.update({
+        "link": fileURL,
+        'documentId': sentData.id});
       print('Assignment file link is here: $fileURL');
 
       await _reference
