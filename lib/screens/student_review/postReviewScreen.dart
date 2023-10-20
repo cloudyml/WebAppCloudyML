@@ -5,6 +5,8 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:timeago/timeago.dart';
 import 'package:toast/toast.dart';
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server/gmail.dart';
 
 class PostReviewScreen extends StatefulWidget {
   @override
@@ -452,6 +454,7 @@ class _PostReviewScreenState extends State<PostReviewScreen> {
                                   : 64.0), // Adjust spacing for different screen sizes
                           SizedBox(
                             width: double.infinity,
+                            height: 50,
                             child: ElevatedButton(
                               onPressed: () async {
                                 if (_nameController.text.isEmpty) {
@@ -508,9 +511,6 @@ class _PostReviewScreenState extends State<PostReviewScreen> {
                               style: ElevatedButton.styleFrom(
                                 primary: Colors.blue,
                                 onPrimary: Colors.white,
-                                padding: EdgeInsets.all(isPhone
-                                    ? 16.0
-                                    : 32.0), // Adjust padding for different screen sizes
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
@@ -524,9 +524,7 @@ class _PostReviewScreenState extends State<PostReviewScreen> {
                                   : Text(
                                       'Submit Review',
                                       style: TextStyle(
-                                        fontSize: isPhone
-                                            ? 18
-                                            : 24, // Adjust font size for different screen sizes
+                                        fontSize: 18.0,
                                       ),
                                     ),
                             ),
