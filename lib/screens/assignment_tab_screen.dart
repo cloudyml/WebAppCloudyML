@@ -5,9 +5,11 @@ import 'package:cloudyml_app2/screens/flutter_flow/flutter_flow_util.dart';
 import 'package:cloudyml_app2/theme.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_pagination/firebase_pagination.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:kr_paginate_firestore/paginate_firestore.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -60,10 +62,10 @@ class _AssignmentsState extends State<Assignments> {
     }
   }
 
-
   final assignmentController = Get.put(AssignmentController());
 
   final finalListOfAllData = [].obs;
+  final headerFontStyle  = TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 14.sp);
 
   @override
   void initState() {
@@ -81,6 +83,7 @@ class _AssignmentsState extends State<Assignments> {
     var horizontalScale = screenWidth / mockUpWidth;
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: true,
         backgroundColor: Colors.purple,
         title: Text('Assignments'),
         actions: [
@@ -126,10 +129,9 @@ class _AssignmentsState extends State<Assignments> {
                           color: MyColors.primaryColor,
                         );
                       }))),
-                  onSubmitted: (text){
+                  onSubmitted: (text) {
                     if (emailSearchController.value.text.isNotEmpty) {
-                      searchEmailInFirestore(
-                          emailSearchController.value.text)
+                      searchEmailInFirestore(emailSearchController.value.text)
                           .then((results) {
                         searchResults.value = results;
                         isLoading.value = false;
@@ -150,89 +152,109 @@ class _AssignmentsState extends State<Assignments> {
       ),
       body: Obx(() {
         return initialData.isTrue
-            ? SingleChildScrollView(
-                child: Container(
+            ? Container(
+                width: Adaptive.w(100),
+                height: Adaptive.h(95),
+                child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      finalListOfAllData.isEmpty ? Container(
-                        height: Adaptive.h(50),
+                      Container(
+                        height: Adaptive.h(4),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black)
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Container(
+                                width: Adaptive.w(20),
+                                child: Center(child: Text('Name',style: headerFontStyle,))),
+                            Container(
+                                width: Adaptive.w(25),
+                                child: Center(child: Text('Email', style: headerFontStyle,))),
+                            Text('Reviewed', style: headerFontStyle),
+                            Container(
+                                width: Adaptive.w(20),
+                                child: Center(child: Text('Assignment File',style: headerFontStyle,))),
+                            Container(width: Adaptive.w(25),
+                                child: Center(child: Text('Date of Submission', overflow: TextOverflow.ellipsis, style: headerFontStyle,))),
+                          ],
+                        ),
+                      ),
+                      Container(
                         width: Adaptive.w(100),
-                        child: Center(child: CircularProgressIndicator()),
-                      ) : Container(
-                        width: Adaptive.w(100),
-                        child: DataTable(
-                            columnSpacing: 6,
-                            horizontalMargin: 6,
-                            showCheckboxColumn: true,
-                            dataTextStyle: TextStyle(fontSize: 11.sp),
-                            border: TableBorder(
-                                horizontalInside:
-                                BorderSide(color: Colors.black),
-                                verticalInside:
-                                BorderSide(color: Colors.black)),
-                            columns: [
-                              DataColumn(
-                                label: Text('Sr. No'),
+                        height: Adaptive.h(85),
+                        child: KrPaginateFirestore(
+                          query: FirebaseFirestore.instance
+                              .collection('assignment')
+                              .orderBy('date of submission', descending: true),
+                          scrollDirection: Axis.vertical,
+                          onEmpty: Text('isEmpty'),
+                          bottomLoader: CircularProgressIndicator(),
+                          itemBuilder: (context, dataSnapshot, pageIndex) {
+                            final data = dataSnapshot[pageIndex].data()
+                                as Map<String, dynamic>;
+                            // timestamp conversion to date
+                            Timestamp t = data["date of submission"];
+                            DateTime date = t.toDate();
+                            return Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.black)
                               ),
-                              DataColumn(
-                                label: Text('Mark as reviewed'),
-                              ),
-                              DataColumn(
-                                label: Text('Student Name'),
-                              ),
-                              DataColumn(
-                                label: Text('Student Email'),
-                              ),
-                              DataColumn(
-                                label: Text('Submitted file'),
-                              ),
-                              DataColumn(
-                                label: Text('Date of submission'),
-                              ),
-                            ],
-                            rows: List<DataRow>.generate(
-                                finalListOfAllData.length, (index) {
-                              // timestamp conversion to date
-
-                              Timestamp t = finalListOfAllData[index]
-                              ["date of submission"];
-                              DateTime date = t.toDate();
-                              return DataRow(cells: [
-                                DataCell(
-                                    Text('${index+1}', style: textStyle)),
-                                DataCell(Checkbox(
-                                  onChanged: (value) {
-
-                                    if(finalListOfAllData[index]['reviewed'] != null) {
-                                      finalListOfAllData[index]['reviewed'] = !finalListOfAllData[index]['reviewed'];
-                                    } else {
-                                      finalListOfAllData[index]['reviewed'] = true;
-                                    }
-
-                                    assignmentController.toggleReview(
-                                        finalListOfAllData[index]['documentId'],
-                                        finalListOfAllData[index]['reviewed']
-                                    );
-                                    setState(() {
-
-                                    });
-                                  },
-                                  value: finalListOfAllData[index]['reviewed'] != null ? finalListOfAllData[index]['reviewed'] : false,
-                                )),
-                                DataCell(SelectableText(
-                                    finalListOfAllData[index]['email'] != null ? '${finalListOfAllData[index]['email']}' : 'null')),
-                                DataCell(Text(
-                                    finalListOfAllData[index]['name'] != null? '${finalListOfAllData[index]['name']}' : 'null')),
-                                DataCell(InkWell(
-                                    onTap: () {
-                                      launch(finalListOfAllData[index]["link"]);
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Container(
+                                      width: Adaptive.w(20),
+                                      height: Adaptive.h(3),
+                                      child: Center(child: Text('${data['name']}'))),
+                                  Container(
+                                      width: Adaptive.w(25),
+                                      child: Center(child: SelectableText('${data['email']}'))),
+                                  Checkbox(
+                                    onChanged: (value) {
+                                      if (data['reviewed'] !=
+                                          null) {
+                                        data['reviewed'] =
+                                            !data
+                                                ['reviewed'];
+                                      } else {
+                                        data['reviewed'] =
+                                            true;
+                                      }
+                                      assignmentController.toggleReview(
+                                          data['documentId'],
+                                          data['reviewed']);
+                                      setState(() {});
                                     },
-                                    child: Text(
-                                        finalListOfAllData[index]['filename'] != null ? '${finalListOfAllData[index]['filename']}' : 'null'))),
-                                DataCell(Text('$date')),
-                              ]);
-                            })),
-                      )
+                                    value: data['reviewed'] !=
+                                            null
+                                        ? data['reviewed']
+                                        : false,
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      launch(data["link"]);
+                                    },
+                                      child: Container(
+                                          width: Adaptive.w(26),
+                                          child: Center(
+                                              child: Text('${data['filename']}',
+                                            style: TextStyle(color: Colors.deepPurple),
+                                            overflow: TextOverflow.ellipsis,
+                                          ))),
+                                  ),
+                                  Container(
+                                      width: Adaptive.w(25),
+                                      child: Center(child: Text('${date}', overflow: TextOverflow.ellipsis,)))
+                                ],
+                              ),
+                            );
+                          },
+                          itemBuilderType: PaginateBuilderType.listView,
+                          isLive: true,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -267,8 +289,26 @@ class _AssignmentsState extends State<Assignments> {
                                 launch(result['link']);
                               },
                               enableFeedback: true,
-                              leading:
-                                  Icon(Icons.download_for_offline_outlined),
+                              leading: Checkbox(
+                                  onChanged: (value) {
+                                    if (result['reviewed'] !=
+                                        null) {
+                                      result['reviewed'] =
+                                      !result
+                                      ['reviewed'];
+                                    } else {
+                                      result['reviewed'] =
+                                      true;
+                                    }
+                                    print('result ${result['documentId']}');
+                                    assignmentController.toggleReview(
+                                        result['documentId'],
+                                        result['reviewed']);
+                                    setState(() {});
+                                  },
+                                  value:  result['reviewed'] != null
+                                  ? result['reviewed'] : false
+                              ),
                               trailing: result["date of submission"] != null
                                   ? Text(DateFormat('yyyy-MM-dd').format(date))
                                   : Text('No date'),
@@ -288,11 +328,7 @@ class _AssignmentsState extends State<Assignments> {
   }
 }
 
-
 class AssignmentController extends GetxController {
-
-
-
   Future<RxList> fetchAllDocuments() async {
     final assignmentDataList = [].obs;
     try {
@@ -301,12 +337,15 @@ class AssignmentController extends GetxController {
       QuerySnapshot querySnapshot = await firestore
           .collection('assignment')
           .orderBy('date of submission', descending: true)
-          .limit(500)
+          .limit(50)
           .get();
 
       for (QueryDocumentSnapshot doc in querySnapshot.docs) {
         // 2. Update each document with its own ID
-        await firestore.collection('assignment').doc(doc.id).update({'documentId': doc.id});
+        await firestore
+            .collection('assignment')
+            .doc(doc.id)
+            .update({'documentId': doc.id});
       }
 
       querySnapshot.docs.forEach((doc) {
@@ -319,19 +358,17 @@ class AssignmentController extends GetxController {
     }
   }
 
-
   toggleReview(String? id, reviewed) async {
-
     try {
       FirebaseFirestore firestore = FirebaseFirestore.instance;
       // Query the collection for documents with the matching email
-      QuerySnapshot querySnapshot = await firestore
-          .collection('assignment')
-          .get();
+      QuerySnapshot querySnapshot =
+          await firestore.collection('assignment').get();
 
       for (QueryDocumentSnapshot doc in querySnapshot.docs) {
-        if(doc.id == id) {
-          await firestore.collection('assignment')
+        if (doc.id == id) {
+          await firestore
+              .collection('assignment')
               .doc(doc.id)
               .update({'reviewed': reviewed});
         }
@@ -340,6 +377,4 @@ class AssignmentController extends GetxController {
       print('Error toggleReviewtoggleReview: $e');
     }
   }
-
-
 }
