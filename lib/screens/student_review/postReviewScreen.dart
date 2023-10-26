@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloudyml_app2/global_variable.dart';
+import 'package:cloudyml_app2/screens/flutter_flow/flutter_flow_theme.dart';
 import 'package:cloudyml_app2/screens/student_review/ReviewApi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -6,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:timeago/timeago.dart';
 import 'package:toast/toast.dart';
 import 'package:mailer/mailer.dart';
+import '../../global_variable.dart' as globals;
 import 'package:mailer/smtp_server/gmail.dart';
 
 class PostReviewScreen extends StatefulWidget {
@@ -36,6 +39,74 @@ class _PostReviewScreenState extends State<PostReviewScreen> {
         experienceStartDate = picked;
       });
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getallcoursename();
+  }
+
+  getallcoursename() async {
+    setState(() {
+      loading = true;
+    });
+    try {
+      var courseMap = {};
+      await FirebaseFirestore.instance
+          .collection('courses')
+          .get()
+          .then((value) {
+        try {
+          List tepcourse = [];
+          print('start1');
+          value.docs.forEach((element) {
+            print('start2');
+            try {
+              for (var k in element['curriculum1']['${element['name']}']) {
+                print('start3');
+                try {
+                  print('start4');
+                  tepcourse.add(k['modulename']);
+                  print('start5');
+                } catch (e) {
+                  print('start6');
+                  print("error lll $e");
+                }
+              }
+            } catch (e) {
+              print("start error ${e}");
+            }
+
+            try {
+              print('start7');
+              globals.coursemoduelmap["${element['name']}"] = tepcourse;
+              print('start8');
+              globals.courseList.add(element['name']);
+              print('start9');
+              tepcourse = [];
+            } catch (e) {
+              print("error hhh $e");
+            }
+          });
+        } catch (e) {
+          print("error kkkl $e");
+        }
+      }).whenComplete(() {
+        setState(() {
+          loading = false;
+        });
+      });
+    } catch (e) {
+      setState(() {
+        loading = false;
+      });
+    }
+    setState(() {
+      globals.courseList;
+    });
+    print("jjjjjjjjjjjjjj1: ${globals.courseList}");
+    print("jjjjjjjjjjjjjj2: ${globals.coursemoduelmap}");
   }
 
   Future<void> _selectEndDate(BuildContext context) async {
@@ -105,6 +176,7 @@ class _PostReviewScreenState extends State<PostReviewScreen> {
   }
 
   bool loading = false;
+  var tempcoursename = "Course Name";
 
   @override
   Widget build(BuildContext context) {
@@ -208,13 +280,63 @@ class _PostReviewScreenState extends State<PostReviewScreen> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          TextFormField(
-                            controller: _courseController,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
+                          Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.grey,
                               ),
-                              contentPadding: EdgeInsets.all(12.0),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.fromLTRB(12.0, 0, 12, 0),
+                              child: DropdownButton<String>(
+                                focusColor: Colors.white,
+                                underline: Container(),
+                                isExpanded: true,
+                                // // Step 3.
+                                value: tempcoursename,
+                                // Step 4.
+
+                                items: globals.courseList
+                                    .map<DropdownMenuItem<String>>((value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(
+                                      value,
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyText1
+                                          .override(
+                                            fontFamily: 'Lexend Deca',
+                                            color: Colors.black,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                    ),
+                                  );
+                                }).toList(),
+                                // Step 5.
+                                onChanged: (String? newValue) {
+                                  try {
+                                    _courseController.text = newValue!;
+                                    setState(() {
+                                      print('ft1');
+                                      print(newValue);
+                                      print(
+                                          '${globals.coursemoduelmap[newValue].runtimeType}');
+                                      try {} catch (e) {
+                                        print(e);
+                                      }
+
+                                      print('ft3');
+                                      tempcoursename = newValue!;
+                                      print('ft4');
+                                    });
+                                  } catch (e) {
+                                    print("rrrrrrr: ${e}");
+                                  }
+                                },
+                              ),
                             ),
                           ),
                           SizedBox(height: 16.0),
@@ -320,76 +442,6 @@ class _PostReviewScreenState extends State<PostReviewScreen> {
                             ),
                           ),
                           SizedBox(height: 16.0),
-                          // RatingBar.builder(
-                          //   initialRating: 3,
-                          //   minRating: 1,
-                          //   direction: Axis.horizontal,
-                          //   allowHalfRating: true,
-                          //   itemCount: 5,
-                          //   itemSize: isPhone
-                          //       ? 30.0
-                          //       : 40.0, // Adjust item size for different screen sizes
-                          //   itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                          //   itemBuilder: (context, index) {
-                          //     Text textData;
-                          //     switch (index) {
-                          //       case 0:
-                          //         textData = Text(
-                          //           '\u{1F922}',
-                          //           style: TextStyle(
-                          //             fontSize: 36,
-                          //           ),
-                          //         );
-                          //         break;
-                          //       case 1:
-                          //         textData = Text(
-                          //           '\u{1F612}',
-                          //           style: TextStyle(
-                          //             fontSize: 36,
-                          //           ),
-                          //         );
-                          //         break;
-                          //       case 2:
-                          //         textData = Text(
-                          //           '\u{1F642}',
-                          //           style: TextStyle(
-                          //             fontSize: 36,
-                          //           ),
-                          //         );
-                          //         break;
-                          //       case 3:
-                          //         textData = Text(
-                          //           '\u{1F60A}',
-                          //           style: TextStyle(
-                          //             fontSize: 36,
-                          //           ),
-                          //         );
-                          //         break;
-                          //       case 4:
-                          //         textData = Text(
-                          //           '\u{1F929}',
-                          //           style: TextStyle(
-                          //             fontSize: 36,
-                          //           ),
-                          //         );
-                          //         break;
-                          //       default:
-                          //         textData = Text(
-                          //           '\u{1FAE0}',
-                          //           style: TextStyle(
-                          //             fontSize: 36,
-                          //           ),
-                          //         );
-                          //         break;
-                          //     }
-
-                          //     return textData;
-                          //   },
-                          //   onRatingUpdate: (rating) {
-                          //     _ratingController.text = rating.toString();
-                          //   },
-                          // ),
-                          // SizedBox(height: 16.0),
                           Text(
                             'Write a Review',
                             style: TextStyle(
