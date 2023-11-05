@@ -193,6 +193,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.0.83"
+  bloc:
+    dependency: transitive
+    description:
+      name: bloc
+      sha256: "3820f15f502372d979121de1f6b97bfcf1630ebff8fe1d52fb2b0bfa49be5b49"
+      url: "https://pub.dev"
+    source: hosted
+    version: "8.1.2"
   boolean_selector:
     dependency: transitive
     description:
@@ -689,6 +697,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.7.0"
+  firebase_database:
+    dependency: transitive
+    description:
+      name: firebase_database
+      sha256: "61d4f75599382194e5a5617e606f61ea5fe092315c61976fab9d3bd7b291e23c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "10.2.5"
+  firebase_database_platform_interface:
+    dependency: transitive
+    description:
+      name: firebase_database_platform_interface
+      sha256: "951738c448a01a9aca2b72b59bf9ebd769a59e49cbae8a5b376e9bdd0ccba3de"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.5+5"
+  firebase_database_web:
+    dependency: transitive
+    description:
+      name: firebase_database_web
+      sha256: fcbd0fc83cabd529b88723d6721d10d7a88d10480fd93904513e60e32c5016d1
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.3+5"
   firebase_dynamic_links:
     dependency: "direct main"
     description:
@@ -729,6 +761,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.5.6"
+  firebase_pagination:
+    dependency: "direct main"
+    description:
+      name: firebase_pagination
+      sha256: "1f9ac5230447f243ce203a789e34b287f58082428d7709a9736e6352c0b3f401"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
   firebase_storage:
     dependency: "direct main"
     description:
@@ -774,6 +814,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_bloc:
+    dependency: transitive
+    description:
+      name: flutter_bloc
+      sha256: e74efb89ee6945bcbce74a5b3a5a3376b088e5f21f55c263fc38cbdc6237faae
+      url: "https://pub.dev"
+    source: hosted
+    version: "8.1.3"
   flutter_blurhash:
     dependency: transitive
     description:
@@ -1169,7 +1217,7 @@ packages:
     source: hosted
     version: "0.15.4"
   http:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: http
       sha256: "5895291c13fa8a3bd82e76d5627f69e0d85ca6a30dcac95c4ea19a5d555879c2"
@@ -1368,6 +1416,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.4.8"
+  kr_paginate_firestore:
+    dependency: "direct main"
+    description:
+      name: kr_paginate_firestore
+      sha256: "0c55efa2ec42acb88bf62cc2b3065d41e87816f983f3d6aa2768a7b402626d4f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.4"
   libphonenumber_platform_interface:
     dependency: transitive
     description:
@@ -1744,6 +1800,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.5.1"
+  preload_page_view:
+    dependency: transitive
+    description:
+      name: preload_page_view
+      sha256: "488a10c158c5c2e9ba9d77e5dbc09b1e49e37a20df2301e5ba02992eac802b7a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.0"
   process:
     dependency: transitive
     description:
@@ -1784,6 +1848,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.2.1"
+  razorpay_flutter:
+    dependency: "direct main"
+    description:
+      name: razorpay_flutter
+      sha256: "959dbedc3af25fd41b43944bc5db00d4be1ea1967fed5d69fba3fc6700b1f103"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.3.4"
   razorpay_web:
     dependency: "direct main"
     description:
@@ -2486,5 +2558,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.1.0-185.0.dev <4.0.0"
+  dart: ">=3.1.0-185.0.dev <=3.9.0"
   flutter: ">=3.10.0"

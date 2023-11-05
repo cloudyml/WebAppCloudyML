@@ -1183,6 +1183,8 @@ class _VideoScreenState extends State<VideoScreen> {
                           flex: 2,
                           child: showAssignment
                               ? AssignmentScreen(
+                            userEmail: userEmail,
+                            userName: studentName,
                                   selectedSection: selectedSection,
                                   courseData: courseData,
                                   courseName: widget.courseName,
@@ -1384,6 +1386,8 @@ class _VideoScreenState extends State<VideoScreen> {
                                 height: Adaptive.h(35),
                                 width: Adaptive.w(100),
                                 child: AssignmentScreen(
+                                  userEmail: userEmail,
+                                  userName: studentName,
                                   selectedSection: selectedSection,
                                   courseData: courseData,
                                   courseName: widget.courseName,
@@ -1506,224 +1510,226 @@ class _VideoScreenState extends State<VideoScreen> {
     final height = MediaQuery.of(context).size.height;
     return Align(
       alignment: Alignment.centerLeft,
-      child: Container(
-        padding:
-            EdgeInsets.symmetric(horizontal: width / 50, vertical: height / 50),
-        width: width / 3,
-        decoration: BoxDecoration(
-          color: Color(0xffF2E9FE),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 3,
-              blurRadius: 5,
-              offset: Offset(0, 3),
-            ),
-          ],
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            DefaultTextStyle(
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
+      child: SingleChildScrollView(
+        child: Container(
+          padding:
+              EdgeInsets.symmetric(horizontal: width / 50, vertical: height / 50),
+          width: width / 3,
+          decoration: BoxDecoration(
+            color: Color(0xffF2E9FE),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 3,
+                blurRadius: 5,
+                offset: Offset(0, 3),
               ),
-              child: Text(
-                'Add Assignment',
-                textAlign: TextAlign.left,
+            ],
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              DefaultTextStyle(
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+                child: Text(
+                  'Add Assignment',
+                  textAlign: TextAlign.left,
+                ),
               ),
-            ),
-            SizedBox(
-              height: height / 40,
-            ),
-            Material(
-              child: TextFormField(
-                controller: addAssignmentNameController,
-                decoration: InputDecoration(
-                  fillColor: Color(0xffF2E9FE),
-                  enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
-                  focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.deepPurpleAccent),
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
-                  hintText: 'Enter Assignment Name',
-                  hintStyle: TextStyle(
-                    color: Colors.grey,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 16,
+              SizedBox(
+                height: height / 40,
+              ),
+              Material(
+                child: TextFormField(
+                  controller: addAssignmentNameController,
+                  decoration: InputDecoration(
+                    fillColor: Color(0xffF2E9FE),
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                    focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.deepPurpleAccent),
+                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                    hintText: 'Enter Assignment Name',
+                    hintStyle: TextStyle(
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16,
+                    ),
                   ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: height / 50,
-            ),
-            StatefulBuilder(builder: (context, state) {
-              return Row(children: [
-                Text('Show description?'),
-                SizedBox(
-                  width: height / 40,
-                ),
-                getX.Obx(() {
-                  return CupertinoSwitch(
-                    value: isToggled.value,
-                    onChanged: (value) {
-                      isToggled.value = !isToggled.value;
-                      print('isToggled ${isToggled.value}');
-                    },
-                  );
-                }),
-              ]);
-            }),
-            SizedBox(
-              height: height / 50,
-            ),
-            Material(
-              child: TextFormField(
-                controller: assignmentDescriptionController,
-                maxLines: 6,
-                decoration: InputDecoration(
-                  fillColor: Color(0xffF2E9FE),
-                  enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
-                  focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.deepPurpleAccent),
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
-                  hintText: 'Enter Assignment description',
-                  hintStyle: TextStyle(
-                    color: Colors.grey,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 16,
-                  ),
-                ),
+              SizedBox(
+                height: height / 50,
               ),
-            ),
-            SizedBox(
-              height: height / 50,
-            ),
-            addAssignmentBox(
-                uploadedFile: uploadedAssignmentFile,
-                fileName: assignmentFileName,
-                onChooseFile: () async {
-                  if (assignmentLinkController.text.isEmpty) {
-                    await getAssignmentFile(
-                        listOfSectionData: listOfSectionData);
-                  } else {
-                    Toast.show(
-                        'Remove Assignment link if you want to attach file');
-                  }
-                },
-                name: 'Assignment',
-                controller: assignmentLinkController,
-                onDelete: () {
-                  setState(() {
-                    uploadedAssignmentFile = null;
-                    assignmentFileName = '';
-                    Navigator.pop(context);
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return addAssigmentPopUp(
-                            listOfSectionData: listOfSectionData);
+              StatefulBuilder(builder: (context, state) {
+                return Row(children: [
+                  Text('Show description?'),
+                  SizedBox(
+                    width: height / 40,
+                  ),
+                  getX.Obx(() {
+                    return CupertinoSwitch(
+                      value: isToggled.value,
+                      onChanged: (value) {
+                        isToggled.value = !isToggled.value;
+                        print('isToggled ${isToggled.value}');
                       },
                     );
-                  });
-                }),
-            SizedBox(
-              height: height / 50,
-            ),
-            addAssignmentBox(
-                uploadedFile: uploadedpdfFile,
-                fileName: pdfFileName,
-                onChooseFile: () async {
-                  if (pdfLinkController.text.isEmpty) {
-                    await getPdfFile(listOfSectionData: listOfSectionData);
-                  } else {
-                    Toast.show('Remove Pdf link if you want to attach file');
-                  }
-                },
-                name: 'Pdf',
-                controller: pdfLinkController,
-                onDelete: () {
-                  setState(() {
-                    uploadedpdfFile = null;
-                    pdfFileName = '';
-                    Navigator.pop(context);
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return addAssigmentPopUp(
-                            listOfSectionData: listOfSectionData);
-                      },
-                    );
-                  });
-                }),
-            SizedBox(
-              height: height / 50,
-            ),
-            addAssignmentBox(
-                uploadedFile: uploadedDatasetFile,
-                fileName: datasetFileName,
-                onChooseFile: () async {
-                  if (datasetLinkController.text.isEmpty) {
-                    await getDatasetFile(listOfSectionData: listOfSectionData);
-                  } else {
-                    Toast.show(
-                        'Remove Dataset link if you want to attach file');
-                  }
-                },
-                name: 'Dataset',
-                controller: datasetLinkController,
-                onDelete: () {
-                  setState(() {
-                    uploadedDatasetFile = null;
-                    datasetFileName = '';
-                    Navigator.pop(context);
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return addAssigmentPopUp(
-                            listOfSectionData: listOfSectionData);
-                      },
-                    );
-                  });
-                }),
-            SizedBox(
-              height: height / 50,
-            ),
-            Center(
-              child: StatefulBuilder(builder: (context, state) {
-                return addAssignmentLoading
-                    ? CircularProgressIndicator(
-                        color: Colors.black, strokeWidth: 2)
-                    : ElevatedButton(
-                        onPressed: () async {
-                          state;
-                          addAssignmentLoading = true;
-                          addAssignment(listOfSectionData: listOfSectionData)
-                              .whenComplete(() {
-                            addAssignmentLoading = false;
-                            state;
-                          });
-                          await getAssignmentDescription();
-                          await assignmentDescriptionShowCheck();
-                        },
-                        child: Text("Add Assignment"),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.deepPurpleAccent,
-                        ),
-                      );
+                  }),
+                ]);
               }),
-            )
-          ],
+              SizedBox(
+                height: height / 50,
+              ),
+              Material(
+                child: TextFormField(
+                  controller: assignmentDescriptionController,
+                  maxLines: 6,
+                  decoration: InputDecoration(
+                    fillColor: Color(0xffF2E9FE),
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                    focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.deepPurpleAccent),
+                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                    hintText: 'Enter Assignment description',
+                    hintStyle: TextStyle(
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: height / 50,
+              ),
+              addAssignmentBox(
+                  uploadedFile: uploadedAssignmentFile,
+                  fileName: assignmentFileName,
+                  onChooseFile: () async {
+                    if (assignmentLinkController.text.isEmpty) {
+                      await getAssignmentFile(
+                          listOfSectionData: listOfSectionData);
+                    } else {
+                      Toast.show(
+                          'Remove Assignment link if you want to attach file');
+                    }
+                  },
+                  name: 'Assignment',
+                  controller: assignmentLinkController,
+                  onDelete: () {
+                    setState(() {
+                      uploadedAssignmentFile = null;
+                      assignmentFileName = '';
+                      Navigator.pop(context);
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return addAssigmentPopUp(
+                              listOfSectionData: listOfSectionData);
+                        },
+                      );
+                    });
+                  }),
+              SizedBox(
+                height: height / 50,
+              ),
+              addAssignmentBox(
+                  uploadedFile: uploadedpdfFile,
+                  fileName: pdfFileName,
+                  onChooseFile: () async {
+                    if (pdfLinkController.text.isEmpty) {
+                      await getPdfFile(listOfSectionData: listOfSectionData);
+                    } else {
+                      Toast.show('Remove Pdf link if you want to attach file');
+                    }
+                  },
+                  name: 'Pdf',
+                  controller: pdfLinkController,
+                  onDelete: () {
+                    setState(() {
+                      uploadedpdfFile = null;
+                      pdfFileName = '';
+                      Navigator.pop(context);
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return addAssigmentPopUp(
+                              listOfSectionData: listOfSectionData);
+                        },
+                      );
+                    });
+                  }),
+              SizedBox(
+                height: height / 50,
+              ),
+              addAssignmentBox(
+                  uploadedFile: uploadedDatasetFile,
+                  fileName: datasetFileName,
+                  onChooseFile: () async {
+                    if (datasetLinkController.text.isEmpty) {
+                      await getDatasetFile(listOfSectionData: listOfSectionData);
+                    } else {
+                      Toast.show(
+                          'Remove Dataset link if you want to attach file');
+                    }
+                  },
+                  name: 'Dataset',
+                  controller: datasetLinkController,
+                  onDelete: () {
+                    setState(() {
+                      uploadedDatasetFile = null;
+                      datasetFileName = '';
+                      Navigator.pop(context);
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return addAssigmentPopUp(
+                              listOfSectionData: listOfSectionData);
+                        },
+                      );
+                    });
+                  }),
+              SizedBox(
+                height: height / 50,
+              ),
+              Center(
+                child: StatefulBuilder(builder: (context, state) {
+                  return addAssignmentLoading
+                      ? CircularProgressIndicator(
+                          color: Colors.black, strokeWidth: 2)
+                      : ElevatedButton(
+                          onPressed: () async {
+                            state;
+                            addAssignmentLoading = true;
+                            addAssignment(listOfSectionData: listOfSectionData)
+                                .whenComplete(() {
+                              addAssignmentLoading = false;
+                              state;
+                            });
+                            await getAssignmentDescription();
+                            await assignmentDescriptionShowCheck();
+                          },
+                          child: Text("Add Assignment"),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.deepPurpleAccent,
+                          ),
+                        );
+                }),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -1945,7 +1951,7 @@ class _VideoScreenState extends State<VideoScreen> {
             'description': assignmentDescriptionController.text.isNotEmpty
                 ? assignmentDescriptionController.text
                 : null,
-            'showDescription': isToggled,
+            'showDescription': isToggled.value,
           });
 
           await courseRef.doc(widget.cID).update({
@@ -3124,6 +3130,8 @@ class _VideoScreenState extends State<VideoScreen> {
                                                     MaterialPageRoute(
                                                         builder: (context) =>
                                                             AssignmentScreen(
+                                                              userEmail: userEmail,
+                                                              userName: studentName,
                                                               selectedSection:
                                                                   selectedSection,
                                                               courseData:
@@ -3447,6 +3455,8 @@ class _VideoScreenState extends State<VideoScreen> {
                                                       MaterialPageRoute(
                                                           builder: (context) =>
                                                               AssignmentScreen(
+                                                                userEmail: userEmail,
+                                                                userName: studentName,
                                                                 selectedSection:
                                                                     selectedSection,
                                                                 courseData:

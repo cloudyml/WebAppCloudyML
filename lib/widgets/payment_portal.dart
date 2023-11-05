@@ -18,6 +18,7 @@ import 'package:cloudyml_app2/globals.dart';
 import 'package:cloudyml_app2/global_variable.dart' as globals;
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:html' as html;
+// import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class PaymentButton extends StatefulWidget {
   final ScrollController scrollController;
@@ -108,6 +109,7 @@ class _PaymentButtonState extends State<PaymentButton> with CouponCodeMixin {
 
   var key_id;
   var key_secret;
+  var successurl;
 
   loadCourses() async {
     try {
@@ -124,24 +126,24 @@ class _PaymentButtonState extends State<PaymentButton> with CouponCodeMixin {
         "cid": widget.courseId
       });
 
-      var mailurl = Uri.parse(
-          'https://us-central1-cloudyml-app.cloudfunctions.net/exceluser/coursemail');
-      // final response =
-      await http.post(mailurl, headers: {
-        "Access-Control-Allow-Origin": "*", // Required for CORS support to work
-        "Access-Control-Allow-Methods": "GET, POST,OPTIONS"
-      }, body: {
-        "uid": _auth.currentUser!.uid,
-        "cname": widget.courseName,
-      });
+      // var mailurl = Uri.parse(
+      //     'https://us-central1-cloudyml-app.cloudfunctions.net/exceluser/coursemail');
+      // // final response =
+      // await http.post(mailurl, headers: {
+      //   "Access-Control-Allow-Origin": "*", // Required for CORS support to work
+      //   "Access-Control-Allow-Methods": "GET, POST,OPTIONS"
+      // }, body: {
+      //   "uid": _auth.currentUser!.uid,
+      //   "cname": widget.courseName,
+      // });
 
-      print("Mail Sent");
+      // print("Mail Sent");
     } catch (e) {
       print(e);
     }
 
     try {
-      print("couponcodeused1");
+      // print("couponcodeused1");
       print(widget.couponcodeused);
       if (widget.couponcodeused == true) {
         await calltoupdatecouponinuser();
@@ -264,6 +266,8 @@ class _PaymentButtonState extends State<PaymentButton> with CouponCodeMixin {
 
     super.initState();
   }
+
+ 
 
   Future<void> _handlePaymentError(PaymentFailureResponse response) async {
     Toast.show("Payment failed");
@@ -439,6 +443,7 @@ class _PaymentButtonState extends State<PaymentButton> with CouponCodeMixin {
 
   // }
 
+
   calltoupdatecouponinuser() async {
     var couponbool = false;
     var couponList;
@@ -588,13 +593,24 @@ class _PaymentButtonState extends State<PaymentButton> with CouponCodeMixin {
     // GoRouter.of(context).pushReplacementNamed('myCourses');
 
     final url;
-    if (widget.courseId == 'DEPAP1') {
-      // url = 'https://de.cloudyml.com/enrolled';
-      html.window.open('https://de.cloudyml.com/enrolled', "_self");
-    } else {
-      // url = 'https://ds.cloudyml.com/enrolled';
-      html.window.open('https://ds.cloudyml.com/enrolled', "_self");
-    }
+    // if (widget.courseId == 'PECG1') {
+    //   html.window.open('https://www.cloudyml.com/tnkyu', "_self");
+    // } else if (widget.courseId == 'DEPAP1') {
+    //   // url = 'https://de.cloudyml.com/enrolled';
+    //   html.window.open('https://de.cloudyml.com/enrolled', "_self");
+    // } else {
+    //   // url = 'https://ds.cloudyml.com/enrolled';
+    //   html.window.open('https://ds.cloudyml.com/enrolled', "_self");
+    // }
+
+     successurl = await FirebaseFirestore.instance
+        .collection('thankyou_url').where("courseid", isEqualTo: widget.courseId )
+        .get()
+        .then((value) {
+      return value.docs.first.data()['url']; // Access your after your get the data
+    });
+
+    print(successurl);
 
     // final uri = Uri.parse(url);
     // // html.WindowBase _popup =
@@ -677,18 +693,12 @@ class _PaymentButtonState extends State<PaymentButton> with CouponCodeMixin {
 
   // void initState() {
   //   super.initState();
-  //   updateAmoutStringForRP(
-  //       widget.isPayInPartsPressed,
-  //       widget.isMinAmountCheckerPressed,
-  //       widget.isOutStandingAmountCheckerPressed);
-  //   updateAmoutStringForUPI(
-  //       widget.isPayInPartsPressed,
-  //       widget.isMinAmountCheckerPressed,
-  //       widget.isOutStandingAmountCheckerPressed);
+  
   // }
 
   @override
   Widget build(BuildContext context) {
+    pushToHome();
     final userprovider = Provider.of<UserProvider>(context);
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
@@ -736,6 +746,7 @@ class _PaymentButtonState extends State<PaymentButton> with CouponCodeMixin {
                       'description': widget.courseDescription,
                       'timeout': 300, //in seconds
                       'order_id': order_id,
+
                       'prefill': {
                         'contact': userprovider.userModel!.mobile,
                         // '7003482660', //original number and email
@@ -747,13 +758,18 @@ class _PaymentButtonState extends State<PaymentButton> with CouponCodeMixin {
                       'notes': {
                         'contact': userprovider.userModel!.mobile,
                         'email': userprovider.userModel!.email,
-                        'name': userprovider.userModel!.name
-                      }
+                        'name': userprovider.userModel!.name,
+                        'description': widget.courseId + "," + widget.couponCode
+                      },
+                      'redirect': true,
+                      'callback_url': successurl,
                     };
                     _razorpay.open(options);
                     setState(() {
                       isLoading = false;
                     });
+                       
+
                   },
                   child: Center(
                     child: Container(
@@ -1255,6 +1271,7 @@ class _PaymentButtonState extends State<PaymentButton> with CouponCodeMixin {
                                 'description': widget.courseDescription,
                                 'timeout': 300, //in seconds
                                 'order_id': order_id,
+
                                 'prefill': {
                                   'contact': userprovider.userModel!.mobile,
                                   // '7003482660', //original number and email
@@ -1266,8 +1283,12 @@ class _PaymentButtonState extends State<PaymentButton> with CouponCodeMixin {
                                 'notes': {
                                   'contact': userprovider.userModel!.mobile,
                                   'email': userprovider.userModel!.email,
-                                  'name': userprovider.userModel!.name
-                                }
+                                  'name': userprovider.userModel!.name,
+                                  'description': widget.courseId + "," + widget.couponCode
+                                },
+                                'redirect': true,
+                                'callback_url':
+                                    'https://ds.cloudyml.com/enrolled/',
                               };
                               _razorpay.open(options);
                               // });

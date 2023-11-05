@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 import 'package:cloudyml_app2/homescreen/clipper.dart';
 import 'package:cloudyml_app2/widgets/notification_popup.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 // import 'package:showcaseview/showcaseview.dart';
+import 'package:http/http.dart' as http;
 import 'package:toast/toast.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:package_info_plus/package_info_plus.dart';
@@ -224,6 +226,9 @@ class _LandingScreenState extends State<LandingScreen> {
   //         .showNotificationHomeScreen(notificationBox.values.first["count"]);
   //   }
   // }
+
+
+
 
   List<CourseDetails> featuredCourse = [];
 
@@ -794,6 +799,7 @@ class _LandingScreenState extends State<LandingScreen> {
     // print('this is url ${html.window.location.href}');
     // print('this is path ${Uri.base.path}');
     // showNotification();
+
     _controller = ScrollController();
 
     futureFiles = FirebaseApi.listAll('reviews/recent_review');
@@ -913,7 +919,7 @@ class _LandingScreenState extends State<LandingScreen> {
                                       child: InkWell(
                                     onTap: () => refreshPage(),
                                     child: Text(
-                                      'Hey, Chat with your Teaching Assistance(TA) for your Doubt Clearance from 6pm to 12 midnight.',
+                                      'Hey, Chat with your Teaching Assistance(TA) for your Doubt Clearance from 6pm to 9am',
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 13.sp,
@@ -1042,7 +1048,7 @@ class _LandingScreenState extends State<LandingScreen> {
                                       child: InkWell(
                                     onTap: () => refreshPage(),
                                     child: Text(
-                                      'Hey, Chat with your Teaching Assistance(TA) for your Doubt Clearance from 6pm to 12 midnight..',
+                                      'Hey, Chat with your Teaching Assistance(TA) for your Doubt Clearance from 6pm to 9am..',
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 11.sp,

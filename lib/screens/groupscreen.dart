@@ -880,7 +880,7 @@ class PopupBox extends StatelessWidget {
                                     fontWeight: FontWeight.w500,
                                      decoration: TextDecoration.underline,
                                   ),),
-              Text(" If you see late response(more than 5 minutes or max more than 10 minutes ) from mentor multiple times during 6pm - midnight , then tag me and raise the concern. "
+              Text(" If you see late response(more than 5 minutes or max more than 10 minutes ) from mentor multiple times during 6pm - 9am , then tag me and raise the concern. "
                ,style: TextStyle(
                           
                                     shadows: <Shadow>[
