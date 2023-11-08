@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloudyml_app2/global_variable.dart';
+import 'package:cloudyml_app2/screens/flutter_flow/flutter_flow_theme.dart';
 import 'package:cloudyml_app2/screens/student_review/ReviewApi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -18,9 +20,10 @@ class _PostReviewScreenState extends State<PostReviewScreen> {
   TextEditingController _linkdinlinkController = TextEditingController();
   TextEditingController _reviewdescriptionController = TextEditingController();
   TextEditingController _ratingController = TextEditingController();
-
+  var tempcoursename = "Course Name";
   DateTime? experienceStartDate;
   DateTime? experienceEndDate;
+  bool courseloading = false;
 
   Future<void> _selectStartDate(BuildContext context) async {
     final DateTime picked = (await showDatePicker(
@@ -34,6 +37,68 @@ class _PostReviewScreenState extends State<PostReviewScreen> {
         experienceStartDate = picked;
       });
     }
+  }
+
+  getallcoursename() async {
+    setState(() {
+      courseloading = true;
+    });
+    try {
+      var courseMap = {};
+      await FirebaseFirestore.instance
+          .collection('courses')
+          .get()
+          .then((value) {
+        try {
+          List tepcourse = [];
+          print('start1');
+          value.docs.forEach((element) {
+            print('start2');
+            try {
+              for (var k in element['curriculum1']['${element['name']}']) {
+                print('start3');
+                try {
+                  print('start4');
+                  tepcourse.add(k['modulename']);
+                  print('start5');
+                } catch (e) {
+                  print('start6');
+                  print("error lll $e");
+                }
+              }
+            } catch (e) {
+              print("start error ${e}");
+            }
+
+            try {
+              print('start7');
+              coursemoduelmap["${element['name']}"] = tepcourse;
+              print('start8');
+              courseList.add(element['name']);
+              print('start9');
+              tepcourse = [];
+            } catch (e) {
+              print("error hhh $e");
+            }
+          });
+        } catch (e) {
+          print("error kkkl $e");
+        }
+      }).whenComplete(() {
+        setState(() {
+          courseloading = false;
+        });
+      });
+    } catch (e) {
+      setState(() {
+        courseloading = false;
+      });
+    }
+    setState(() {
+      courseList;
+    });
+    print("jjjjjjjjjjjjjj1: ${courseList}");
+    print("jjjjjjjjjjjjjj2: ${coursemoduelmap}");
   }
 
   Future<void> _selectEndDate(BuildContext context) async {
@@ -59,6 +124,13 @@ class _PostReviewScreenState extends State<PostReviewScreen> {
   double fontSize4 = 30.0;
 
   var rating = 5;
+
+  @override
+  void initState() {
+    super.initState();
+    getallcoursename();
+    courseList = ["Course Name"];
+  }
 
   void toggleExpansion(int i) {
     rating = i + 1;
@@ -206,13 +278,74 @@ class _PostReviewScreenState extends State<PostReviewScreen> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          TextFormField(
-                            controller: _courseController,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
+                          Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.grey,
                               ),
-                              contentPadding: EdgeInsets.all(12.0),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.fromLTRB(12.0, 0, 12, 0),
+                              child: courseloading
+                                  ? Center(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(14.0),
+                                        child: SizedBox(
+                                            height: 20,
+                                            width: 20,
+                                            child: CircularProgressIndicator()),
+                                      ),
+                                    )
+                                  : DropdownButton<String>(
+                                      focusColor: Colors.white,
+                                      underline: Container(),
+                                      isExpanded: true,
+                                      // // Step 3.
+                                      value: tempcoursename,
+                                      // Step 4.
+
+                                      items: courseList
+                                          .map<DropdownMenuItem<String>>(
+                                              (value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(
+                                            value,
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyText1
+                                                .override(
+                                                  fontFamily: 'Lexend Deca',
+                                                  color: Colors.black,
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                          ),
+                                        );
+                                      }).toList(),
+                                      // Step 5.
+                                      onChanged: (String? newValue) {
+                                        try {
+                                          _courseController.text = newValue!;
+                                          setState(() {
+                                            print('ft1');
+                                            print(newValue);
+                                            print(
+                                                '${coursemoduelmap[newValue].runtimeType}');
+                                            try {} catch (e) {
+                                              print(e);
+                                            }
+
+                                            print('ft3');
+                                            tempcoursename = newValue!;
+                                            print('ft4');
+                                          });
+                                        } catch (e) {
+                                          print("rrrrrrr: ${e}");
+                                        }
+                                      },
+                                    ),
                             ),
                           ),
                           SizedBox(height: 16.0),
@@ -318,76 +451,6 @@ class _PostReviewScreenState extends State<PostReviewScreen> {
                             ),
                           ),
                           SizedBox(height: 16.0),
-                          // RatingBar.builder(
-                          //   initialRating: 3,
-                          //   minRating: 1,
-                          //   direction: Axis.horizontal,
-                          //   allowHalfRating: true,
-                          //   itemCount: 5,
-                          //   itemSize: isPhone
-                          //       ? 30.0
-                          //       : 40.0, // Adjust item size for different screen sizes
-                          //   itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                          //   itemBuilder: (context, index) {
-                          //     Text textData;
-                          //     switch (index) {
-                          //       case 0:
-                          //         textData = Text(
-                          //           '\u{1F922}',
-                          //           style: TextStyle(
-                          //             fontSize: 36,
-                          //           ),
-                          //         );
-                          //         break;
-                          //       case 1:
-                          //         textData = Text(
-                          //           '\u{1F612}',
-                          //           style: TextStyle(
-                          //             fontSize: 36,
-                          //           ),
-                          //         );
-                          //         break;
-                          //       case 2:
-                          //         textData = Text(
-                          //           '\u{1F642}',
-                          //           style: TextStyle(
-                          //             fontSize: 36,
-                          //           ),
-                          //         );
-                          //         break;
-                          //       case 3:
-                          //         textData = Text(
-                          //           '\u{1F60A}',
-                          //           style: TextStyle(
-                          //             fontSize: 36,
-                          //           ),
-                          //         );
-                          //         break;
-                          //       case 4:
-                          //         textData = Text(
-                          //           '\u{1F929}',
-                          //           style: TextStyle(
-                          //             fontSize: 36,
-                          //           ),
-                          //         );
-                          //         break;
-                          //       default:
-                          //         textData = Text(
-                          //           '\u{1FAE0}',
-                          //           style: TextStyle(
-                          //             fontSize: 36,
-                          //           ),
-                          //         );
-                          //         break;
-                          //     }
-
-                          //     return textData;
-                          //   },
-                          //   onRatingUpdate: (rating) {
-                          //     _ratingController.text = rating.toString();
-                          //   },
-                          // ),
-                          // SizedBox(height: 16.0),
                           Text(
                             'Write a Review',
                             style: TextStyle(
@@ -452,31 +515,42 @@ class _PostReviewScreenState extends State<PostReviewScreen> {
                                   : 64.0), // Adjust spacing for different screen sizes
                           SizedBox(
                             width: double.infinity,
+                            height: 50,
                             child: ElevatedButton(
                               onPressed: () async {
+                                print('wew1');
                                 if (_nameController.text.isEmpty) {
                                   Toast.show('Name is required');
+                                  print('wew2');
                                 } else if (!isValidEmail(
                                     _emailController.text)) {
+                                  print('wew3');
                                   Toast.show(
                                       'Please enter a valid email address');
                                 } else if (_courseController.text.isEmpty) {
+                                  print('wew4');
                                   Toast.show('Course is required');
+                                  print('wew5');
                                 } else if (!isValidLinkedInUrl(
                                     _linkdinlinkController.text)) {
+                                  print('wew6');
                                   Toast.show(
                                       'Please enter a valid LinkedIn URL');
+                                  print('wew7');
                                 } else if (_reviewdescriptionController
                                     .text.isEmpty) {
+                                  print('wew8');
                                   Toast.show('Review description is required');
                                 } else if (experienceStartDate == null ||
                                     experienceEndDate == null) {
+                                  print('wew9');
                                   Toast.show(
                                       'Please select start and end dates for your experience');
                                 } else {
                                   setState(() {
                                     loading = true;
                                   });
+                                  print('wew10');
                                   Toast.show(await postReview({
                                     "name": _nameController.text,
                                     "email": _emailController.text,
@@ -490,6 +564,7 @@ class _PostReviewScreenState extends State<PostReviewScreen> {
                                     "date": DateTime.now().toString(),
                                   }));
 
+                                  print('wew11');
                                   setState(() {
                                     loading = false;
                                     _nameController.text = '';
@@ -508,9 +583,6 @@ class _PostReviewScreenState extends State<PostReviewScreen> {
                               style: ElevatedButton.styleFrom(
                                 primary: Colors.blue,
                                 onPrimary: Colors.white,
-                                padding: EdgeInsets.all(isPhone
-                                    ? 16.0
-                                    : 32.0), // Adjust padding for different screen sizes
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
@@ -524,9 +596,7 @@ class _PostReviewScreenState extends State<PostReviewScreen> {
                                   : Text(
                                       'Submit Review',
                                       style: TextStyle(
-                                        fontSize: isPhone
-                                            ? 18
-                                            : 24, // Adjust font size for different screen sizes
+                                        fontSize: 18.0,
                                       ),
                                     ),
                             ),
