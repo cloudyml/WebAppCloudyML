@@ -62,6 +62,37 @@ class _AssignmentsState extends State<Assignments> {
     }
   }
 
+  Future<void> updateAssignmentDataFromUsers() async {
+    try {
+      final firestore = FirebaseFirestore.instance;
+
+      // Query the 'Users' collection to get the data you need
+      final usersQuerySnapshot = await firestore.collection('Users').get();
+
+      for (final userDoc in usersQuerySnapshot.docs) {
+        final studentId = userDoc['id'];
+        final email = userDoc['email'];
+        final name = userDoc['name'];
+
+        // Update the 'assignment' collection using the 'studentId'
+        await firestore
+            .collection('assignment')
+            .where('student id', isEqualTo: studentId)
+            .get()
+            .then((assignmentQuerySnapshot) {
+          for (final assignmentDoc in assignmentQuerySnapshot.docs) {
+            assignmentDoc.reference.update({
+              'email': email,
+              'name': name,
+            });
+          }
+        });
+      }
+    } catch (e) {
+      print('Error updating assignment data: $e');
+    }
+  }
+
   final assignmentController = Get.put(AssignmentController());
 
   final finalListOfAllData = [].obs;
@@ -69,6 +100,7 @@ class _AssignmentsState extends State<Assignments> {
 
   @override
   void initState() {
+    updateAssignmentDataFromUsers();
     assignmentController.fetchAllDocuments().then((value) {
       finalListOfAllData.value = value;
     });

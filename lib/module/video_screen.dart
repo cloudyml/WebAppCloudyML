@@ -37,6 +37,7 @@ import '../global_variable.dart';
 import '../models/course_details.dart';
 import '../models/firebase_file.dart';
 import '../screens/quiz/quizentry.dart';
+import '../widgets/video_player.dart';
 import 'new_assignment_screen.dart';
 
 class VideoScreen extends StatefulWidget {
@@ -1125,7 +1126,8 @@ class _VideoScreenState extends State<VideoScreen> {
     return Scaffold(
         // floatingActionButton: FloatingActionButton(
         //     onPressed: (){
-        //       getScoreOfAllQuiz();
+        //       Navigator.push(context,
+        //           MaterialPageRoute(builder: (context)=> VideoPlayerWidget()));
         // }),
         body: LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
@@ -1614,6 +1616,30 @@ class _VideoScreenState extends State<VideoScreen> {
               SizedBox(
                 height: height / 50,
               ),
+              Material(
+                child: TextFormField(
+                  controller: updateSolutionVideo,
+                  decoration: InputDecoration(
+                    fillColor: Color(0xffF2E9FE),
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                    focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.deepPurpleAccent),
+                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                    hintText: 'Enter Solution Video URL',
+                    hintStyle: TextStyle(
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: height / 50,
+              ),
               addAssignmentBox(
                   uploadedFile: uploadedAssignmentFile,
                   fileName: assignmentFileName,
@@ -1952,6 +1978,7 @@ class _VideoScreenState extends State<VideoScreen> {
                 ? assignmentDescriptionController.text
                 : null,
             'showDescription': isToggled.value,
+            'videoUrl': updateSolutionVideo.text.isNotEmpty ? updateSolutionVideo.text : null,
           });
 
           await courseRef.doc(widget.cID).update({
@@ -1969,6 +1996,7 @@ class _VideoScreenState extends State<VideoScreen> {
               datasetFileName = null;
               uploadedDatasetFile = null;
               addAssignmentNameController.text = '';
+              updateSolutionVideo.clear();
               assignmentLinkController.clear();
               pdfLinkController.clear();
               datasetLinkController.clear();
@@ -3827,7 +3855,8 @@ class _VideoScreenState extends State<VideoScreen> {
                                                                           sectionIndex;
                                                                       updateVideoName =
                                                                           false;
-                                                                    });
+                                                                      updateVideoUrl.text =listOfSectionData[widget.courseName][editIndex]['videos'][updateVideoIndex]['weburl'];
+                                                                        });
                                                                     showDialog(
                                                                         context:
                                                                             context,
@@ -4171,7 +4200,7 @@ class _VideoScreenState extends State<VideoScreen> {
                                                                               width: 350,
                                                                               child: Column(
                                                                                 children: [
-                                                                                  TextField(
+                                                                                  TextFormField(
                                                                                     controller: updateSolutionVideo,
                                                                                     maxLines: 2,
                                                                                     decoration: InputDecoration(
