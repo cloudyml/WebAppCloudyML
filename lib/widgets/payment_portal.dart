@@ -490,7 +490,8 @@ class _PaymentButtonState extends State<PaymentButton> with CouponCodeMixin {
   }
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) async {
-    await loadCourses();
+    // await loadCourses();
+    pushToHome();
     print("from wjrjwoeo");
     removeCourseFromTrial();
 
@@ -593,15 +594,7 @@ class _PaymentButtonState extends State<PaymentButton> with CouponCodeMixin {
     // GoRouter.of(context).pushReplacementNamed('myCourses');
 
     final url;
-    // if (widget.courseId == 'PECG1') {
-    //   html.window.open('https://www.cloudyml.com/tnkyu', "_self");
-    // } else if (widget.courseId == 'DEPAP1') {
-    //   // url = 'https://de.cloudyml.com/enrolled';
-    //   html.window.open('https://de.cloudyml.com/enrolled', "_self");
-    // } else {
-    //   // url = 'https://ds.cloudyml.com/enrolled';
-    //   html.window.open('https://ds.cloudyml.com/enrolled', "_self");
-    // }
+    
 
      successurl = await FirebaseFirestore.instance
         .collection('thankyou_url').where("courseid", isEqualTo: widget.courseId )
@@ -611,6 +604,18 @@ class _PaymentButtonState extends State<PaymentButton> with CouponCodeMixin {
     });
 
     print(successurl);
+
+    html.window.open(successurl, "_self");
+
+    // if (widget.courseId == 'PECG1') {
+    //   html.window.open('https://www.cloudyml.com/tnkyu', "_self");
+    // } else if (widget.courseId == 'DEPAP1') {
+    //   // url = 'https://de.cloudyml.com/enrolled';
+    //   html.window.open('https://de.cloudyml.com/enrolled', "_self");
+    // } else {
+    //   // url = 'https://ds.cloudyml.com/enrolled';
+    //   html.window.open('https://ds.cloudyml.com/enrolled', "_self");
+    // }
 
     // final uri = Uri.parse(url);
     // // html.WindowBase _popup =
@@ -698,7 +703,7 @@ class _PaymentButtonState extends State<PaymentButton> with CouponCodeMixin {
 
   @override
   Widget build(BuildContext context) {
-    pushToHome();
+    
     final userprovider = Provider.of<UserProvider>(context);
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
@@ -761,8 +766,8 @@ class _PaymentButtonState extends State<PaymentButton> with CouponCodeMixin {
                         'name': userprovider.userModel!.name,
                         'description': widget.courseId + "," + widget.couponCode
                       },
-                      'redirect': true,
-                      'callback_url': successurl,
+                      // 'redirect': true,
+                      // 'callback_url': successurl,
                     };
                     _razorpay.open(options);
                     setState(() {
@@ -1286,9 +1291,8 @@ class _PaymentButtonState extends State<PaymentButton> with CouponCodeMixin {
                                   'name': userprovider.userModel!.name,
                                   'description': widget.courseId + "," + widget.couponCode
                                 },
-                                'redirect': true,
-                                'callback_url':
-                                    'https://ds.cloudyml.com/enrolled/',
+                                // 'redirect': true,
+                                // 'callback_url': successurl,
                               };
                               _razorpay.open(options);
                               // });
