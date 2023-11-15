@@ -36,6 +36,7 @@ dependencies:
   renderer_switcher: ^0.1.0
   firebase_dynamic_links: ^5.1.1 #deep linking
   firebase_pagination:
+  easy_formz_inputs:
   kr_paginate_firestore:
   share_extend: ^2.0.0
   shared_preferences: ^2.0.15
@@ -72,7 +73,7 @@ dependencies:
   flutter_linkify: ^5.0.2
   url_launcher: ^6.0.6
   ribbon_widget: ^1.0.5
-  intl: ^0.17.0
+  intl:
   image_picker: ^0.8.4+2
   uuid: ^3.0.6
   path: ^1.8.0

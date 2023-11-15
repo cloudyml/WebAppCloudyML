@@ -644,10 +644,11 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                               ],
                             )
                           : Container(),
-                      (widget.assignmentUrl != null &&
-                              widget.assignmentUrl != "" &&
-                              widget.assignmentUrl != "null")
-                          ? Container(
+                      // (widget.assignmentUrl != null &&
+                      //         widget.assignmentUrl != "" &&
+                      //         widget.assignmentUrl != "null")
+                      //     ?
+                      Container(
                               width: MediaQuery.of(context).size.width / 2,
                               decoration: BoxDecoration(
                                 border: Border.all(
@@ -766,7 +767,8 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                                 ),
                               ),
                             )
-                          : SizedBox(),
+                          // : SizedBox()
+                      ,
                       SizedBox(
                         height: 15.sp,
                       ),

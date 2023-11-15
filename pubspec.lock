@@ -173,10 +173,10 @@ packages:
     dependency: "direct main"
     description:
       name: awesome_notifications
-      sha256: "2b430c75cc879d6cfd52bb6eb2b5c1591ed425347816408cdcbd3f6916bba14c"
+      sha256: "327162c36a1476978f89638741da618cac42356aabc39a5035b6c206d8fca978"
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.4+1"
+    version: "0.7.7"
   badges:
     dependency: "direct main"
     description:
@@ -529,6 +529,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.4"
+  easy_formz_inputs:
+    dependency: "direct main"
+    description:
+      name: easy_formz_inputs
+      sha256: "070733515dae4609a57594a8cb139459a76a08b384a8b255581e02cef563746d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.1"
   encrypt:
     dependency: "direct main"
     description:
@@ -1000,6 +1008,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "10.4.0"
+  formz:
+    dependency: transitive
+    description:
+      name: formz
+      sha256: df8301299601139de7e653e68a07c332fd2db7cec65745eca1a1ea73fb711e06
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.6.1"
   from_css_color:
     dependency: "direct main"
     description:
@@ -1348,10 +1364,10 @@ packages:
     dependency: "direct main"
     description:
       name: intl
-      sha256: "910f85bce16fb5c6f614e117efa303e85a1731bb0081edf3604a2ae6e9a3cc91"
+      sha256: "3bc132a9dbce73a7e4a21a17d06e1878839ffbf975568bc875c60537824b0c4d"
       url: "https://pub.dev"
     source: hosted
-    version: "0.17.0"
+    version: "0.18.1"
   intl_phone_number_input:
     dependency: "direct main"
     description:
@@ -2209,10 +2225,10 @@ packages:
     dependency: "direct main"
     description:
       name: timeago
-      sha256: "46c128312ab0ea144b146c0ac6426ddd96810efec2de3fccc425d00179cd8254"
+      sha256: c44b80cbc6b44627c00d76960f2af571f6f50e5dbedef4d9215d455e4335165b
       url: "https://pub.dev"
     source: hosted
-    version: "3.3.0"
+    version: "3.6.0"
   timezone:
     dependency: transitive
     description:
