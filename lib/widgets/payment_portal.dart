@@ -111,49 +111,49 @@ class _PaymentButtonState extends State<PaymentButton> with CouponCodeMixin {
   var key_secret;
   var successurl;
 
-  loadCourses() async {
-    try {
-      var url = Uri.parse(
-          'https://us-central1-cloudyml-app.cloudfunctions.net/adduser/addgroup');
-      await http.post(url, headers: {
-        "Access-Control-Allow-Origin": "*", // Required for CORS support to work
-        "Access-Control-Allow-Methods": "GET, POST,OPTIONS"
-      }, body: {
-        "sname": userData["name"],
-        "sid": _auth.currentUser!.uid,
-        "cname": widget.courseName,
-        "image": widget.courseImageUrl,
-        "cid": widget.courseId
-      });
+  // loadCourses() async {
+  //   try {
+  //     var url = Uri.parse(
+  //         'https://us-central1-cloudyml-app.cloudfunctions.net/adduser/addgroup');
+  //     await http.post(url, headers: {
+  //       "Access-Control-Allow-Origin": "*", // Required for CORS support to work
+  //       "Access-Control-Allow-Methods": "GET, POST,OPTIONS"
+  //     }, body: {
+  //       "sname": userData["name"],
+  //       "sid": _auth.currentUser!.uid,
+  //       "cname": widget.courseName,
+  //       "image": widget.courseImageUrl,
+  //       "cid": widget.courseId
+  //     });
 
-      // var mailurl = Uri.parse(
-      //     'https://us-central1-cloudyml-app.cloudfunctions.net/exceluser/coursemail');
-      // // final response =
-      // await http.post(mailurl, headers: {
-      //   "Access-Control-Allow-Origin": "*", // Required for CORS support to work
-      //   "Access-Control-Allow-Methods": "GET, POST,OPTIONS"
-      // }, body: {
-      //   "uid": _auth.currentUser!.uid,
-      //   "cname": widget.courseName,
-      // });
+  //     // var mailurl = Uri.parse(
+  //     //     'https://us-central1-cloudyml-app.cloudfunctions.net/exceluser/coursemail');
+  //     // // final response =
+  //     // await http.post(mailurl, headers: {
+  //     //   "Access-Control-Allow-Origin": "*", // Required for CORS support to work
+  //     //   "Access-Control-Allow-Methods": "GET, POST,OPTIONS"
+  //     // }, body: {
+  //     //   "uid": _auth.currentUser!.uid,
+  //     //   "cname": widget.courseName,
+  //     // });
 
-      // print("Mail Sent");
-    } catch (e) {
-      print(e);
-    }
+  //     // print("Mail Sent");
+  //   } catch (e) {
+  //     print(e);
+  //   }
 
-    try {
-      // print("couponcodeused1");
-      print(widget.couponcodeused);
-      if (widget.couponcodeused == true) {
-        await calltoupdatecouponinuser();
-      }
-    } catch (e) {
-      print("error id woiejiowie: ${e.toString()}");
-    }
+  //   try {
+  //     // print("couponcodeused1");
+  //     print(widget.couponcodeused);
+  //     if (widget.couponcodeused == true) {
+  //       await calltoupdatecouponinuser();
+  //     }
+  //   } catch (e) {
+  //     print("error id woiejiowie: ${e.toString()}");
+  //   }
 
-    pushToHome();
-  }
+  //   pushToHome();
+  // }
 
   void updateAmoutStringForUPI(bool isPayInPartsPressed,
       bool isMinAmountCheckerPressed, bool isOutStandingAmountCheckerPressed) {
@@ -490,7 +490,9 @@ class _PaymentButtonState extends State<PaymentButton> with CouponCodeMixin {
   }
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) async {
-    await loadCourses();
+    // await loadCourses();
+    Toast.show("Payment successful.");
+    pushToHome();
     print("from wjrjwoeo");
     removeCourseFromTrial();
 
@@ -500,7 +502,7 @@ class _PaymentButtonState extends State<PaymentButton> with CouponCodeMixin {
       print("loadingpaymetn1: ${loadingpayment}");
       loadingpayment.value = false;
     });
-    Toast.show("Payment successful.");
+    
     // addCoursetoUser(widget.courseId);
 
     updateCouponDetailsToUser(
@@ -593,15 +595,7 @@ class _PaymentButtonState extends State<PaymentButton> with CouponCodeMixin {
     // GoRouter.of(context).pushReplacementNamed('myCourses');
 
     final url;
-    // if (widget.courseId == 'PECG1') {
-    //   html.window.open('https://www.cloudyml.com/tnkyu', "_self");
-    // } else if (widget.courseId == 'DEPAP1') {
-    //   // url = 'https://de.cloudyml.com/enrolled';
-    //   html.window.open('https://de.cloudyml.com/enrolled', "_self");
-    // } else {
-    //   // url = 'https://ds.cloudyml.com/enrolled';
-    //   html.window.open('https://ds.cloudyml.com/enrolled', "_self");
-    // }
+    
 
      successurl = await FirebaseFirestore.instance
         .collection('thankyou_url').where("courseid", isEqualTo: widget.courseId )
@@ -611,6 +605,18 @@ class _PaymentButtonState extends State<PaymentButton> with CouponCodeMixin {
     });
 
     print(successurl);
+
+    html.window.open(successurl, "_self");
+
+    // if (widget.courseId == 'PECG1') {
+    //   html.window.open('https://www.cloudyml.com/tnkyu', "_self");
+    // } else if (widget.courseId == 'DEPAP1') {
+    //   // url = 'https://de.cloudyml.com/enrolled';
+    //   html.window.open('https://de.cloudyml.com/enrolled', "_self");
+    // } else {
+    //   // url = 'https://ds.cloudyml.com/enrolled';
+    //   html.window.open('https://ds.cloudyml.com/enrolled', "_self");
+    // }
 
     // final uri = Uri.parse(url);
     // // html.WindowBase _popup =
@@ -698,7 +704,7 @@ class _PaymentButtonState extends State<PaymentButton> with CouponCodeMixin {
 
   @override
   Widget build(BuildContext context) {
-    pushToHome();
+    
     final userprovider = Provider.of<UserProvider>(context);
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
@@ -761,8 +767,8 @@ class _PaymentButtonState extends State<PaymentButton> with CouponCodeMixin {
                         'name': userprovider.userModel!.name,
                         'description': widget.courseId + "," + widget.couponCode
                       },
-                      'redirect': true,
-                      'callback_url': successurl,
+                      // 'redirect': true,
+                      // 'callback_url': successurl,
                     };
                     _razorpay.open(options);
                     setState(() {
@@ -1286,9 +1292,8 @@ class _PaymentButtonState extends State<PaymentButton> with CouponCodeMixin {
                                   'name': userprovider.userModel!.name,
                                   'description': widget.courseId + "," + widget.couponCode
                                 },
-                                'redirect': true,
-                                'callback_url':
-                                    'https://ds.cloudyml.com/enrolled/',
+                                // 'redirect': true,
+                                // 'callback_url': successurl,
                               };
                               _razorpay.open(options);
                               // });
