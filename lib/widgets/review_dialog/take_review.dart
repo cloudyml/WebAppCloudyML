@@ -261,90 +261,90 @@ class _ShowReviewDialogState extends State<ShowReviewDialog> {
                       'Course Enrolled In',
                       style: textStyle,
                     ),
-                    // Container(
-                    //   decoration: BoxDecoration(
-                    //     border: Border.all(
-                    //       color: Colors.grey,
-                    //     ),
-                    //     borderRadius: BorderRadius.circular(10.sp),
-                    //   ),
-                    //   height: courseloading ? 20.sp : 35.sp,
-                    //   child: Padding(
-                    //       padding: EdgeInsets.fromLTRB(10.sp, 0, 10.sp, 0),
-                    //       child: courseloading
-                    //           ? Center(
-                    //               child: Padding(
-                    //                 padding: EdgeInsets.all(10.sp),
-                    //                 child: SizedBox(
-                    //                     height: 12.sp,
-                    //                     width: 12.sp,
-                    //                     child: CircularProgressIndicator()),
-                    //               ),
-                    //             )
-                    //           :
-                    //       DropdownButton<String>(
-                    //         focusColor: Colors.white,
-                    //         underline: Container(),
-                    //         isExpanded: true,
-                    //         // // Step 3.
-                    //         value: tempcoursename,
-                    //         // Step 4.
-                    //
-                    //         items: courseList
-                    //             .map<DropdownMenuItem<String>>(
-                    //                 (value) {
-                    //               return DropdownMenuItem<String>(
-                    //                 value: value,
-                    //                 child: Text(
-                    //                   value,
-                    //                   // style: FlutterFlowTheme.of(context)
-                    //                   //     .bodyText1
-                    //                   //     .override(
-                    //                   //   fontFamily: 'Lexend Deca',
-                    //                   //   color: Colors.black,
-                    //                   //   fontSize: 12.sp,
-                    //                   //   fontWeight: FontWeight.bold,
-                    //                   // ),
-                    //                 ),
-                    //               );
-                    //             }).toList(),
-                    //         // Step 5.
-                    //         onChanged: (String? newValue) {
-                    //           try {
-                    //             _courseController.text = newValue!;
-                    //             setState(() {
-                    //               print('ft1');
-                    //               print(newValue);
-                    //               print(
-                    //                   '${coursemoduelmap[newValue].runtimeType}');
-                    //               try {} catch (e) {
-                    //                 print(e);
-                    //               }
-                    //
-                    //               print('ft3');
-                    //               tempcoursename = newValue!;
-                    //               print('ft4');
-                    //             });
-                    //           } catch (e) {
-                    //             print("rrrrrrr: ${e}");
-                    //           }
-                    //         },
-                    //       ),
-                    //       ),
-                    // ),
-                    SizedBox(height: 8.sp),
-                    SizedBox(
-                      height: 20.sp,
-                      child: TextFormField(
-                        controller: _courseController,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.sp),
-                          ),
-                          contentPadding: EdgeInsets.all(10.sp),
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
                         ),
+                        borderRadius: BorderRadius.circular(10.sp),
                       ),
+                      height: 20.sp,
+                      child: Padding(
+                          padding: EdgeInsets.fromLTRB(10.sp, 0, 10.sp, 0),
+                          child: courseloading
+                              ? Center(
+                                  child: Padding(
+                                    padding: EdgeInsets.all(10.sp),
+                                    child: SizedBox(
+                                        height: 12.sp,
+                                        width: 12.sp,
+                                        child: CircularProgressIndicator()),
+                                  ),
+                                )
+                              :
+                          DropdownButton<String>(
+                            focusColor: Colors.white,
+                            underline: Container(),
+                            isExpanded: true,
+                            // // Step 3.
+                            value: tempcoursename,
+                            // Step 4.
+
+                            items: courseList
+                                .map<DropdownMenuItem<String>>(
+                                    (value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(
+                                      value,
+                                      // style: FlutterFlowTheme.of(context)
+                                      //     .bodyText1
+                                      //     .override(
+                                      //   fontFamily: 'Lexend Deca',
+                                      //   color: Colors.black,
+                                      //   fontSize: 12.sp,
+                                      //   fontWeight: FontWeight.bold,
+                                      // ),
+                                    ),
+                                  );
+                                }).toList(),
+                            // Step 5.
+                            onChanged: (String? newValue) {
+                              try {
+                                _courseController.text = newValue!;
+                                setState(() {
+                                  print('ft1');
+                                  print(newValue);
+                                  print(
+                                      '${coursemoduelmap[newValue].runtimeType}');
+                                  try {} catch (e) {
+                                    print(e);
+                                  }
+
+                                  print('ft3');
+                                  tempcoursename = newValue;
+                                  print('ft4');
+                                });
+                              } catch (e) {
+                                print("rrrrrrr: ${e}");
+                              }
+                            },
+                          ),
+                          ),
                     ),
+                    SizedBox(height: 8.sp),
+                    // SizedBox(
+                    //   height: 20.sp,
+                    //   child: TextFormField(
+                    //     controller: _courseController,
+                    //     decoration: InputDecoration(
+                    //       border: OutlineInputBorder(
+                    //         borderRadius: BorderRadius.circular(10.sp),
+                    //       ),
+                    //       contentPadding: EdgeInsets.all(10.sp),
+                    //     ),
+                    //   ),
+                    // ),
                     SizedBox(height: 8.sp),
                     Text(
                       'LinkedIn Url',
@@ -521,9 +521,7 @@ class _ShowReviewDialogState extends State<ShowReviewDialog> {
                                 ),
                               ),
                               onPressed: () {
-                                // Navigator.pop(context);
-                                // Navigator.pop(widget.value);
-                                BotToast.cleanAll();
+                                Navigator.of(context).pop();
                               },
                               child: Text(
                                 "I'll do it later",
@@ -582,7 +580,7 @@ class _ShowReviewDialogState extends State<ShowReviewDialog> {
                                       "${experienceStartDate!.day}/${experienceStartDate!.month}/${experienceStartDate!.year} to ${experienceEndDate!.day}/${experienceEndDate!.month}/${experienceEndDate!.year}",
                                   "date": DateTime.now().toString(),
                                 }));
-                                BotToast.cleanAll();
+                                Navigator.of(context).pop();
                                 print('wew11');
                                 setState(() {
                                   loading = false;
@@ -595,8 +593,6 @@ class _ShowReviewDialogState extends State<ShowReviewDialog> {
                                   experienceStartDate = null;
                                   experienceEndDate = null;
                                 });
-
-                                // Navigator.pop(context);
                               }
                             },
                             style: ElevatedButton.styleFrom(
@@ -875,90 +871,78 @@ class _MobileReviewDialogState extends State<MobileReviewDialog> {
                       'Course Enrolled In',
                       style: textStyle,
                     ),
-                    SizedBox(
-                      height: 20.sp,
-                      child: TextFormField(
-                        controller: _courseController,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.sp),
-                          ),
-                          contentPadding: EdgeInsets.all(10.sp),
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
                         ),
+                        borderRadius: BorderRadius.circular(10.sp),
+                      ),
+                      height: 20.sp,
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(10.sp, 0, 10.sp, 0),
+                        child: courseloading
+                            ? Center(
+                                child: Padding(
+                                  padding: EdgeInsets.all(10.sp),
+                                  child: SizedBox(
+                                      height: 12.sp,
+                                      width: 12.sp,
+                                      child: CircularProgressIndicator()),
+                                ),
+                              )
+                            :
+
+                        DropdownButton<String>(
+                                focusColor: Colors.white,
+                                underline: Container(),
+                                isExpanded: true,
+                                // // Step 3.
+                                value: tempcoursename,
+                                // Step 4.
+
+                                items: courseList
+                                    .map<DropdownMenuItem<String>>((value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(
+                                      value,
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyText1
+                                          .override(
+                                            fontFamily: 'Lexend Deca',
+                                            color: Colors.black,
+                                            fontSize: 12.sp,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                    ),
+                                  );
+                                }).toList(),
+                                // Step 5.
+                                onChanged: (String? newValue) {
+                                  try {
+                                    _courseController.text = newValue!;
+                                    setState(() {
+                                      print('ft1');
+                                      print(newValue);
+                                      print(
+                                          '${coursemoduelmap[newValue].runtimeType}');
+                                      try {} catch (e) {
+                                        print(e);
+                                      }
+
+                                      print('ft3');
+                                      tempcoursename = newValue!;
+                                      print('ft4');
+                                    });
+                                  } catch (e) {
+                                    print("rrrrrrr: ${e}");
+                                  }
+                                },
+                              )
+                        ,
                       ),
                     ),
-                    // Container(
-                    //   decoration: BoxDecoration(
-                    //     border: Border.all(
-                    //       color: Colors.grey,
-                    //     ),
-                    //     borderRadius: BorderRadius.circular(10.sp),
-                    //   ),
-                    //   height: 20.sp,
-                    //   child: Padding(
-                    //     padding: EdgeInsets.fromLTRB(10.sp, 0, 10.sp, 0),
-                    //     child: courseloading
-                    //         ? Center(
-                    //             child: Padding(
-                    //               padding: EdgeInsets.all(10.sp),
-                    //               child: SizedBox(
-                    //                   height: 12.sp,
-                    //                   width: 12.sp,
-                    //                   child: CircularProgressIndicator()),
-                    //             ),
-                    //           )
-                    //         :
-                    //
-                    //     DropdownButton<String>(
-                    //             focusColor: Colors.white,
-                    //             underline: Container(),
-                    //             isExpanded: true,
-                    //             // // Step 3.
-                    //             value: tempcoursename,
-                    //             // Step 4.
-                    //
-                    //             items: courseList
-                    //                 .map<DropdownMenuItem<String>>((value) {
-                    //               return DropdownMenuItem<String>(
-                    //                 value: value,
-                    //                 child: Text(
-                    //                   value,
-                    //                   style: FlutterFlowTheme.of(context)
-                    //                       .bodyText1
-                    //                       .override(
-                    //                         fontFamily: 'Lexend Deca',
-                    //                         color: Colors.black,
-                    //                         fontSize: 12.sp,
-                    //                         fontWeight: FontWeight.bold,
-                    //                       ),
-                    //                 ),
-                    //               );
-                    //             }).toList(),
-                    //             // Step 5.
-                    //             onChanged: (String? newValue) {
-                    //               try {
-                    //                 _courseController.text = newValue!;
-                    //                 setState(() {
-                    //                   print('ft1');
-                    //                   print(newValue);
-                    //                   print(
-                    //                       '${coursemoduelmap[newValue].runtimeType}');
-                    //                   try {} catch (e) {
-                    //                     print(e);
-                    //                   }
-                    //
-                    //                   print('ft3');
-                    //                   tempcoursename = newValue!;
-                    //                   print('ft4');
-                    //                 });
-                    //               } catch (e) {
-                    //                 print("rrrrrrr: ${e}");
-                    //               }
-                    //             },
-                    //           )
-                    //     ,
-                    //   ),
-                    // ),
                     SizedBox(height: 12.sp),
                     Text(
                       'LinkedIn Url',
@@ -1138,9 +1122,7 @@ class _MobileReviewDialogState extends State<MobileReviewDialog> {
                                 ),
                               ),
                               onPressed: () {
-                                // Navigator.pop(context);
-                                // BotToast.closeAllLoading();
-                                BotToast.cleanAll();
+                                Navigator.of(context).pop();
                               },
                               child: Text(
                                 "I'll do it later",
@@ -1197,7 +1179,7 @@ class _MobileReviewDialogState extends State<MobileReviewDialog> {
                                       "${experienceStartDate!.day}/${experienceStartDate!.month}/${experienceStartDate!.year} to ${experienceEndDate!.day}/${experienceEndDate!.month}/${experienceEndDate!.year}",
                                   "date": DateTime.now().toString(),
                                 }));
-                                BotToast.cleanAll();
+                                Navigator.of(context).pop();
                                 print('wew11');
                                 setState(() {
                                   loading = false;
