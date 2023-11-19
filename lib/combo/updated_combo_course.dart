@@ -8,6 +8,8 @@ import 'package:cloudyml_app2/models/course_details.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:hive/hive.dart';
@@ -15,6 +17,9 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import 'dart:html' as html;
+
+import '../widgets/review_dialog/take_review.dart';
+import 'controller/combo_course_controller.dart';
 
 class NewScreen extends StatefulWidget {
   final List<dynamic>? courses;
@@ -150,23 +155,34 @@ class _NewScreenState extends State<NewScreen> {
       counterSink.add(value.docs);
     });
   }
-  Future<String> getProgress(int index)async{
+  List progressData = [].obs;
+
+  progressDataOfModules() async{
+    try {
+      var data = await FirebaseFirestore.instance
+          .collection("courseprogress")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .get();
+      for (var i = 0; i < widget.courses!.length; i++) {
+        print("progressData = $i ${widget.courses!.length}");
+          progressData.add(data.data()![widget.courses![i] + "percentage"]);
+      }
+    } catch (e) {
+      print("progressData = $e");
+    }
+  }
+
+  Future<String> getProgress(int index) async{
 try {
       var data = await FirebaseFirestore.instance
           .collection("courseprogress")
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .get();
-     
-     
-
      List dataTemp = [];
      courseData = data.data();
-
-    
         for (var i = 0; i < widget.courses!.length; i++) {
           dataTemp.add(data.data()![widget.courses![i] + "percentage"]);
         }
-
         return dataTemp[index].toString();
 
     } catch (e) {
@@ -174,9 +190,31 @@ try {
     }
 }
 
+
+  void _showAlertDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+
+        double screenWidth = MediaQuery.of(context).size.width;
+        double screenHeight = MediaQuery.of(context).size.height;
+
+        // Define breakpoints for different screen sizes
+        final isPhone =
+            screenWidth < 600;
+
+        return AlertDialog(
+          content: isPhone? MobileReviewDialog()
+              : ShowReviewDialog(),
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
+    progressDataOfModules();
     getTheStreamData();
     // getTheDurationOfCourse();
     getAllPaidCourses();
@@ -184,10 +222,25 @@ try {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // This callback will be called after the first frame has been displayed
+      for (var i = 0; i < widget.courses!.length; i++) {
+        if (progressData[i] != null && progressData[i] > 30) {
+          _showAlertDialog();
+        }
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (Get.isRegistered<ComboCourseController>()) {
+      Get.find<ComboCourseController>().getPercentageOfCourse();
+    }
     List<CourseDetails> course = Provider.of<List<CourseDetails>>(context);
     final width = MediaQuery.of(context).size.width;
-    
     return Scaffold(
       // appBar: appBar(context),
       // drawer: width<650?

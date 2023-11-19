@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'package:better_player/better_player.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloudyml_app2/widgets/video_player.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -55,20 +56,20 @@ class AssignmentScreen extends StatefulWidget {
 class _AssignmentScreenState extends State<AssignmentScreen> {
   // TextEditingController noteText = TextEditingController();
 
-  VideoPlayerController? _controller;
-  late Future<void> _initializeVideoPlayerFuture;
-  initialize() {
-    print('initialize started ');
-    try {
-      _controller = VideoPlayerController.network(
-        widget.assignmentSolutionVideo[widget.assignmentName],
-      );
-      _initializeVideoPlayerFuture = _controller!.initialize();
-      print('initialize completed ${_controller!.value.aspectRatio}');
-    } catch (e) {
-      print('initialize $e');
-    }
-  }
+  // VideoPlayerController? _controller;
+  // late Future<void> _initializeVideoPlayerFuture;
+  // initialize() {
+  //   print('initialize started ');
+  //   try {
+  //     _controller = VideoPlayerController.network(
+  //       widget.assignmentSolutionVideo[widget.assignmentName],
+  //     );
+  //     _initializeVideoPlayerFuture = _controller!.initialize();
+  //     print('initialize completed ${_controller!.value.aspectRatio}');
+  //   } catch (e) {
+  //     print('initialize $e');
+  //   }
+  // }
 
   Uint8List? uploadedFile;
 
@@ -133,14 +134,14 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
 
   @override
   void initState() {
-    initialize();
+    // initialize();
     _extractLink();
     super.initState();
   }
 
   @override
   void dispose() {
-    _controller!.dispose();
+    // _controller!.dispose();
     super.dispose();
   }
 
@@ -643,10 +644,11 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                               ],
                             )
                           : Container(),
-                      (widget.assignmentUrl != null &&
-                              widget.assignmentUrl != "" &&
-                              widget.assignmentUrl != "null")
-                          ? Container(
+                      // (widget.assignmentUrl != null &&
+                      //         widget.assignmentUrl != "" &&
+                      //         widget.assignmentUrl != "null")
+                      //     ?
+                      Container(
                               width: MediaQuery.of(context).size.width / 2,
                               decoration: BoxDecoration(
                                 border: Border.all(
@@ -765,7 +767,8 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                                 ),
                               ),
                             )
-                          : SizedBox(),
+                          // : SizedBox()
+                      ,
                       SizedBox(
                         height: 15.sp,
                       ),
@@ -790,49 +793,7 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                               widget.assignmentTrackBoolMap[
                                       widget.assignmentName] ==
                                   true
-                          ? Container(
-                              width: Adaptive.w(40),
-                              height: Adaptive.h(40),
-                              child: Stack(
-                                children: [
-                                  FutureBuilder(
-                                    future: _initializeVideoPlayerFuture,
-                                    builder: (context, snapshot) {
-                                      if (snapshot.connectionState ==
-                                          ConnectionState.done) {
-                                        return Container(
-                                            height: Adaptive.h(40),
-                                            width: Adaptive.w(40),
-                                            child: VideoPlayer(_controller!));
-                                      } else {
-                                        return Center(
-                                            child: CircularProgressIndicator());
-                                      }
-                                    },
-                                  ),
-                                  Center(
-                                    child: IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          if (_controller!.value.isPlaying) {
-                                            _controller!.pause();
-                                          } else {
-                                            _controller!.play();
-                                          }
-                                        });
-                                      },
-                                      icon: Icon(
-                                        _controller!.value.isPlaying
-                                            ? Icons.pause
-                                            : Icons.play_arrow,
-                                        size: 48,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )
+                          ? VideoPlayerWidget(url: widget.assignmentSolutionVideo[widget.assignmentName],)
                           : Container(),
                     ],
                   ),

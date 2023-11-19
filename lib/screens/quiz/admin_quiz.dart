@@ -110,9 +110,7 @@ class _AdminQuizPanelState extends State<AdminQuizPanel> {
           .then((value) {
         try {
           List tepcourse = [];
-          print('start1');
           value.docs.forEach((element) {
-            print('start2');
             try {
               for (var k in element['curriculum1']['${element['name']}']) {
                 print('start3');
@@ -156,9 +154,7 @@ class _AdminQuizPanelState extends State<AdminQuizPanel> {
     setState(() {
       globals.courseList;
     });
-    print("jjjjjjjjjjjjjj1: ${globals.courseList}");
-    print("jjjjjjjjjjjjjj2: ${globals.coursemoduelmap}");
-  }
+    }
 
   @override
   void dispose() {

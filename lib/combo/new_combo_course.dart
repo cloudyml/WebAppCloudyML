@@ -1,20 +1,77 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloudyml_app2/combo/controller/combo_course_controller.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 import '../global_variable.dart';
 import '../globals.dart';
 import '../module/video_screen.dart';
+import '../widgets/review_dialog/take_review.dart';
 
-class NewComboCourse extends StatelessWidget {
+class NewComboCourse extends StatefulWidget {
   final String? courseName;
   final String? courseIdd;
-  const NewComboCourse(
-      {Key? key, required this.courseName, required this.courseIdd})
+  bool? functionCalled;
+   NewComboCourse(
+      {Key? key, required this.courseName, required this.courseIdd, this.functionCalled = false})
       : super(key: key);
+
+  @override
+  State<NewComboCourse> createState() => _NewComboCourseState();
+}
+
+class _NewComboCourseState extends State<NewComboCourse> {
+
+  showAlertDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+
+        double screenWidth = MediaQuery.of(context).size.width;
+        double screenHeight = MediaQuery.of(context).size.height;
+
+        // Define breakpoints for different screen sizes
+        final isPhone =
+            screenWidth < 600;
+
+        return AlertDialog(
+          content: isPhone? MobileReviewDialog()
+              : ShowReviewDialog(),
+        );
+      },
+    );
+  }
+
+
+var courseData;
+  var coursePerc;
+
+
+  @override
+  void initState() {
+    super.initState();
+
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if(!widget.functionCalled!){
+        showAlertDialog();
+        setState(() {
+          widget.functionCalled = true;
+        });
+      }
+    });
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +79,6 @@ class NewComboCourse extends StatelessWidget {
     if (Get.isRegistered<ComboCourseController>()) {
       Get.find<ComboCourseController>().getPercentageOfCourse();
     }
-
     return Scaffold(
       body: LayoutBuilder(
         builder: (context, constraints) {
@@ -45,6 +101,8 @@ class NewComboCourse extends StatelessWidget {
                 InkWell(
                   onTap: () {
                     GoRouter.of(context).pushReplacementNamed('home');
+                    Get.delete<ComboCourseController>();
+                    widget.functionCalled = false;
                   },
                   child: Container(
                       child: Padding(
@@ -76,7 +134,7 @@ class NewComboCourse extends StatelessWidget {
                                 : 40,
                             color: Colors.black)),
                     TextSpan(
-                        text: courseName,
+                        text: widget.courseName,
                         style: TextStyle(
                             fontSize: width < 850
                                 ? width < 430
@@ -92,9 +150,9 @@ class NewComboCourse extends StatelessWidget {
                   height: 20,
                 ),
                 GetX<ComboCourseController>(
-                    init: ComboCourseController(courseId: courseIdd),
+                    init: ComboCourseController(courseId: widget.courseIdd),
                     builder: (controller) {
-                      return !controller.paidCourse.contains(courseIdd)
+                      return !controller.paidCourse.contains(widget.courseIdd)
                           ? Center(
                               child: SizedBox(
                                 child: CircularProgressIndicator(
@@ -121,7 +179,7 @@ class NewComboCourse extends StatelessWidget {
                                                 ? width / 7
                                                 : width / 50),
                                         physics: NeverScrollableScrollPhysics(),
-                                        itemBuilder: (context, index) {
+                                        itemBuilder: (c, index) {
                                           return Container(
                                             padding: EdgeInsets.all(8),
                                             margin: EdgeInsets.only(bottom: 15),
