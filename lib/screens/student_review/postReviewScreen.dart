@@ -23,9 +23,10 @@ class _PostReviewScreenState extends State<PostReviewScreen> {
   TextEditingController _linkdinlinkController = TextEditingController();
   TextEditingController _reviewdescriptionController = TextEditingController();
   TextEditingController _ratingController = TextEditingController();
-
+  var tempcoursename = "Course Name";
   DateTime? experienceStartDate;
   DateTime? experienceEndDate;
+  bool courseloading = false;
 
   Future<void> _selectStartDate(BuildContext context) async {
     final DateTime picked = (await showDatePicker(
@@ -41,15 +42,9 @@ class _PostReviewScreenState extends State<PostReviewScreen> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    getallcoursename();
-  }
-
   getallcoursename() async {
     setState(() {
-      loading = true;
+      courseloading = true;
     });
     try {
       var courseMap = {};
@@ -80,9 +75,9 @@ class _PostReviewScreenState extends State<PostReviewScreen> {
 
             try {
               print('start7');
-              globals.coursemoduelmap["${element['name']}"] = tepcourse;
+              coursemoduelmap["${element['name']}"] = tepcourse;
               print('start8');
-              globals.courseList.add(element['name']);
+              courseList.add(element['name']);
               print('start9');
               tepcourse = [];
             } catch (e) {
@@ -95,18 +90,20 @@ class _PostReviewScreenState extends State<PostReviewScreen> {
       }).whenComplete(() {
         setState(() {
           loading = false;
+          courseloading = false;
         });
       });
     } catch (e) {
       setState(() {
-        loading = false;
+
+        courseloading = false;
       });
     }
     setState(() {
-      globals.courseList;
+      courseList;
     });
-    print("jjjjjjjjjjjjjj1: ${globals.courseList}");
-    print("jjjjjjjjjjjjjj2: ${globals.coursemoduelmap}");
+    print("jjjjjjjjjjjjjj1: ${courseList}");
+    print("jjjjjjjjjjjjjj2: ${coursemoduelmap}");
   }
 
   Future<void> _selectEndDate(BuildContext context) async {
@@ -132,6 +129,13 @@ class _PostReviewScreenState extends State<PostReviewScreen> {
   double fontSize4 = 30.0;
 
   var rating = 5;
+
+  @override
+  void initState() {
+    super.initState();
+    getallcoursename();
+    courseList = ["Course Name"];
+  }
 
   void toggleExpansion(int i) {
     rating = i + 1;
@@ -176,7 +180,6 @@ class _PostReviewScreenState extends State<PostReviewScreen> {
   }
 
   bool loading = false;
-  var tempcoursename = "Course Name";
 
   @override
   Widget build(BuildContext context) {
@@ -290,53 +293,64 @@ class _PostReviewScreenState extends State<PostReviewScreen> {
                             child: Padding(
                               padding:
                                   const EdgeInsets.fromLTRB(12.0, 0, 12, 0),
-                              child: DropdownButton<String>(
-                                focusColor: Colors.white,
-                                underline: Container(),
-                                isExpanded: true,
-                                // // Step 3.
-                                value: tempcoursename,
-                                // Step 4.
+                              child: courseloading
+                                  ? Center(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(14.0),
+                                        child: SizedBox(
+                                            height: 20,
+                                            width: 20,
+                                            child: CircularProgressIndicator()),
+                                      ),
+                                    )
+                                  : DropdownButton<String>(
+                                      focusColor: Colors.white,
+                                      underline: Container(),
+                                      isExpanded: true,
+                                      // // Step 3.
+                                      value: tempcoursename,
+                                      // Step 4.
 
-                                items: globals.courseList
-                                    .map<DropdownMenuItem<String>>((value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(
-                                      value,
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyText1
-                                          .override(
-                                            fontFamily: 'Lexend Deca',
-                                            color: Colors.black,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold,
+                                      items: courseList
+                                          .map<DropdownMenuItem<String>>(
+                                              (value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(
+                                            value,
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyText1
+                                                .override(
+                                                  fontFamily: 'Lexend Deca',
+                                                  color: Colors.black,
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                           ),
-                                    ),
-                                  );
-                                }).toList(),
-                                // Step 5.
-                                onChanged: (String? newValue) {
-                                  try {
-                                    _courseController.text = newValue!;
-                                    setState(() {
-                                      print('ft1');
-                                      print(newValue);
-                                      print(
-                                          '${globals.coursemoduelmap[newValue].runtimeType}');
-                                      try {} catch (e) {
-                                        print(e);
-                                      }
+                                        );
+                                      }).toList(),
+                                      // Step 5.
+                                      onChanged: (String? newValue) {
+                                        try {
+                                          _courseController.text = newValue!;
+                                          setState(() {
+                                            print('ft1');
+                                            print(newValue);
+                                            print(
+                                                '${coursemoduelmap[newValue].runtimeType}');
+                                            try {} catch (e) {
+                                              print(e);
+                                            }
 
-                                      print('ft3');
-                                      tempcoursename = newValue!;
-                                      print('ft4');
-                                    });
-                                  } catch (e) {
-                                    print("rrrrrrr: ${e}");
-                                  }
-                                },
-                              ),
+                                            print('ft3');
+                                            tempcoursename = newValue!;
+                                            print('ft4');
+                                          });
+                                        } catch (e) {
+                                          print("rrrrrrr: ${e}");
+                                        }
+                                      },
+                                    ),
                             ),
                           ),
                           SizedBox(height: 16.0),
@@ -509,29 +523,39 @@ class _PostReviewScreenState extends State<PostReviewScreen> {
                             height: 50,
                             child: ElevatedButton(
                               onPressed: () async {
+                                print('wew1');
                                 if (_nameController.text.isEmpty) {
                                   Toast.show('Name is required');
+                                  print('wew2');
                                 } else if (!isValidEmail(
                                     _emailController.text)) {
+                                  print('wew3');
                                   Toast.show(
                                       'Please enter a valid email address');
                                 } else if (_courseController.text.isEmpty) {
+                                  print('wew4');
                                   Toast.show('Course is required');
+                                  print('wew5');
                                 } else if (!isValidLinkedInUrl(
                                     _linkdinlinkController.text)) {
+                                  print('wew6');
                                   Toast.show(
                                       'Please enter a valid LinkedIn URL');
+                                  print('wew7');
                                 } else if (_reviewdescriptionController
                                     .text.isEmpty) {
+                                  print('wew8');
                                   Toast.show('Review description is required');
                                 } else if (experienceStartDate == null ||
                                     experienceEndDate == null) {
+                                  print('wew9');
                                   Toast.show(
                                       'Please select start and end dates for your experience');
                                 } else {
                                   setState(() {
                                     loading = true;
                                   });
+                                  print('wew10');
                                   Toast.show(await postReview({
                                     "name": _nameController.text,
                                     "email": _emailController.text,
@@ -545,6 +569,7 @@ class _PostReviewScreenState extends State<PostReviewScreen> {
                                     "date": DateTime.now().toString(),
                                   }));
 
+                                  print('wew11');
                                   setState(() {
                                     loading = false;
                                     _nameController.text = '';
