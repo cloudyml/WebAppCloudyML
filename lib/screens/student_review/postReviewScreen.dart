@@ -7,9 +7,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:timeago/timeago.dart';
 import 'package:toast/toast.dart';
-import 'package:mailer/mailer.dart';
 import '../../global_variable.dart' as globals;
-import 'package:mailer/smtp_server/gmail.dart';
 
 class PostReviewScreen extends StatefulWidget {
   @override
@@ -95,7 +93,6 @@ class _PostReviewScreenState extends State<PostReviewScreen> {
       });
     } catch (e) {
       setState(() {
-
         courseloading = false;
       });
     }

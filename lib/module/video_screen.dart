@@ -1346,7 +1346,7 @@ class _VideoScreenState extends State<VideoScreen> {
                                     MaterialPageRoute(
                                         builder: (context) =>
                                             InstructionspageWidget(
-                                                quizdata, widget.courseName)),
+                                                quizdata, widget.courseName,false)),
                                   ).then((value) {
                                     getScoreOfAllQuiz();
                                   });
@@ -1459,7 +1459,7 @@ class _VideoScreenState extends State<VideoScreen> {
                                     MaterialPageRoute(
                                         builder: (context) =>
                                             InstructionspageWidget(
-                                                quizdata, widget.courseName)),
+                                                quizdata, widget.courseName, false)),
                                   ).then((value) {
                                     getScoreOfAllQuiz();
                                   });
