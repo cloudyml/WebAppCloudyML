@@ -704,10 +704,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                             QuerySnapshot query=
                                      await  _firestore
                                           .collection('groups')
-                                          .where('student_name',
+                                          .where('student_id’',
                                               isEqualTo:  Provider.of<UserProvider>(context, listen: false)
         .userModel
-        ?.name
+        ?.id
         .toString()).get();
                                                DocumentReference documentReference = query.docs.first.reference;
       await documentReference.update({
@@ -761,10 +761,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                            QuerySnapshot query=
                                      await  _firestore
                                           .collection('groups')
-                                          .where('student_name',
+                                          .where('student_id’',
                                               isEqualTo:  Provider.of<UserProvider>(context, listen: false)
         .userModel
-        ?.name
+        ?.id
         .toString()).get();
                                                DocumentReference documentReference = query.docs.first.reference;
       await documentReference.update({
@@ -1184,3 +1184,4 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
   }
 }
+
