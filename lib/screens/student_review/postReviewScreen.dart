@@ -624,7 +624,7 @@ class _PostReviewScreenState extends State<PostReviewScreen> {
       required String nostar,
       required String description}) async {
     final String apiUrl =
-        'https://us-central1-cloudyml-app.cloudfunctions.net/exceluser/reviewmail';
+        'https://us-central1-cloudyml-app.cloudfunctions.net/mailapi/reviewmail';
 
     final Map<String, dynamic> data = {
       "name": "$name",
