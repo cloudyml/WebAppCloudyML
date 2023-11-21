@@ -51,9 +51,7 @@ class _PostReviewScreenState extends State<PostReviewScreen> {
           .then((value) {
         try {
           List tepcourse = [];
-          print('start1');
           value.docs.forEach((element) {
-            print('start2');
             try {
               for (var k in element['curriculum1']['${element['name']}']) {
                 print('start3');
@@ -97,9 +95,7 @@ class _PostReviewScreenState extends State<PostReviewScreen> {
     setState(() {
       courseList;
     });
-    print("jjjjjjjjjjjjjj1: ${courseList}");
-    print("jjjjjjjjjjjjjj2: ${coursemoduelmap}");
-  }
+    }
 
   Future<void> _selectEndDate(BuildContext context) async {
     final DateTime picked = (await showDatePicker(

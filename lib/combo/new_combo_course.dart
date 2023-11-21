@@ -4,17 +4,21 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:path/path.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 import '../global_variable.dart';
 import '../globals.dart';
 import '../module/video_screen.dart';
+import '../widgets/review_dialog/take_review.dart';
 
 class NewComboCourse extends StatelessWidget {
   final String? courseName;
   final String? courseIdd;
-  const NewComboCourse(
+   NewComboCourse(
       {Key? key, required this.courseName, required this.courseIdd})
       : super(key: key);
+
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +26,6 @@ class NewComboCourse extends StatelessWidget {
     if (Get.isRegistered<ComboCourseController>()) {
       Get.find<ComboCourseController>().getPercentageOfCourse();
     }
-
     return Scaffold(
       body: LayoutBuilder(
         builder: (context, constraints) {
@@ -45,6 +48,7 @@ class NewComboCourse extends StatelessWidget {
                 InkWell(
                   onTap: () {
                     GoRouter.of(context).pushReplacementNamed('home');
+                    Get.delete<ComboCourseController>();
                   },
                   child: Container(
                       child: Padding(
@@ -121,7 +125,7 @@ class NewComboCourse extends StatelessWidget {
                                                 ? width / 7
                                                 : width / 50),
                                         physics: NeverScrollableScrollPhysics(),
-                                        itemBuilder: (context, index) {
+                                        itemBuilder: (c, index) {
                                           return Container(
                                             padding: EdgeInsets.all(8),
                                             margin: EdgeInsets.only(bottom: 15),
