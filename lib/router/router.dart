@@ -313,7 +313,7 @@ class MyRouter {
           name: 'QuizPage',
           path: '/quizpage',
           pageBuilder: (context, state) {
-            return MaterialPage(key: state.pageKey, child: QuizPage("", false));
+            return MaterialPage(key: state.pageKey, child: QuizPage("", false, ''));
           },
         ),
 

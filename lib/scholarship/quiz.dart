@@ -78,6 +78,8 @@ class _ScholarshipQuizState extends State<ScholarshipQuiz> {
         .get()
         .then((value) {
       try {
+        globals.name = value.data()!['name'];
+        globals.email = value.data()!['email'];
         var data = value.data()!['quiztrack'];
         bool attemptingquizforthefirsttime = true;
         for (var i in data) {
@@ -105,7 +107,7 @@ class _ScholarshipQuizState extends State<ScholarshipQuiz> {
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  QuizPage(quizdata, bollen)));
+                                  QuizPage(quizdata, bollen, docid)));
                     } else {
                       // condition for quiz not cleared
                       print("quiz not cleared");
@@ -122,7 +124,7 @@ class _ScholarshipQuizState extends State<ScholarshipQuiz> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      QuizPage(quizdata, bollen)));
+                                      QuizPage(quizdata, bollen, docid)));
                         } else {
                           print("quiz attempt gap not over");
                           Toast.show(
@@ -140,7 +142,7 @@ class _ScholarshipQuizState extends State<ScholarshipQuiz> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      QuizPage(quizdata, bollen)));
+                                      QuizPage(quizdata, bollen, docid)));
                         } else {
                           print('quiz attempt gap not over');
                           Toast.show(
@@ -162,7 +164,7 @@ class _ScholarshipQuizState extends State<ScholarshipQuiz> {
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  QuizPage(quizdata, bollen)));
+                                  QuizPage(quizdata, bollen, docid)));
                     } else {
                       // condition for quiz not cleared
                       print("quiz not cleared");
@@ -179,7 +181,7 @@ class _ScholarshipQuizState extends State<ScholarshipQuiz> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      QuizPage(quizdata, bollen)));
+                                      QuizPage(quizdata, bollen, docid)));
                         } else {
                           print("quiz attempt gap not over");
                           Toast.show(
@@ -197,7 +199,7 @@ class _ScholarshipQuizState extends State<ScholarshipQuiz> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      QuizPage(quizdata, bollen)));
+                                      QuizPage(quizdata, bollen, docid)));
                         } else {
                           print('quiz attempt gap not over');
                           Toast.show(
@@ -218,14 +220,14 @@ class _ScholarshipQuizState extends State<ScholarshipQuiz> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => QuizPage(quizdata, bollen)));
+                  builder: (context) => QuizPage(quizdata, bollen, docid)));
         }
       } catch (e) {
         print("error id: efwefwe3223232: ${e.toString()}");
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => QuizPage(quizdata, bollen)));
+                builder: (context) => QuizPage(quizdata, bollen, docid)));
       }
     });
   }
@@ -393,7 +395,8 @@ class _ScholarshipQuizState extends State<ScholarshipQuiz> {
                                                             ScholarshipQuizList[
                                                                     index]
                                                                 ['courseName'],
-                                                            true),
+                                                            true,
+                                                            docid),
                                                   ),
                                                   SizedBox(
                                                     height: 3,
