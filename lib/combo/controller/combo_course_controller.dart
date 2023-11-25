@@ -12,10 +12,13 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../global_variable.dart';
 import '../../widgets/review_dialog/take_review.dart';
+import '../new_combo_course.dart';
 
 class ComboCourseController extends GetxController {
   final String? courseId;
   ComboCourseController({required this.courseId});
+
+
   reviewAlert() {
     // showDialog(
     //     context: context,
@@ -64,29 +67,14 @@ class ComboCourseController extends GetxController {
   RxInt coursePerc = 0.obs;
   @override
   void onInit() {
+    super.onInit();
     // reviewAlert();
     getCourseIds().whenComplete(() {
       print('CCCC: : ${courses}');
       checkCourseExist();
       getCourses();
-      getPercentageOfCourse().whenComplete(() {
-        // print("courseData Value = ${courseData}");
-        for(var j in courseData.keys) {
-          for(var i in courseList){
-            if(j == i["id"]){
-              if(courseData[i["id"] + "percentage"] != null && courseData[i["id"] + "percentage"] > 10){
-                print("coursewise = ${courseData[i["id"] + "percentage"]}");
-                if(coursePerc.value < courseData[i["id"] + "percentage"]){
-                  coursePerc.value = courseData[i["id"] + "percentage"];
-                  // reviewAlert();
-                }
-              }
-            }
-          }
-        }
-      });
+      getPercentageOfCourse();
     });
-    super.onInit();
   }
 
   @override
@@ -131,7 +119,6 @@ class ComboCourseController extends GetxController {
         });
       })
     };
-    // isLoading.value = false;
   }
 
 
@@ -171,22 +158,21 @@ class ComboCourseController extends GetxController {
           .collection("courseprogress")
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .get();
-
-      // tmp.clear();
-      // for (var i = 0; i < data.data()!.length; i++) {
-      //   try {
-      //     if (i != 0) {
-      //       tmp.add(data.data()![courses[i] + "percentage"]);
-      //     }
-      //   } catch (e) {}
-      // }
-      // for (int i = 1; i < tmp.length; i++) {
-      //   if (tmp[i] is int) {
-      //     oldModuleProgress.value = true;
-      //   }
-      // }
-
       courseData.value = data.data() as Map;
+      for(var j in courseData.keys) {
+        for(var i in courseList){
+          if(j == i["id"]){
+            if(courseData[i["id"] + "percentage"] != null && courseData[i["id"] + "percentage"] > 10){
+              print("coursewise = ${courseData[i["id"] + "percentage"]}");
+              if(coursePerc.value < courseData[i["id"] + "percentage"]){
+                coursePerc.value = courseData[i["id"] + "percentage"];
+                print("object ${coursePerc.value}");
+              }
+            }
+          }
+
+        }
+      }
 // isLoading.value = false;
     } catch (e) {
       // isLoading.value = false;

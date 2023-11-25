@@ -2,11 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloudyml_app2/global_variable.dart';
 import 'package:cloudyml_app2/screens/flutter_flow/flutter_flow_theme.dart';
 import 'package:cloudyml_app2/screens/student_review/ReviewApi.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:timeago/timeago.dart';
 import 'package:toast/toast.dart';
+import '../../global_variable.dart' as globals;
 
 class PostReviewScreen extends StatefulWidget {
   @override
@@ -84,6 +86,7 @@ class _PostReviewScreenState extends State<PostReviewScreen> {
         }
       }).whenComplete(() {
         setState(() {
+          loading = false;
           courseloading = false;
         });
       });
@@ -95,7 +98,7 @@ class _PostReviewScreenState extends State<PostReviewScreen> {
     setState(() {
       courseList;
     });
-    }
+  }
 
   Future<void> _selectEndDate(BuildContext context) async {
     final DateTime picked = (await showDatePicker(
@@ -560,6 +563,12 @@ class _PostReviewScreenState extends State<PostReviewScreen> {
                                     "date": DateTime.now().toString(),
                                   }));
 
+                                  sendReviewData(
+                                      name: _nameController.text,
+                                      nostar: rating.toString(),
+                                      description:
+                                          _reviewdescriptionController.text);
+
                                   print('wew11');
                                   setState(() {
                                     loading = false;
@@ -608,6 +617,38 @@ class _PostReviewScreenState extends State<PostReviewScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> sendReviewData(
+      {required String name,
+      required String nostar,
+      required String description}) async {
+    final String apiUrl =
+        'https://us-central1-cloudyml-app.cloudfunctions.net/mailapi/reviewmail';
+
+    final Map<String, dynamic> data = {
+      "name": "$name",
+      "nostar": "$nostar",
+      "description": "$description",
+    };
+
+    try {
+      final dio = Dio();
+      final response = await dio.post(
+        apiUrl,
+        data: data,
+        options: Options(headers: {'Content-Type': 'application/json'}),
+      );
+
+      if (response.statusCode == 200) {
+        print('Review data sent successfully');
+      } else {
+        print(
+            'Failed to send review data. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error sending review data: $e');
+    }
   }
 
   bool isValidEmail(String email) {

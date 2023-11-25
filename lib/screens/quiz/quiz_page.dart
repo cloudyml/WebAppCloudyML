@@ -1,10 +1,12 @@
 import 'dart:math';
 import 'dart:ui';
-
+import 'package:dio/dio.dart';
+import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloudyml_app2/MyAccount/myaccount.dart';
 import 'package:cloudyml_app2/screens/quiz/quizsolution.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:toast/toast.dart';
 import '../../global_variable.dart' as globals;
 import 'certificate_api.dart';
 import 'model/certificatemodel.dart';
@@ -22,7 +24,8 @@ import 'congralutation_screen.dart';
 
 class QuizPage extends StatefulWidget {
   var quizdata;
-  QuizPage(this.quizdata, {Key? key}) : super(key: key);
+  bool? scholarshipQuiz;
+  QuizPage(this.quizdata, this.scholarshipQuiz, {Key? key}) : super(key: key);
 
   @override
   _QuizPageState createState() => _QuizPageState();
@@ -50,6 +53,8 @@ class _QuizPageState extends State<QuizPage> {
   }
 
   var userName = '';
+  var email = '';
+  var contactnumber = '';
 
   Future<String> handlingCasesAccoridingToTotal(
       double total, List quizdata, String courseid, var correctint) async {
@@ -140,24 +145,28 @@ class _QuizPageState extends State<QuizPage> {
             .then(
           (value) {
             userName = value.data()!['name'];
+            email = value.data()!['email'];
+            contactnumber = value.data()!['mobilenumber'];
           },
         );
         // track this quiz in user's doc
         quizTrackModel = QuizTrackModel(
-            quizname: widget.quizdata['name'],
-            quizdata: quizdata,
-            quizScore: total,
-            date: DateTime.now(),
-            quizlevel: widget.quizdata['quizlevel'],
-            courseName: widget.quizdata['courseName'],
-            courseId: courseid,
-            quizCleared: true,
-            quizAttemptGapForModularQuiz:
-                DateTime.now().add(Duration(hours: modulerquizwindowinhours)),
-            quizAttemptGapForCourseQuiz:
-                DateTime.now().add(Duration(days: coursequizwindowindays)),
-            quizTakenTime: countUsedTime(),
-            quizMark: correctint.toString());
+          scholarshipQuiz: widget.scholarshipQuiz,
+          quizname: widget.quizdata['name'],
+          quizScore: total,
+          date: DateTime.now(),
+          quizlevel: widget.quizdata['quizlevel'],
+          courseName: widget.quizdata['courseName'],
+          courseId: courseid,
+          quizCleared: true,
+          quizAttemptGapForModularQuiz:
+              DateTime.now().add(Duration(hours: modulerquizwindowinhours)),
+          quizAttemptGapForCourseQuiz:
+              DateTime.now().add(Duration(days: coursequizwindowindays)),
+          quizTakenTime: countUsedTime(),
+          quizMark: correctint.toString(),
+          quizdata: quizdata,
+        );
         returningString = "Congratulations!";
       }
     } catch (e) {
@@ -172,6 +181,7 @@ class _QuizPageState extends State<QuizPage> {
         print("course quiz not cleared");
         // open this quiz after 3 days
         quizTrackModel = QuizTrackModel(
+            scholarshipQuiz: widget.scholarshipQuiz,
             quizname: widget.quizdata['name'],
             quizdata: quizdata,
             quizScore: total,
@@ -199,6 +209,7 @@ class _QuizPageState extends State<QuizPage> {
         print("course quiz not cleared with less than 50%");
         // open this quiz after 7 days
         quizTrackModel = QuizTrackModel(
+            scholarshipQuiz: widget.scholarshipQuiz,
             quizname: widget.quizdata['name'],
             quizdata: quizdata,
             quizScore: total,
@@ -226,6 +237,7 @@ class _QuizPageState extends State<QuizPage> {
           widget.quizdata['quizlevel'] == "modulelevel") {
         print("module quiz cleared");
         quizTrackModel = QuizTrackModel(
+          scholarshipQuiz: widget.scholarshipQuiz,
           quizname: widget.quizdata['name'],
           quizdata: quizdata,
           quizScore: total,
@@ -252,6 +264,7 @@ class _QuizPageState extends State<QuizPage> {
         print("module quiz not cleared");
         // open this quiz after 6 hours
         quizTrackModel = QuizTrackModel(
+          scholarshipQuiz: widget.scholarshipQuiz,
           quizname: widget.quizdata['name'],
           quizdata: quizdata,
           quizScore: total,
@@ -1017,6 +1030,23 @@ class _QuizPageState extends State<QuizPage> {
   }
 
   getQuiz() async {
+    try {
+      await FirebaseFirestore.instance
+          .collection("Users")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .get()
+          .then(
+        (value) {
+          setState(() {
+            userName = value.data()!['name'];
+            email = value.data()!['email'];
+            contactnumber = value.data()!['mobilenumber'];
+          });
+        },
+      );
+    } catch (e) {
+      print(e);
+    }
     try {
       quizdata = widget.quizdata['questionbucket'];
       quiztiming = widget.quizdata['quiztiming'];
@@ -3297,17 +3327,35 @@ class _QuizPageState extends State<QuizPage> {
                                                                             0,
                                                                             0),
                                                                         child:
-                                                                            Text(
-                                                                          'Report an error',
-                                                                          textAlign:
-                                                                              TextAlign.end,
-                                                                          style: FlutterFlowTheme.of(context)
-                                                                              .bodyText1
-                                                                              .override(
-                                                                                fontFamily: 'Poppins',
-                                                                                fontSize: 10,
-                                                                                fontWeight: FontWeight.normal,
+                                                                            GestureDetector(
+                                                                          onTap:
+                                                                              () {
+                                                                            showDialog(
+                                                                              context: context,
+                                                                              builder: (context) => QuizReportDialog(
+                                                                                coursename: widget.quizdata['courseName'],
+                                                                                modulename: widget.quizdata['module'],
+                                                                                sname: userName,
+                                                                                email: email,
+                                                                                cno: contactnumber,
+                                                                                quiznumber: questionindex + 1,
+                                                                                quizname: widget.quizdata['name'],
+                                                                                subcname: '',
+                                                                                description: '',
                                                                               ),
+                                                                            );
+                                                                          },
+                                                                          child:
+                                                                              Text(
+                                                                            'Report an error',
+                                                                            textAlign:
+                                                                                TextAlign.end,
+                                                                            style: FlutterFlowTheme.of(context).bodyText1.override(
+                                                                                  fontFamily: 'Poppins',
+                                                                                  fontSize: 10,
+                                                                                  fontWeight: FontWeight.normal,
+                                                                                ),
+                                                                          ),
                                                                         ),
                                                                       ),
                                                                     ],
@@ -3823,14 +3871,32 @@ class _QuizPageState extends State<QuizPage> {
                                                                             0,
                                                                             1),
                                                                         child:
-                                                                            Text(
-                                                                          '   Report an error',
-                                                                          style: FlutterFlowTheme.of(context)
-                                                                              .bodyText1
-                                                                              .override(
-                                                                                fontFamily: 'Poppins',
-                                                                                fontWeight: FontWeight.w300,
+                                                                            GestureDetector(
+                                                                          onTap:
+                                                                              () {
+                                                                            showDialog(
+                                                                              context: context,
+                                                                              builder: (context) => QuizReportDialog(
+                                                                                coursename: widget.quizdata['courseName'],
+                                                                                modulename: widget.quizdata['module'],
+                                                                                sname: userName,
+                                                                                email: email,
+                                                                                cno: contactnumber,
+                                                                                quiznumber: questionindex + 1,
+                                                                                quizname: widget.quizdata['name'],
+                                                                                subcname: '',
+                                                                                description: '',
                                                                               ),
+                                                                            );
+                                                                          },
+                                                                          child:
+                                                                              Text(
+                                                                            '   Report an error',
+                                                                            style: FlutterFlowTheme.of(context).bodyText1.override(
+                                                                                  fontFamily: 'Poppins',
+                                                                                  fontWeight: FontWeight.w300,
+                                                                                ),
+                                                                          ),
                                                                         ),
                                                                       ),
                                                                     ],
@@ -4789,6 +4855,142 @@ class _QuizPageState extends State<QuizPage> {
               )
             : Container()
       ]),
+    );
+  }
+}
+
+class QuizReportDialog extends StatefulWidget {
+  final String coursename;
+  final String subcname;
+  final String modulename;
+  final String quizname;
+  final int quiznumber;
+  final String description;
+  final String sname;
+  final String email;
+  final String cno;
+
+  QuizReportDialog({
+    required this.coursename,
+    required this.subcname,
+    required this.modulename,
+    required this.quizname,
+    required this.quiznumber,
+    required this.description,
+    required this.sname,
+    required this.email,
+    required this.cno,
+  });
+
+  @override
+  _QuizReportDialogState createState() => _QuizReportDialogState();
+}
+
+class _QuizReportDialogState extends State<QuizReportDialog> {
+  final Map<String, dynamic> data = {
+    "cname": "",
+    "subcname": "",
+    "mname": "",
+    "qname": "",
+    "qno": "",
+    "description": "",
+    "sname": "",
+    "email": "",
+    "cno": "",
+  };
+
+  Future<void> sendQuizReport() async {
+    final String apiUrl =
+        'https://us-central1-cloudyml-app.cloudfunctions.net/mailapi/quizreportmail';
+
+    try {
+      final dio = Dio();
+      final response = await dio.post(
+        apiUrl,
+        data: data,
+        options: Options(headers: {'Content-Type': 'application/json'}),
+      );
+
+      if (response.statusCode == 200) {
+        print('Data sent successfully');
+        Toast.show('Data sent successfully');
+      } else {
+        print('Failed to send data. Status code: ${response.statusCode}');
+        Toast.show(
+          'Failed to send data. Status code: ${response.statusCode}',
+        );
+      }
+    } catch (e) {
+      print('Error sending data: $e');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize data with values from widget properties
+    setState(() {
+      data["cname"] = widget.coursename;
+      data["subcname"] = widget.subcname;
+      data["mname"] = widget.modulename;
+      data["qname"] = widget.quizname;
+      data["qno"] = widget.quiznumber.toString();
+      data["description"] = widget.description;
+      data["sname"] = widget.sname;
+      data["email"] = widget.email;
+      data["cno"] = widget.cno;
+    });
+    print("sfowiejfow: ${data}");
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text('Error Report'),
+      content: SingleChildScrollView(
+        child: Container(
+          width: MediaQuery.of(context).size.width / 3,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              buildTextField('Course Name', 'cname'),
+              buildTextField('Subcourse Name', 'subcname'),
+              buildTextField('Module Name', 'mname'),
+              buildTextField('Quiz Name', 'qname'),
+              buildTextField('Quiz Number', 'qno'),
+              buildTextField('Description', 'description'),
+              buildTextField('Student Name', 'sname'),
+              buildTextField('Email', 'email'),
+              buildTextField('Contact Number', 'cno'),
+              SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () async {
+                  await sendQuizReport();
+                  Navigator.of(context)
+                      .pop(); // Close the dialog after sending data
+                },
+                child: Text('Send Report'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildTextField(String labelText, String fieldName) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: TextFormField(
+        initialValue: data[fieldName],
+        decoration: InputDecoration(labelText: labelText),
+        onChanged: (value) {
+          setState(() {
+            data[fieldName] = value;
+          });
+        },
+      ),
     );
   }
 }

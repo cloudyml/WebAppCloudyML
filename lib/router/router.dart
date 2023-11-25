@@ -17,6 +17,8 @@ import 'package:cloudyml_app2/module/video_screen.dart';
 import 'package:cloudyml_app2/payment_screen.dart';
 import 'package:cloudyml_app2/payments_history.dart';
 import 'package:cloudyml_app2/router/error_page.dart';
+import 'package:cloudyml_app2/scholarship/course_screen.dart';
+import 'package:cloudyml_app2/scholarship/quiz.dart';
 import 'package:cloudyml_app2/screens/chat_screen.dart';
 import 'package:cloudyml_app2/screens/chatpage.dart';
 import 'package:cloudyml_app2/screens/groups_list.dart';
@@ -71,6 +73,8 @@ class MyRouter {
         print('currentURL: $currentURL');
         if (currentURL.contains("/students/review")) {
           return ('/students/review');
+        } else if (currentURL.contains("/scholarship")) {
+          return ('/scholarship');
         } else {
           if (!loggedIn && !goingToLogin) {
             return ('/');
@@ -80,6 +84,8 @@ class MyRouter {
             return null;
           }
         }
+
+        //ScholarshipQuiz
       },
       routes: <RouteBase>[
         GoRoute(
@@ -87,6 +93,13 @@ class MyRouter {
           path: '/students/review',
           pageBuilder: (context, state) {
             return MaterialPage(child: StudentReviewScreen());
+          },
+        ),
+        GoRoute(
+          name: 'scholarship',
+          path: '/scholarship',
+          pageBuilder: (context, state) {
+            return MaterialPage(child: ScholarshipQuiz());
           },
         ),
         GoRoute(
@@ -300,7 +313,7 @@ class MyRouter {
           name: 'QuizPage',
           path: '/quizpage',
           pageBuilder: (context, state) {
-            return MaterialPage(key: state.pageKey, child: QuizPage(""));
+            return MaterialPage(key: state.pageKey, child: QuizPage("", false));
           },
         ),
 
