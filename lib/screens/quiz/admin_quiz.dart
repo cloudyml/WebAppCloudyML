@@ -69,6 +69,7 @@ class _AdminQuizPanelState extends State<AdminQuizPanel> {
   }
 
   bool loading = false;
+  bool isScholarshipEnabled = false;
 
   @override
   void initState() {
@@ -2314,9 +2315,32 @@ class _AdminQuizPanelState extends State<AdminQuizPanel> {
                                 child: Column(
                                   mainAxisSize: MainAxisSize.max,
                                   children: [
+                                    Row(
+                                      children: [
+                                        Switch(
+                                          value: isScholarshipEnabled,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              isScholarshipEnabled = value;
+                                            });
+                                          },
+                                        ),
+                                        Text(
+                                          isScholarshipEnabled
+                                              ? 'Scholarship Enabled'
+                                              : 'Scholarship Disabled',
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            color: isScholarshipEnabled
+                                                ? Colors.green
+                                                : Colors.red,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                     Padding(
                                       padding: EdgeInsetsDirectional.fromSTEB(
-                                          0, 20, 0, 0),
+                                          0, 0, 0, 0),
                                       child: Row(
                                         mainAxisSize: MainAxisSize.max,
                                         mainAxisAlignment:
@@ -2397,65 +2421,71 @@ class _AdminQuizPanelState extends State<AdminQuizPanel> {
                                               ),
                                             ),
                                           ),
-                                          isSwitched
+                                          isScholarshipEnabled
                                               ? Container()
-                                              : tempmodulelist.length != 1
-                                                  ? Expanded(
-                                                      child: Padding(
-                                                        padding:
-                                                            EdgeInsetsDirectional
-                                                                .fromSTEB(10, 0,
-                                                                    0, 0),
-                                                        child: DropdownButton<
-                                                            String>(
-                                                          underline:
-                                                              Container(),
-                                                          isExpanded: true,
-                                                          // Step 3.
-                                                          value: tempmodulename,
-                                                          // Step 4.
+                                              : isSwitched
+                                                  ? Container()
+                                                  : tempmodulelist.length != 1
+                                                      ? Expanded(
+                                                          child: Padding(
+                                                            padding:
+                                                                EdgeInsetsDirectional
+                                                                    .fromSTEB(
+                                                                        10,
+                                                                        0,
+                                                                        0,
+                                                                        0),
+                                                            child:
+                                                                DropdownButton<
+                                                                    String>(
+                                                              underline:
+                                                                  Container(),
+                                                              isExpanded: true,
+                                                              // Step 3.
+                                                              value:
+                                                                  tempmodulename,
+                                                              // Step 4.
 
-                                                          items: tempmodulelist.map<
-                                                                  DropdownMenuItem<
-                                                                      String>>(
-                                                              (value) {
-                                                            return DropdownMenuItem<
-                                                                String>(
-                                                              value: value,
-                                                              child: Text(
-                                                                value,
-                                                                style: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyText1
-                                                                    .override(
-                                                                      fontFamily:
-                                                                          'Lexend Deca',
-                                                                      color: Color(
-                                                                          0xFF57636C),
-                                                                      fontSize:
-                                                                          14,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .normal,
-                                                                    ),
-                                                              ),
-                                                            );
-                                                          }).toList(),
-                                                          // Step 5.
-                                                          onChanged: (String?
-                                                              newValue) {
-                                                            setState(() {
-                                                              tempmodulename =
-                                                                  newValue!;
-                                                            });
-                                                          },
+                                                              items: tempmodulelist.map<
+                                                                      DropdownMenuItem<
+                                                                          String>>(
+                                                                  (value) {
+                                                                return DropdownMenuItem<
+                                                                    String>(
+                                                                  value: value,
+                                                                  child: Text(
+                                                                    value,
+                                                                    style: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodyText1
+                                                                        .override(
+                                                                          fontFamily:
+                                                                              'Lexend Deca',
+                                                                          color:
+                                                                              Color(0xFF57636C),
+                                                                          fontSize:
+                                                                              14,
+                                                                          fontWeight:
+                                                                              FontWeight.normal,
+                                                                        ),
+                                                                  ),
+                                                                );
+                                                              }).toList(),
+                                                              // Step 5.
+                                                              onChanged: (String?
+                                                                  newValue) {
+                                                                setState(() {
+                                                                  tempmodulename =
+                                                                      newValue!;
+                                                                });
+                                                              },
+                                                            ),
+                                                          ),
+                                                        )
+                                                      : Container(
+                                                          height: 0,
+                                                          width: 0,
                                                         ),
-                                                      ),
-                                                    )
-                                                  : Container(
-                                                      height: 0,
-                                                      width: 0,
-                                                    ),
                                           Expanded(
                                             child: Padding(
                                               padding: EdgeInsetsDirectional
@@ -2635,23 +2665,45 @@ class _AdminQuizPanelState extends State<AdminQuizPanel> {
                                                             print(
                                                                 "quizdata: ${quizdata}");
                                                             print("id: ${id}");
-                                                            FirebaseFirestore
-                                                                .instance
-                                                                .collection(
-                                                                    "courses")
-                                                                .doc(id)
-                                                                .update({
-                                                              "coursequiz":
-                                                                  FieldValue
-                                                                      .arrayUnion([
-                                                                quizdata
-                                                              ])
-                                                            }).whenComplete(() {
-                                                              Toast.show(
-                                                                  "successfully uploaded");
-                                                              print(
-                                                                  "iiioopp ${curriculum1}");
-                                                            });
+                                                            if (isScholarshipEnabled) {
+                                                              FirebaseFirestore
+                                                                  .instance
+                                                                  .collection(
+                                                                      "courses")
+                                                                  .doc(id)
+                                                                  .update({
+                                                                "scholarshipQuiz":
+                                                                    FieldValue
+                                                                        .arrayUnion([
+                                                                  quizdata
+                                                                ])
+                                                              }).whenComplete(
+                                                                      () {
+                                                                Toast.show(
+                                                                    "successfully uploaded");
+                                                                print(
+                                                                    "iiioopp ${curriculum1}");
+                                                              });
+                                                            } else {
+                                                              FirebaseFirestore
+                                                                  .instance
+                                                                  .collection(
+                                                                      "courses")
+                                                                  .doc(id)
+                                                                  .update({
+                                                                "coursequiz":
+                                                                    FieldValue
+                                                                        .arrayUnion([
+                                                                  quizdata
+                                                                ])
+                                                              }).whenComplete(
+                                                                      () {
+                                                                Toast.show(
+                                                                    "successfully uploaded");
+                                                                print(
+                                                                    "iiioopp ${curriculum1}");
+                                                              });
+                                                            }
                                                           } else {
                                                             // to insert quiz in module
                                                             for (var i
@@ -2728,7 +2780,7 @@ class _AdminQuizPanelState extends State<AdminQuizPanel> {
                                                         }
                                                       }).catchError((err) {
                                                         Toast.show(
-                                                            "select the course name! ($err)");
+                                                            "select the course name1! ($err)");
                                                       });
                                                     } catch (e) {
                                                       Toast.show(

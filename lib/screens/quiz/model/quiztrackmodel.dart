@@ -13,6 +13,7 @@ String welcomeToJson(QuizTrackModel data) => json.encode(data.toJson());
 
 class QuizTrackModel {
   QuizTrackModel({
+    this.scholarshipQuiz,
     this.quizdata,
     this.date,
     this.quizlevel,
@@ -30,6 +31,7 @@ class QuizTrackModel {
 
   List<dynamic>? quizdata;
   DateTime? date;
+  bool? scholarshipQuiz;
   String? quizlevel;
   String? courseName;
   String? courseId;
@@ -46,6 +48,7 @@ class QuizTrackModel {
         ? []
         : List<dynamic>.from(json["quizdata"]!.map((x) => x)),
     date: (json["date"] as Timestamp).toDate(),
+    scholarshipQuiz: json["scholarshipQuiz"],
     quizlevel: json["quizlevel"],
     courseName: json["courseName"],
     courseId: json["courseId"],
@@ -64,6 +67,7 @@ class QuizTrackModel {
     "quizdata":
     quizdata == null ? [] : List<dynamic>.from(quizdata!.map((x) => x)),
     "date": date,
+    "scholarshipQuiz": scholarshipQuiz,
     "quizlevel": quizlevel,
     "courseName": courseName,
     "courseId": courseId,

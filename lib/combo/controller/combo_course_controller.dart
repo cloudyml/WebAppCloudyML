@@ -120,7 +120,6 @@ class ComboCourseController extends GetxController {
         });
       })
     };
-    // isLoading.value = false;
   }
 
 

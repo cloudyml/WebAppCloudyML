@@ -633,7 +633,7 @@ class _StudentReviewScreenState extends State<StudentReviewScreen> {
             width: MediaQuery.of(context).size.width / 4,
             child: LinearProgressIndicator(
               value: value / 100,
-              borderRadius: BorderRadius.circular(10),
+             borderRadius: BorderRadius.circular(10),
               backgroundColor: Colors.purpleAccent[300],
               valueColor: AlwaysStoppedAnimation<Color>(Colors.purpleAccent),
             ),

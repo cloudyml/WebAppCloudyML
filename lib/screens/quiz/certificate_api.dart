@@ -1,8 +1,8 @@
 import 'dart:convert';
 
+import 'package:cloudyml_app2/screens/quiz/certificatemodel.dart';
 import 'package:http/http.dart' as http;
 import 'package:cloudyml_app2/global_variable.dart' as globals;
-import 'model/certificatemodel.dart';
 
 void printWrapped(String text) {
     final pattern = RegExp('.{1,800}'); // 800 is the size of each chunk

@@ -13,7 +13,11 @@ import '../flutter_flow/flutter_flow_theme.dart';
 class InstructionspageWidget extends StatefulWidget {
   var courseName;
   var quizdata;
-  InstructionspageWidget(this.quizdata, this.courseName, {Key? key})
+  String? docid;
+  bool? scholarshipQuiz;
+  InstructionspageWidget(
+      this.quizdata, this.courseName, this.scholarshipQuiz, this.docid,
+      {Key? key})
       : super(key: key);
 
   @override
@@ -30,158 +34,181 @@ class _InstructionspageWidgetState extends State<InstructionspageWidget> {
   }
 
   checkQuizStatusOrNavigate() async {
-    await FirebaseFirestore.instance
-        .collection("Users")
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .get()
-        .then((value) {
-      try {
-        var data = value.data()!['quiztrack'];
-        bool attemptingquizforthefirsttime = true;
-        for (var i in data) {
-          if (i != null) {
-            i = QuizTrackModel.fromJson(i);
-            print(i.quizname);
-            print(widget.quizdata['name']);
-            try {
-              print('joifweofwoefjowjeof1');
-              if (widget.courseName == i!.courseName) {
-                var quiznameNumbers =
-                    i!.quizname.replaceAll(RegExp(r'[^0-9]'), '');
-                var quiznamenumbercount =
-                    widget.quizdata['name'].replaceAll(RegExp(r'[^0-9]'), '');
-                if (quiznameNumbers == '') {
-                  if (widget.quizdata['name'] == i!.quizname) {
-                    attemptingquizforthefirsttime = false;
-                    print("quiz found");
-                    print("quiz cleared ppppppppppppp ${i.quizCleared}");
-                    if (i.quizCleared == true) {
-                      print("quiz cleared ppppppppppppp");
-                      Toast.show('You have already aced this quiz!');
-                      globals.quizCleared = true;
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => QuizPage(widget.quizdata)));
-                    } else {
-                      // condition for quiz not cleared
-                      print("quiz not cleared");
-                      // condition for course quiz
-                      if (i.quizlevel == "courselevel") {
-                        if (i.quizAttemptGapForCourseQuiz!
-                                .compareTo(DateTime.now()) <
-                            0) {
-                          print("quiz attempt gap over");
-                          print(i.quizAttemptGapForCourseQuiz);
-                          print(DateTime.now());
-                          // navigate to quiz page
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      QuizPage(widget.quizdata)));
+    try {
+      print('jfwofe1');
+      await FirebaseFirestore.instance
+          .collection("Users")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .get()
+          .then((value) {
+        print('jfwofe2');
+        try {
+          var data = value.data()!['quiztrack'];
+          print('jfwofe3');
+          bool attemptingquizforthefirsttime = true;
+          for (var i in data) {
+            print('jfwofe4');
+            if (i != null) {
+              i = QuizTrackModel.fromJson(i);
+              print(i.quizname);
+              print(widget.quizdata['name']);
+              try {
+                print('joifweofwoefjowjeof1');
+                if (widget.courseName == i!.courseName) {
+                  var quiznameNumbers =
+                      i!.quizname.replaceAll(RegExp(r'[^0-9]'), '');
+                  var quiznamenumbercount =
+                      widget.quizdata['name'].replaceAll(RegExp(r'[^0-9]'), '');
+                  if (quiznameNumbers == '') {
+                    if (widget.quizdata['name'] == i!.quizname) {
+                      attemptingquizforthefirsttime = false;
+                      print("quiz found");
+                      print("quiz cleared ppppppppppppp ${i.quizCleared}");
+                      if (i.quizCleared == true) {
+                        print("quiz cleared ppppppppppppp");
+                        Toast.show('You have already aced this quiz!');
+                        globals.quizCleared = true;
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => QuizPage(widget.quizdata,
+                                    widget.scholarshipQuiz, widget.docid)));
+                      } else {
+                        // condition for quiz not cleared
+                        print("quiz not cleared");
+                        // condition for course quiz
+                        if (i.quizlevel == "courselevel") {
+                          if (i.quizAttemptGapForCourseQuiz!
+                                  .compareTo(DateTime.now()) <
+                              0) {
+                            print("quiz attempt gap over");
+                            print(i.quizAttemptGapForCourseQuiz);
+                            print(DateTime.now());
+                            // navigate to quiz page
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => QuizPage(
+                                        widget.quizdata,
+                                        widget.scholarshipQuiz,
+                                        widget.docid)));
+                          } else {
+                            print("quiz attempt gap not over");
+                            Toast.show(
+                              'You can attempt this quiz after ${i.quizAttemptGapForCourseQuiz}',
+                            );
+                          }
                         } else {
                           print("quiz attempt gap not over");
-                          Toast.show(
-                            'You can attempt this quiz after ${i.quizAttemptGapForCourseQuiz}',
-                          );
-                        }
-                      } else {
-                        print("quiz attempt gap not over");
-                        // condition for modular quiz
-                        if (i.quizAttemptGapForModularQuiz!
-                                .compareTo(DateTime.now()) <
-                            0) {
-                          // navigate to quiz page
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      QuizPage(widget.quizdata)));
-                        } else {
-                          print('quiz attempt gap not over');
-                          Toast.show(
-                              'You can attempt this quiz after ${i.quizAttemptGapForModularQuiz}');
+                          // condition for modular quiz
+                          if (i.quizAttemptGapForModularQuiz!
+                                  .compareTo(DateTime.now()) <
+                              0) {
+                            // navigate to quiz page
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => QuizPage(
+                                        widget.quizdata,
+                                        widget.scholarshipQuiz,
+                                        widget.docid)));
+                          } else {
+                            print('quiz attempt gap not over');
+                            Toast.show(
+                                'You can attempt this quiz after ${i.quizAttemptGapForModularQuiz}');
+                          }
                         }
                       }
                     }
-                  }
-                } else {
-                  if (quiznameNumbers == quiznamenumbercount) {
-                    attemptingquizforthefirsttime = false;
-                    print("quiz found");
-                    print("quiz cleared ppppppppppppp ${i.quizCleared}");
-                    if (i.quizCleared == true) {
-                      print("quiz cleared ppppppppppppp");
-                      Toast.show('You have already aced this quiz!');
-                      globals.quizCleared = true;
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => QuizPage(widget.quizdata)));
-                    } else {
-                      // condition for quiz not cleared
-                      print("quiz not cleared");
-                      // condition for course quiz
-                      if (i.quizlevel == "courselevel") {
-                        if (i.quizAttemptGapForCourseQuiz!
-                                .compareTo(DateTime.now()) <
-                            0) {
-                          print("quiz attempt gap over");
-                          print(i.quizAttemptGapForCourseQuiz);
-                          print(DateTime.now());
-                          // navigate to quiz page
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      QuizPage(widget.quizdata)));
+                  } else {
+                    if (quiznameNumbers == quiznamenumbercount) {
+                      attemptingquizforthefirsttime = false;
+                      print("quiz found");
+                      print("quiz cleared ppppppppppppp ${i.quizCleared}");
+                      if (i.quizCleared == true) {
+                        print("quiz cleared ppppppppppppp");
+                        Toast.show('You have already aced this quiz!');
+                        globals.quizCleared = true;
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => QuizPage(widget.quizdata,
+                                    widget.scholarshipQuiz, widget.docid)));
+                      } else {
+                        // condition for quiz not cleared
+                        print("quiz not cleared");
+                        // condition for course quiz
+                        if (i.quizlevel == "courselevel") {
+                          if (i.quizAttemptGapForCourseQuiz!
+                                  .compareTo(DateTime.now()) <
+                              0) {
+                            print("quiz attempt gap over");
+                            print(i.quizAttemptGapForCourseQuiz);
+                            print(DateTime.now());
+                            // navigate to quiz page
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => QuizPage(
+                                        widget.quizdata,
+                                        widget.scholarshipQuiz,
+                                        widget.docid)));
+                          } else {
+                            print("quiz attempt gap not over");
+                            Toast.show(
+                              'You can attempt this quiz after ${i.quizAttemptGapForCourseQuiz}',
+                            );
+                          }
                         } else {
                           print("quiz attempt gap not over");
-                          Toast.show(
-                            'You can attempt this quiz after ${i.quizAttemptGapForCourseQuiz}',
-                          );
-                        }
-                      } else {
-                        print("quiz attempt gap not over");
-                        // condition for modular quiz
-                        if (i.quizAttemptGapForModularQuiz!
-                                .compareTo(DateTime.now()) <
-                            0) {
-                          // navigate to quiz page
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      QuizPage(widget.quizdata)));
-                        } else {
-                          print('quiz attempt gap not over');
-                          Toast.show(
-                              'You can attempt this quiz after ${i.quizAttemptGapForModularQuiz}');
+                          // condition for modular quiz
+                          if (i.quizAttemptGapForModularQuiz!
+                                  .compareTo(DateTime.now()) <
+                              0) {
+                            // navigate to quiz page
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => QuizPage(
+                                        widget.quizdata,
+                                        widget.scholarshipQuiz,
+                                        widget.docid)));
+                          } else {
+                            print('quiz attempt gap not over');
+                            Toast.show(
+                                'You can attempt this quiz after ${i.quizAttemptGapForModularQuiz}');
+                          }
                         }
                       }
                     }
                   }
                 }
+              } catch (e) {
+                print("error id: ifwjoefjwoeivfff: ${e.toString()}");
               }
-            } catch (e) {
-              print("error id: ifwjoefjwoeivfff: ${e.toString()}");
             }
           }
-        }
-        if (attemptingquizforthefirsttime) {
-          print("quiz is taken for the first time");
+          if (attemptingquizforthefirsttime) {
+            print("quiz is taken for the first time");
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => QuizPage(widget.quizdata,
+                        widget.scholarshipQuiz, widget.docid)));
+          }
+        } catch (e) {
+          print("error id: efwefwe3223232: ${e.toString()}");
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => QuizPage(widget.quizdata)));
+                  builder: (context) => QuizPage(
+                      widget.quizdata, widget.scholarshipQuiz, widget.docid)));
         }
-      } catch (e) {
-        print("error id: efwefwe3223232: ${e.toString()}");
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => QuizPage(widget.quizdata)));
-      }
-    });
+      });
+    } catch (e) {
+      Toast.show(e.toString());
+      print("iowoie: ${e}");
+    }
   }
 
   @override
@@ -211,10 +238,10 @@ class _InstructionspageWidgetState extends State<InstructionspageWidget> {
         child: GestureDetector(
           onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
           child: Align(
-            alignment: AlignmentDirectional(0, 0),
+            alignment: Alignment.topCenter,
             child: Container(
               width: MediaQuery.of(context).size.width * 0.95,
-              height: MediaQuery.of(context).size.height * 0.9,
+              height: 400,
               decoration: BoxDecoration(
                 color: FlutterFlowTheme.of(context).secondaryBackground,
                 border: Border.all(
