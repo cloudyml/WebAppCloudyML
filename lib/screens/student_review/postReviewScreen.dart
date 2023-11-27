@@ -3,6 +3,7 @@ import 'package:cloudyml_app2/global_variable.dart';
 import 'package:cloudyml_app2/screens/flutter_flow/flutter_flow_theme.dart';
 import 'package:cloudyml_app2/screens/student_review/ReviewApi.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -114,6 +115,20 @@ class _PostReviewScreenState extends State<PostReviewScreen> {
     }
   }
 
+  String uid = '';
+  getUid() async {
+    try {
+      uid = await FirebaseAuth.instance.currentUser!.uid;
+    } catch (e) {
+      uid = '';
+      print(e);
+    }
+
+    if (uid == null) {
+      uid = '';
+    }
+  }
+
   bool isExpanded = false;
 
   double fontSize = 30.0;
@@ -127,6 +142,7 @@ class _PostReviewScreenState extends State<PostReviewScreen> {
   @override
   void initState() {
     super.initState();
+    getUid();
     getallcoursename();
     courseList = ["Course Name"];
   }
@@ -561,6 +577,7 @@ class _PostReviewScreenState extends State<PostReviewScreen> {
                                     "experience":
                                         "${experienceStartDate!.day}/${experienceStartDate!.month}/${experienceStartDate!.year} to ${experienceEndDate!.day}/${experienceEndDate!.month}/${experienceEndDate!.year}",
                                     "date": DateTime.now().toString(),
+                                    "uid": '$uid'
                                   }));
 
                                   sendReviewData(

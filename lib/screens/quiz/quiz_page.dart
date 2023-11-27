@@ -1,5 +1,7 @@
 import 'dart:math';
 import 'dart:ui';
+import 'package:cloudyml_app2/screens/quiz/certificatemodel.dart';
+import 'package:cloudyml_app2/screens/quiz/congralutation_scholarship.dart';
 import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,7 +11,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:toast/toast.dart';
 import '../../global_variable.dart' as globals;
 import 'certificate_api.dart';
-import 'model/certificatemodel.dart';
 import 'model/quiztrackmodel.dart';
 import 'quiz_model.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
@@ -25,7 +26,9 @@ import 'congralutation_screen.dart';
 class QuizPage extends StatefulWidget {
   var quizdata;
   bool? scholarshipQuiz;
-  QuizPage(this.quizdata, this.scholarshipQuiz, {Key? key}) : super(key: key);
+  String? docid;
+  QuizPage(this.quizdata, this.scholarshipQuiz, this.docid, {Key? key})
+      : super(key: key);
 
   @override
   _QuizPageState createState() => _QuizPageState();
@@ -493,20 +496,39 @@ class _QuizPageState extends State<QuizPage> {
       print("isfojsoiefj${total} ${unanswered} ${wronganswered} ${correctint}");
       print("lll7");
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) => CongratulationsWidget(
-                quizdata,
-                total,
-                unanswered,
-                wronganswered,
-                correctint,
-                widget.quizdata,
-                resultString,
-                countUsedTime(),
-                quizdata.length.toString())),
-      );
+      if (widget.scholarshipQuiz!) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ScholarshipCongratulationsWidget(
+                  quizdata,
+                  total,
+                  unanswered,
+                  wronganswered,
+                  correctint,
+                  widget.quizdata,
+                  resultString,
+                  countUsedTime(),
+                  quizdata.length.toString(),
+                  widget.docid)),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => CongratulationsWidget(
+                  quizdata,
+                  total,
+                  unanswered,
+                  wronganswered,
+                  correctint,
+                  widget.quizdata,
+                  resultString,
+                  countUsedTime(),
+                  quizdata.length.toString())),
+        );
+      }
+
       // Navigator.push(
       //   context,
       //   MaterialPageRoute(
@@ -1747,7 +1769,7 @@ class _QuizPageState extends State<QuizPage> {
                                           width: MediaQuery.of(context)
                                                   .size
                                                   .width -
-                                              200,
+                                              380,
                                           height: 71.2,
                                           decoration: BoxDecoration(
                                             color: FlutterFlowTheme.of(context)
@@ -1970,43 +1992,84 @@ class _QuizPageState extends State<QuizPage> {
                                             ),
                                           ),
                                         ),
-                                        Container(
-                                          width: 150,
-                                          height: 71.2,
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                          ),
-                                          child: Align(
-                                            alignment:
-                                                AlignmentDirectional(100, 0),
-                                            child: Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0, 0, 10, 0),
-                                              child: GestureDetector(
-                                                onTap: () {
-                                                  submit();
-                                                },
-                                                child: Container(
-                                                  width: 140,
-                                                  height: 50,
-                                                  decoration: BoxDecoration(
-                                                    color: Color(0xFF0A9E04),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8),
-                                                    border: Border.all(
-                                                      color: Colors.transparent,
-                                                    ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            GestureDetector(
+                                              onTap: () {
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (context) =>
+                                                      QuizReportDialog(
+                                                    coursename: widget
+                                                        .quizdata['courseName'],
+                                                    modulename: widget
+                                                        .quizdata['module'],
+                                                    sname: userName,
+                                                    email: email,
+                                                    cno: contactnumber,
+                                                    quiznumber:
+                                                        questionindex + 1,
+                                                    quizname:
+                                                        widget.quizdata['name'],
+                                                    subcname: '',
+                                                    description: '',
                                                   ),
-                                                  child: Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0, 0),
-                                                    child: Text(
-                                                      'SUBMIT',
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
+                                                );
+                                              },
+                                              child: Text(
+                                                'Report an error',
+                                                style:
+                                                    FlutterFlowTheme.of(context)
+                                                        .bodyText1
+                                                        .override(
+                                                            fontFamily:
+                                                                'Poppins',
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            color: Colors.red),
+                                              ),
+                                            ),
+                                            SizedBox(width: 30),
+                                            Container(
+                                              width: 150,
+                                              height: 71.2,
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                              ),
+                                              child: Align(
+                                                alignment: AlignmentDirectional(
+                                                    100, 0),
+                                                child: Padding(
+                                                  padding: EdgeInsetsDirectional
+                                                      .fromSTEB(0, 0, 10, 0),
+                                                  child: GestureDetector(
+                                                    onTap: () {
+                                                      submit();
+                                                    },
+                                                    child: Container(
+                                                      width: 140,
+                                                      height: 50,
+                                                      decoration: BoxDecoration(
+                                                        color:
+                                                            Color(0xFF0A9E04),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8),
+                                                        border: Border.all(
+                                                          color: Colors
+                                                              .transparent,
+                                                        ),
+                                                      ),
+                                                      child: Align(
+                                                        alignment:
+                                                            AlignmentDirectional(
+                                                                0, 0),
+                                                        child: Text(
+                                                          'SUBMIT',
+                                                          style: FlutterFlowTheme
+                                                                  .of(context)
                                                               .bodyText1
                                                               .override(
                                                                 fontFamily:
@@ -2015,12 +2078,14 @@ class _QuizPageState extends State<QuizPage> {
                                                                         context)
                                                                     .primaryBtnText,
                                                               ),
+                                                        ),
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
                                               ),
                                             ),
-                                          ),
+                                          ],
                                         ),
                                       ],
                                     ),
@@ -3348,13 +3413,10 @@ class _QuizPageState extends State<QuizPage> {
                                                                           child:
                                                                               Text(
                                                                             'Report an error',
-                                                                            textAlign:
-                                                                                TextAlign.end,
                                                                             style: FlutterFlowTheme.of(context).bodyText1.override(
-                                                                                  fontFamily: 'Poppins',
-                                                                                  fontSize: 10,
-                                                                                  fontWeight: FontWeight.normal,
-                                                                                ),
+                                                                                fontFamily: 'Poppins',
+                                                                                fontWeight: FontWeight.w500,
+                                                                                color: Colors.red),
                                                                           ),
                                                                         ),
                                                                       ),
@@ -3891,11 +3953,11 @@ class _QuizPageState extends State<QuizPage> {
                                                                           },
                                                                           child:
                                                                               Text(
-                                                                            '   Report an error',
+                                                                            'Report an error',
                                                                             style: FlutterFlowTheme.of(context).bodyText1.override(
-                                                                                  fontFamily: 'Poppins',
-                                                                                  fontWeight: FontWeight.w300,
-                                                                                ),
+                                                                                fontFamily: 'Poppins',
+                                                                                fontWeight: FontWeight.w500,
+                                                                                color: Colors.red),
                                                                           ),
                                                                         ),
                                                                       ),

@@ -13,8 +13,10 @@ import '../flutter_flow/flutter_flow_theme.dart';
 class InstructionspageWidget extends StatefulWidget {
   var courseName;
   var quizdata;
+  String? docid;
   bool? scholarshipQuiz;
-  InstructionspageWidget(this.quizdata, this.courseName, this.scholarshipQuiz,
+  InstructionspageWidget(
+      this.quizdata, this.courseName, this.scholarshipQuiz, this.docid,
       {Key? key})
       : super(key: key);
 
@@ -69,8 +71,8 @@ class _InstructionspageWidgetState extends State<InstructionspageWidget> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => QuizPage(
-                                    widget.quizdata, widget.scholarshipQuiz)));
+                                builder: (context) => QuizPage(widget.quizdata,
+                                    widget.scholarshipQuiz, widget.docid)));
                       } else {
                         // condition for quiz not cleared
                         print("quiz not cleared");
@@ -88,7 +90,8 @@ class _InstructionspageWidgetState extends State<InstructionspageWidget> {
                                 MaterialPageRoute(
                                     builder: (context) => QuizPage(
                                         widget.quizdata,
-                                        widget.scholarshipQuiz)));
+                                        widget.scholarshipQuiz,
+                                        widget.docid)));
                           } else {
                             print("quiz attempt gap not over");
                             Toast.show(
@@ -107,7 +110,8 @@ class _InstructionspageWidgetState extends State<InstructionspageWidget> {
                                 MaterialPageRoute(
                                     builder: (context) => QuizPage(
                                         widget.quizdata,
-                                        widget.scholarshipQuiz)));
+                                        widget.scholarshipQuiz,
+                                        widget.docid)));
                           } else {
                             print('quiz attempt gap not over');
                             Toast.show(
@@ -128,8 +132,8 @@ class _InstructionspageWidgetState extends State<InstructionspageWidget> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => QuizPage(
-                                    widget.quizdata, widget.scholarshipQuiz)));
+                                builder: (context) => QuizPage(widget.quizdata,
+                                    widget.scholarshipQuiz, widget.docid)));
                       } else {
                         // condition for quiz not cleared
                         print("quiz not cleared");
@@ -147,7 +151,8 @@ class _InstructionspageWidgetState extends State<InstructionspageWidget> {
                                 MaterialPageRoute(
                                     builder: (context) => QuizPage(
                                         widget.quizdata,
-                                        widget.scholarshipQuiz)));
+                                        widget.scholarshipQuiz,
+                                        widget.docid)));
                           } else {
                             print("quiz attempt gap not over");
                             Toast.show(
@@ -166,7 +171,8 @@ class _InstructionspageWidgetState extends State<InstructionspageWidget> {
                                 MaterialPageRoute(
                                     builder: (context) => QuizPage(
                                         widget.quizdata,
-                                        widget.scholarshipQuiz)));
+                                        widget.scholarshipQuiz,
+                                        widget.docid)));
                           } else {
                             print('quiz attempt gap not over');
                             Toast.show(
@@ -187,16 +193,16 @@ class _InstructionspageWidgetState extends State<InstructionspageWidget> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                        QuizPage(widget.quizdata, widget.scholarshipQuiz)));
+                    builder: (context) => QuizPage(widget.quizdata,
+                        widget.scholarshipQuiz, widget.docid)));
           }
         } catch (e) {
           print("error id: efwefwe3223232: ${e.toString()}");
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) =>
-                      QuizPage(widget.quizdata, widget.scholarshipQuiz)));
+                  builder: (context) => QuizPage(
+                      widget.quizdata, widget.scholarshipQuiz, widget.docid)));
         }
       });
     } catch (e) {
