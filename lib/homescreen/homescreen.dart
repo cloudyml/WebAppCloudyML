@@ -1668,6 +1668,7 @@ class _LandingScreenState extends State<LandingScreen> {
                                                                 .toString(),
                                                         'id': course[index]
                                                             .courseId,
+                                                        "isReviewed": isReviewedCourse,
                                                       });
                                                 } else if (!course[index]
                                                     .isItComboCourse) {
@@ -1745,6 +1746,7 @@ class _LandingScreenState extends State<LandingScreen> {
                                                                 .toString(),
                                                         'id': course[index]
                                                             .courseId,
+                                                        "isReviewed": isReviewedCourse,
                                                       });
                                                 } else if (!course[index]
                                                     .isItComboCourse) {
@@ -2070,6 +2072,7 @@ class _LandingScreenState extends State<LandingScreen> {
                                                                                 GoRouter.of(context).pushNamed('MultiComboCourseScreen', queryParams: {
                                                                                   'courseName': course[index].courseName.toString(),
                                                                                   'id': course[index].courseId,
+                                                                                  "isReviewed": isReviewedCourse,
                                                                                 });
                                                                               } else if (!course[index].isItComboCourse) {
                                                                                 GoRouter.of(context).pushNamed('videoScreen', queryParams: {
@@ -2126,6 +2129,7 @@ class _LandingScreenState extends State<LandingScreen> {
                                                                                 GoRouter.of(context).pushNamed('MultiComboCourseScreen', queryParams: {
                                                                                   'courseName': course[index].courseName.toString(),
                                                                                   'id': course[index].courseId,
+                                                                                  "isReviewed": isReviewedCourse,
                                                                                 });
                                                                               } else if (!course[index].isItComboCourse) {
                                                                                 if (course[index].courseContent == 'pdf') {
@@ -4351,6 +4355,7 @@ class _LandingScreenState extends State<LandingScreen> {
                                                               .toString(),
                                                       'id': course[index]
                                                           .courseId,
+                                                      "isReviewed": isReviewedCourse,
                                                     });
                                               } else if (!course[index]
                                                   .isItComboCourse) {
@@ -4405,6 +4410,7 @@ class _LandingScreenState extends State<LandingScreen> {
                                                               .toString(),
                                                       'id': course[index]
                                                           .courseId,
+                                                      "isReviewed": isReviewedCourse,
                                                     });
                                               } else if (!course[index]
                                                   .isItComboCourse) {
@@ -4796,6 +4802,7 @@ class _LandingScreenState extends State<LandingScreen> {
                                                                             queryParams: {
                                                                               'courseName': course[index].courseName.toString(),
                                                                               'id': course[index].courseId,
+                                                                              "isReviewed": isReviewedCourse,
                                                                             });
                                                                       } else if (!course[
                                                                               index]
@@ -4866,6 +4873,7 @@ class _LandingScreenState extends State<LandingScreen> {
                                                                             queryParams: {
                                                                               'courseName': course[index].courseName.toString(),
                                                                               'id': course[index].courseId,
+                                                                              "isReviewed": isReviewedCourse,
                                                                             });
                                                                       } else if (!course[
                                                                               index]

@@ -239,11 +239,13 @@ class MyRouter {
               final String id = state.queryParams['id']!;
               final String courseName = state.queryParams['courseName']!;
               //           final String coursePrice = state.queryParams['coursePrice']!;
+              final String isReviewed = state.queryParams['isReviewed']!;
               return MaterialPage(
                   key: state.pageKey,
                   child: MultiComboCourse(
                     id: id,
                     courseName: courseName,
+                    isReviewed: isReviewed,
                     // coursePrice: coursePrice,
                     // cID: cID,
                   ));
