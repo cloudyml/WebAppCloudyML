@@ -799,7 +799,7 @@ class _LandingScreenState extends State<LandingScreen> {
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection("Reviews").get();
       for( QueryDocumentSnapshot doc in querySnapshot.docs) {
-        String id = doc["uid"] ?? "";
+        String id = doc["email"] ?? "";
         reviewedStudentIds.add(id);
       }
       print("review IDs: $reviewedStudentIds");
