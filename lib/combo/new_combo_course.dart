@@ -12,13 +12,15 @@ import '../global_variable.dart';
 import '../globals.dart';
 import '../module/video_screen.dart';
 import '../widgets/review_dialog/take_review.dart';
-
+import 'package:cloudyml_app2/global_variable.dart' as globals;
 class NewComboCourse extends StatefulWidget {
   final String? courseName;
   final String? courseIdd;
+  String? isReviewed;
   bool? functionCalled;
    NewComboCourse(
-      {Key? key, required this.courseName, required this.courseIdd, this.functionCalled = false})
+      {Key? key, required this.courseName, required this.courseIdd,
+        this.isReviewed, this.functionCalled = false})
       : super(key: key);
 
   @override
@@ -48,21 +50,20 @@ class _NewComboCourseState extends State<NewComboCourse> {
   }
 
 
-var courseData;
+  var courseData;
   var coursePerc;
 
 
   @override
   void initState() {
     super.initState();
-
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if(!widget.functionCalled!){
+      if(!widget.functionCalled! && widget.isReviewed! == "false" && globals.role != "mentor"){
         showAlertDialog();
         setState(() {
           widget.functionCalled = true;

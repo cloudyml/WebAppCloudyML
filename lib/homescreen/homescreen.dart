@@ -791,9 +791,35 @@ class _LandingScreenState extends State<LandingScreen> {
   }
 
   bool viewAll = false;
+  bool isReviewed = false;
+  String? isReviewedCourse;
+  final reviewedStudentIds = [];
+  getReviewedStudentIds() async {
+    try{
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection("Reviews").get();
+      for( QueryDocumentSnapshot doc in querySnapshot.docs) {
+        String id = doc["uid"] ?? "";
+        reviewedStudentIds.add(id);
+      }
+      print("review IDs: $reviewedStudentIds");
+      isReviewed = reviewedStudentIds.contains(FirebaseAuth.instance.currentUser!.uid);
+      print("IDs: $isReviewed");
+      if(isReviewed){
+        isReviewedCourse = "true";
+      } else {
+        isReviewedCourse = "false";
+      }
+      setState(() {});
+    }catch(e){
+      print("Error getting review IDs: $e");
+    }
+
+  }
 
   @override
   void initState() {
+    getReviewedStudentIds();
     getQuizDataAndUpdateScores();
     super.initState();
     // print('this is url ${html.window.location.href}');
@@ -1795,7 +1821,8 @@ class _LandingScreenState extends State<LandingScreen> {
                                                         'courseId':
                                                             course[index]
                                                                 .courseId,
-                                                        'courseName': courseName
+                                                        'courseName': courseName,
+                                                        "isReviewed": isReviewedCourse,
                                                       });
                                                   // Navigator.push(
                                                   //   context,
@@ -2140,7 +2167,8 @@ class _LandingScreenState extends State<LandingScreen> {
                                                                                 mainCourseId = course[index].courseId;
                                                                                 GoRouter.of(context).pushNamed('NewComboCourseScreen', queryParams: {
                                                                                   'courseId': course[index].courseId,
-                                                                                  'courseName': courseName
+                                                                                  'courseName': courseName,
+                                                                                  "isReviewed": isReviewedCourse,
                                                                                 });
                                                                                 // Navigator.push(
                                                                                 //   context,
@@ -4446,7 +4474,8 @@ class _LandingScreenState extends State<LandingScreen> {
                                                     queryParams: {
                                                       'courseId': course[index]
                                                           .courseId,
-                                                      'courseName': courseName
+                                                      'courseName': courseName,
+                                                      "isReviewed": isReviewedCourse,
                                                     });
                                               }
                                             }
