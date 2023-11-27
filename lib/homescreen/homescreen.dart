@@ -796,14 +796,20 @@ class _LandingScreenState extends State<LandingScreen> {
   final reviewedStudentIds = [];
   getReviewedStudentIds() async {
     try{
+
+      var email = await FirebaseFirestore.instance
+          .collection("Users")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .get();
+
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection("Reviews").get();
       for( QueryDocumentSnapshot doc in querySnapshot.docs) {
         String id = doc["email"] ?? "";
         reviewedStudentIds.add(id);
       }
-      print("review IDs: $reviewedStudentIds");
-      isReviewed = reviewedStudentIds.contains(FirebaseAuth.instance.currentUser!.uid);
+      print("review IDs: $reviewedStudentIds ${email.data()!["email"]}");
+      isReviewed = reviewedStudentIds.contains(email.data()!["email"]);
       print("IDs: $isReviewed");
       if(isReviewed){
         isReviewedCourse = "true";
