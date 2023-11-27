@@ -14,7 +14,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../../global_variable.dart' as globals;
-import 'package:material_dialogs/material_dialogs.dart';
 // import 'certificate.dart';
 
 class ScholarshipCongratulationsWidget extends StatefulWidget {
