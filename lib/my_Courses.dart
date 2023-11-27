@@ -27,7 +27,8 @@ import 'module/pdf_course.dart';
 import 'dart:html' as html;
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  String? isReviewed;
+  HomeScreen({Key? key, this.isReviewed}) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -284,7 +285,7 @@ final Scrollcontroller = ScrollController();
                     // height: 45,
                     color: HexColor("440F87"),
                     padding: const EdgeInsets.only(top: 8.0, right: 5),
-                    child: customMenuBar(context),
+                    child: customMenuBar(context, widget.isReviewed),
                   ),
                   ref.data()!["name"] == null
                       ? Container()
@@ -359,6 +360,7 @@ final Scrollcontroller = ScrollController();
                                                         .toString(),
                                                     'id':
                                                         course[index].courseId,
+                                                    "isReviewed": widget.isReviewed,
                                                   });
                                             } else if (!course[index]
                                                 .isItComboCourse) {
@@ -430,6 +432,7 @@ final Scrollcontroller = ScrollController();
                                                         .toString(),
                                                     'id':
                                                         course[index].courseId,
+                                                    "isReviewed": widget.isReviewed,
                                                   });
                                             } else if (!course[index]
                                                 .isItComboCourse) {
@@ -497,7 +500,8 @@ final Scrollcontroller = ScrollController();
                                                   queryParams: {
                                                     'courseId':
                                                         course[index].courseId,
-                                                    'courseName': courseName
+                                                    'courseName': courseName,
+                                                    "isReviewed": widget.isReviewed,
                                                   });
 
                                               // GoRouter.of(context).pushNamed(
@@ -881,6 +885,7 @@ final Scrollcontroller = ScrollController();
                                                   .courseName
                                                   .toString(),
                                               'id': course[index].courseId,
+                                              "isReviewed": widget.isReviewed,
                                             });
                                       } else if (!course[index]
                                           .isItComboCourse) {
@@ -928,6 +933,7 @@ final Scrollcontroller = ScrollController();
                                                   .courseName
                                                   .toString(),
                                               'id': course[index].courseId,
+                                              "isReviewed": widget.isReviewed,
                                             });
                                       } else if (!course[index]
                                           .isItComboCourse) {
@@ -982,7 +988,8 @@ final Scrollcontroller = ScrollController();
                                             queryParams: {
                                               'courseId':
                                                   course[index].courseId,
-                                              'courseName': courseName
+                                              'courseName': courseName,
+                                              "isReviewed": widget.isReviewed,
                                             });
 
                                         // GoRouter.of(context).pushNamed(
