@@ -283,7 +283,10 @@ class MyRouter {
           name: 'myCourses',
           path: '/myCourses',
           pageBuilder: (context, state) {
-            return MaterialPage(key: state.pageKey, child: HomeScreen());
+            final String isReviewed = state.queryParams['isReviewed']!;
+            return MaterialPage(key: state.pageKey, child: HomeScreen(
+              isReviewed: isReviewed,
+            ));
           },
         ),
         GoRoute(

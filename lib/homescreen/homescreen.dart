@@ -1477,7 +1477,7 @@ class _LandingScreenState extends State<LandingScreen> {
 
                     Padding(
                       padding: const EdgeInsets.only(top: 8.0, right: 5),
-                      child: customMenuBar(context),
+                      child: customMenuBar(context, isReviewedCourse),
                     ),
                     // Positioned(
                     //   top: verticalScale * 475,
@@ -1599,7 +1599,11 @@ class _LandingScreenState extends State<LandingScreen> {
                                   InkWell(
                                     onTap: () {
                                       GoRouter.of(context)
-                                          .pushReplacementNamed('myCourses');
+                                          .pushReplacementNamed('myCourses',
+                                        queryParams: {
+                                          "isReviewed": isReviewedCourse,
+                                        }
+                                      );
                                     },
                                     child: Row(
                                       children: [
@@ -4288,7 +4292,9 @@ class _LandingScreenState extends State<LandingScreen> {
                                 InkWell(
                                   onTap: () {
                                     GoRouter.of(context)
-                                        .pushReplacementNamed('myCourses');
+                                        .pushReplacementNamed('myCourses',queryParams: {
+                                      "isReviewed": isReviewedCourse,
+                                    });
                                   },
                                   child: Row(
                                     children: [
