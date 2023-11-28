@@ -1164,7 +1164,9 @@ Drawer customDrawer(BuildContext context) {
                   ),
                 ),
                 onTap: () {
-                  GoRouter.of(context).push('/myCourses');
+                  GoRouter.of(context).push('/myCourses', extra: {
+                  "isReviewed": "true"
+                  });
                 },
               ),
               globals.role == 'mentor'

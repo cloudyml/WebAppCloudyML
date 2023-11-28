@@ -1153,7 +1153,11 @@ class _VideoScreenState extends State<VideoScreen> {
                                   widget.isDemo == null
                                       ? Navigator.pop(context)
                                       : GoRouter.of(context)
-                                          .pushReplacementNamed('myCourses');
+                                          .pushReplacementNamed('myCourses',
+
+                                      queryParams: {
+                                        "isReviewed": "true"
+                                      });
                                   // Navigator.pop(context);
                                 },
                                 child: Container(

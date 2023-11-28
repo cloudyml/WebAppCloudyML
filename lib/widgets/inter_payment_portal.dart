@@ -341,9 +341,13 @@ class _RazorPayInternationalBtnState extends State<RazorPayInternationalBtn> {
           GoRouter.of(context).pushNamed('NewComboCourseScreen', queryParams: {
             'courseId': value.data()!['id'],
             'courseName': value.data()!['name'],
+            "isReviewed": "true"
           });
         } else {
-          GoRouter.of(context).pushReplacementNamed('myCourses');
+          GoRouter.of(context).pushReplacementNamed('myCourses',
+          queryParams: {
+            "isReviewed": "true",
+          });
         }
       });
 

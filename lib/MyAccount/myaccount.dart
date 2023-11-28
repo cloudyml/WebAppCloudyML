@@ -544,7 +544,9 @@ class _MyAccountPageState extends State<MyAccountPage> {
                                               'Certificate'),
                                           InkWell(
                                             onTap: () {
-                                              GoRouter.of(context).pushReplacementNamed('myCourses');
+                                              GoRouter.of(context).pushReplacementNamed('myCourses', queryParams: {
+                                                "isReviewed": "true"
+                                              });
                                             },
                                             child: container(
                                                 Adaptive.w(10),
@@ -911,7 +913,10 @@ class _MyAccountPageState extends State<MyAccountPage> {
                                           'Certificate'),
                                       InkWell(
                                           onTap: () {
-                                            GoRouter.of(context).pushReplacementNamed('myCourses');
+                                            GoRouter.of(context).pushReplacementNamed('myCourses',
+                                                queryParams: {
+                                                  "isReviewed": "true"
+                                                });
 
                                           },
                                           child: container(

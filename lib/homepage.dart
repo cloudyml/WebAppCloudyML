@@ -1016,6 +1016,7 @@ class _HomeState extends State<Home> {
                                                       'courseId': course[index]
                                                           .courseId,
                                                       'courseName': courseName,
+                                                      "isReviewed": "true"
                                                     });
                                                 // Navigator.push(
                                                 //   context,
@@ -2715,7 +2716,8 @@ class _HomeState extends State<Home> {
                                             queryParams: {
                                               'courseId':
                                                   course[index].courseId,
-                                              'courseName': courseName
+                                              'courseName': courseName,
+                                              "isReviewed": "true",
                                             });
                                       }
                                     }
