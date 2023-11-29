@@ -59,18 +59,18 @@ class _NewComboCourseState extends State<NewComboCourse> {
     super.initState();
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if(!widget.functionCalled! && widget.isReviewed! == "false" && globals.role != "mentor"){
-        showAlertDialog();
-        setState(() {
-          widget.functionCalled = true;
-        });
-      }
-    });
-  }
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   WidgetsBinding.instance.addPostFrameCallback((_) {
+  //     if(!widget.functionCalled! && widget.isReviewed! == "false" && globals.role != "mentor"){
+  //       showAlertDialog();
+  //       setState(() {
+  //         widget.functionCalled = true;
+  //       });
+  //     }
+  //   });
+  // }
 
 
 

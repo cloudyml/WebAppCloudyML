@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloudyml_app2/global_variable.dart';
 import 'package:cloudyml_app2/screens/flutter_flow/flutter_flow_theme.dart';
 import 'package:cloudyml_app2/screens/student_review/ReviewApi.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -104,7 +105,19 @@ class _ShowReviewDialogState extends State<ShowReviewDialog> {
       courseList;
     });
   }
+  String uid = '';
+  getUid() async {
+    try {
+      uid = await FirebaseAuth.instance.currentUser!.uid;
+    } catch (e) {
+      uid = '';
+      print(e);
+    }
 
+    if (uid == null) {
+      uid = '';
+    }
+  }
   Future<void> _selectEndDate(BuildContext context) async {
     final DateTime picked = (await showDatePicker(
       context: context,
@@ -133,6 +146,7 @@ class _ShowReviewDialogState extends State<ShowReviewDialog> {
   void initState() {
     super.initState();
     getallcoursename();
+    getUid();
     courseList = ["Course Name"];
   }
 
@@ -579,6 +593,7 @@ class _ShowReviewDialogState extends State<ShowReviewDialog> {
                                   "experience":
                                       "${experienceStartDate!.day}/${experienceStartDate!.month}/${experienceStartDate!.year} to ${experienceEndDate!.day}/${experienceEndDate!.month}/${experienceEndDate!.year}",
                                   "date": DateTime.now().toString(),
+                                  "uid": uid,
                                 }));
                                 Navigator.of(context).pop();
                                 print('wew11');
@@ -746,11 +761,25 @@ class _MobileReviewDialogState extends State<MobileReviewDialog> {
   double fontSize4 = 15.0;
 
   var rating = 5;
+  String uid = '';
+  getUid() async {
+    try {
+      uid = await FirebaseAuth.instance.currentUser!.uid;
+    } catch (e) {
+      uid = '';
+      print(e);
+    }
+
+    if (uid == null) {
+      uid = '';
+    }
+  }
 
   @override
   void initState() {
     super.initState();
     getallcoursename();
+    getUid();
     courseList = ["Course Name"];
   }
 
@@ -1178,6 +1207,7 @@ class _MobileReviewDialogState extends State<MobileReviewDialog> {
                                   "experience":
                                       "${experienceStartDate!.day}/${experienceStartDate!.month}/${experienceStartDate!.year} to ${experienceEndDate!.day}/${experienceEndDate!.month}/${experienceEndDate!.year}",
                                   "date": DateTime.now().toString(),
+                                  "uid": uid,
                                 }));
                                 Navigator.of(context).pop();
                                 print('wew11');
