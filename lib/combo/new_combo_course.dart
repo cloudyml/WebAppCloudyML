@@ -17,10 +17,9 @@ class NewComboCourse extends StatefulWidget {
   final String? courseName;
   final String? courseIdd;
   String? isReviewed;
-  bool? functionCalled;
    NewComboCourse(
       {Key? key, required this.courseName, required this.courseIdd,
-        this.isReviewed, this.functionCalled = false})
+        this.isReviewed, })
       : super(key: key);
 
   @override
@@ -29,25 +28,7 @@ class NewComboCourse extends StatefulWidget {
 
 class _NewComboCourseState extends State<NewComboCourse> {
 
-  showAlertDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
 
-        double screenWidth = MediaQuery.of(context).size.width;
-        double screenHeight = MediaQuery.of(context).size.height;
-
-        // Define breakpoints for different screen sizes
-        final isPhone =
-            screenWidth < 600;
-
-        return AlertDialog(
-          content: isPhone? MobileReviewDialog()
-              : ShowReviewDialog(),
-        );
-      },
-    );
-  }
 
 
   var courseData;
@@ -59,20 +40,21 @@ class _NewComboCourseState extends State<NewComboCourse> {
     super.initState();
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if(!widget.functionCalled! && widget.isReviewed! == "false" && globals.role != "mentor"){
-        // showAlertDialog();
-        setState(() {
-          widget.functionCalled = true;
-        });
-      }
-    });
-  }
-
-
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   WidgetsBinding.instance.addPostFrameCallback((_) {
+  //     if(!widget.functionCalled!
+  //         && widget.isReviewed! == "false"
+  //         && globals.role != "mentor"){
+  //       showAlertDialog();
+  //       print("showAlertDialog showAlertDialog");
+  //       setState(() {
+  //         widget.functionCalled = true;
+  //       });
+  //     }
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +85,6 @@ class _NewComboCourseState extends State<NewComboCourse> {
                   onTap: () {
                     GoRouter.of(context).pushReplacementNamed('home');
                     Get.delete<ComboCourseController>();
-                    widget.functionCalled = false;
                   },
                   child: Container(
                       child: Padding(
