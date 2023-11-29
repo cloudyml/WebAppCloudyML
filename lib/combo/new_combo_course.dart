@@ -64,7 +64,7 @@ class _NewComboCourseState extends State<NewComboCourse> {
     super.didChangeDependencies();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if(!widget.functionCalled! && widget.isReviewed! == "false" && globals.role != "mentor"){
-        showAlertDialog();
+        // showAlertDialog();
         setState(() {
           widget.functionCalled = true;
         });
