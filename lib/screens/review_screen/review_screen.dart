@@ -174,7 +174,10 @@ class _Review1State extends State<ReviewsScreen> {
                           if (value != dropdownValue) {
                             if (value == 'My Courses') {
                               GoRouter.of(context)
-                                  .pushReplacementNamed('myCourses');
+                                  .pushReplacementNamed('myCourses',
+                                  queryParams: {
+                                    "isReviewed": "true"
+                                  });
                             } else if (value == 'Resume Review') {
                               GoRouter.of(context)
                                   .pushReplacementNamed('reviewResume');

@@ -178,7 +178,7 @@ class _PayNowBottomSheetfeatureState extends State<PayNowBottomSheetfeature> {
                                         'courseName':
                                             featuredCourse[0].courseName,
                                         'courseId': featuredCourse[0].courseId,
-                                      });
+                                        "isReviewed": "true",});
                                   // }
                                   // else if(featuredCourse[0].findex=='14')
                                   // {
@@ -416,6 +416,7 @@ class _PayNowBottomSheetfeatureState extends State<PayNowBottomSheetfeature> {
                                                                             queryParams: {
                                                                               'courseName': featuredCourse[0].courseName,
                                                                               'courseId': featuredCourse[0].courseId,
+                                                                              "isReviewed": "true",
                                                                             })
                                                                         // }
                                                                         // else if(featuredCourse[0].findex=='14')
@@ -585,6 +586,7 @@ class _PayNowBottomSheetfeatureState extends State<PayNowBottomSheetfeature> {
                                                 featuredCourse[0].courseName,
                                             'courseId':
                                                 featuredCourse[0].courseId,
+                                            "isReviewed": "true",
                                           });
                                       // }
                                       // else if(featuredCourse[0].findex=='14')
@@ -836,6 +838,7 @@ class _PayNowBottomSheetfeatureState extends State<PayNowBottomSheetfeature> {
                                                                             GoRouter.of(context).pushNamed('NewComboCourseScreen', queryParams: {
                                                                               'courseName': featuredCourse[0].courseName,
                                                                               'courseId': featuredCourse[0].courseId,
+                                                                              "isReviewed": "true",
                                                                             })
                                                                             // }
                                                                             // else if(featuredCourse[0].findex=='14')

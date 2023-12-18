@@ -50,6 +50,8 @@ import 'package:cloudyml_app2/global_variable.dart' as globals;
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:html' as html;
 
+import '../widgets/review_dialog/take_review.dart';
+
 var rewardCount = 0;
 String? linkMessage;
 
@@ -793,6 +795,7 @@ class _LandingScreenState extends State<LandingScreen> {
   bool viewAll = false;
   bool isReviewed = false;
   String? isReviewedCourse;
+  String? role;
   final reviewedStudentIds = [];
   getReviewedStudentIds() async {
     try{
@@ -801,7 +804,8 @@ class _LandingScreenState extends State<LandingScreen> {
           .collection("Users")
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .get();
-
+      role = email.data()!["role"];
+      print("Role  = ${role}");
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection("Reviews").get();
       for( QueryDocumentSnapshot doc in querySnapshot.docs) {
@@ -810,19 +814,42 @@ class _LandingScreenState extends State<LandingScreen> {
       }
       print("review IDs: $reviewedStudentIds ${email.data()!["email"]}");
       isReviewed = reviewedStudentIds.contains(email.data()!["email"]);
-      print("IDs: $isReviewed");
+      print("IDs: $isReviewed ${email.data()!["paidCourseNames"].isNotEmpty}");
       if(isReviewed){
         isReviewedCourse = "true";
       } else {
         isReviewedCourse = "false";
       }
-      setState(() {});
+      showAlertDialog(email.data()!["paidCourseNames"].isNotEmpty);
     }catch(e){
       print("Error getting review IDs: $e");
     }
 
   }
+  showAlertDialog(isPurchased) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      print("Role  = ${globals.role}");
+      if(!isReviewed && globals.role != "mentor" && isPurchased){
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
 
+            double screenWidth = MediaQuery.of(context).size.width;
+            double screenHeight = MediaQuery.of(context).size.height;
+
+            // Define breakpoints for different screen sizes
+            final isPhone =
+                screenWidth < 600;
+
+            return AlertDialog(
+              content: isPhone? MobileReviewDialog()
+                  : ShowReviewDialog(),
+            );
+          },
+        );
+      }
+    });
+  }
   @override
   void initState() {
     getReviewedStudentIds();
