@@ -830,7 +830,7 @@ var items = [
 ];
 String dropdownValue = '';
 
-Widget customMenuBar(BuildContext context) {
+Widget customMenuBar(BuildContext context, String? isReviewed) {
   void saveLoginOutState(BuildContext context) {
     Provider.of<LoginState>(context, listen: false).loggedIn = false;
   }
@@ -987,7 +987,11 @@ Widget customMenuBar(BuildContext context) {
             onChanged: (String? value) {
               if (value != dropdownValue) {
                 if (value == 'My Courses') {
-                  GoRouter.of(context).pushReplacementNamed('myCourses');
+                  GoRouter.of(context).pushReplacementNamed('myCourses',
+                    queryParams: {
+                    "isReviewed": isReviewed,
+                    }
+                  );
                 } else if (value == 'Resume Review') {
                   GoRouter.of(context).pushReplacementNamed('reviewResume');
                 } else if (value == 'Admin Quiz Panel') {
@@ -1160,7 +1164,9 @@ Drawer customDrawer(BuildContext context) {
                   ),
                 ),
                 onTap: () {
-                  GoRouter.of(context).push('/myCourses');
+                  GoRouter.of(context).push('/myCourses', extra: {
+                  "isReviewed": "true"
+                  });
                 },
               ),
               globals.role == 'mentor'

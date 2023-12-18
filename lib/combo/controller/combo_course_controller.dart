@@ -91,6 +91,7 @@ class ComboCourseController extends GetxController {
   var courses = [].obs;
 
   var paidCourse = [].obs;
+  
 
 //var isLoading = true.obs;
 
@@ -124,7 +125,7 @@ class ComboCourseController extends GetxController {
 
 
 
- checkCourseExist() async {
+  checkCourseExist() async {
     await FirebaseFirestore.instance
         .collection("Users")
         .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -179,6 +180,8 @@ class ComboCourseController extends GetxController {
       print('the progress exception is$e');
     }
   }
+
+  
 }
 
 class ComboModuleController extends GetxController {

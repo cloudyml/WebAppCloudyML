@@ -13,7 +13,8 @@ import 'combo_course.dart';
 class MultiComboCourse extends StatelessWidget {
   final String? id;
   final String? courseName;
-  const MultiComboCourse({Key? key, this.id, this.courseName})
+  final String? isReviewed;
+  const MultiComboCourse({Key? key, this.id, this.courseName, this.isReviewed})
       : super(key: key);
 
   @override
@@ -316,7 +317,8 @@ class MultiComboCourse extends StatelessWidget {
                                                                             [
                                                                             'id'],
                                                                     'courseName':
-                                                                        courseName
+                                                                        courseName,
+                                                                        "isReviewed": isReviewed,
                                                                   });
                                                             }
                                                           },

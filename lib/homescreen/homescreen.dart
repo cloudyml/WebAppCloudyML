@@ -50,6 +50,8 @@ import 'package:cloudyml_app2/global_variable.dart' as globals;
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:html' as html;
 
+import '../widgets/review_dialog/take_review.dart';
+
 var rewardCount = 0;
 String? linkMessage;
 
@@ -791,9 +793,66 @@ class _LandingScreenState extends State<LandingScreen> {
   }
 
   bool viewAll = false;
+  bool isReviewed = false;
+  String? isReviewedCourse;
+  String? role;
+  final reviewedStudentIds = [];
+  getReviewedStudentIds() async {
+    try{
 
+      var email = await FirebaseFirestore.instance
+          .collection("Users")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .get();
+      role = email.data()!["role"];
+      print("Role  = ${role}");
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection("Reviews").get();
+      for( QueryDocumentSnapshot doc in querySnapshot.docs) {
+        String id = doc["email"] ?? "";
+        reviewedStudentIds.add(id);
+      }
+      print("review IDs: $reviewedStudentIds ${email.data()!["email"]}");
+      isReviewed = reviewedStudentIds.contains(email.data()!["email"]);
+      print("IDs: $isReviewed ${email.data()!["paidCourseNames"].isNotEmpty}");
+      if(isReviewed){
+        isReviewedCourse = "true";
+      } else {
+        isReviewedCourse = "false";
+      }
+      showAlertDialog(email.data()!["paidCourseNames"].isNotEmpty);
+    }catch(e){
+      print("Error getting review IDs: $e");
+    }
+
+  }
+  showAlertDialog(isPurchased) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      print("Role  = ${globals.role}");
+      if(!isReviewed && globals.role != "mentor" && isPurchased){
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+
+            double screenWidth = MediaQuery.of(context).size.width;
+            double screenHeight = MediaQuery.of(context).size.height;
+
+            // Define breakpoints for different screen sizes
+            final isPhone =
+                screenWidth < 600;
+
+            return AlertDialog(
+              content: isPhone? MobileReviewDialog()
+                  : ShowReviewDialog(),
+            );
+          },
+        );
+      }
+    });
+  }
   @override
   void initState() {
+    getReviewedStudentIds();
     getQuizDataAndUpdateScores();
     super.initState();
     // print('this is url ${html.window.location.href}');
@@ -1445,7 +1504,7 @@ class _LandingScreenState extends State<LandingScreen> {
 
                     Padding(
                       padding: const EdgeInsets.only(top: 8.0, right: 5),
-                      child: customMenuBar(context),
+                      child: customMenuBar(context, isReviewedCourse),
                     ),
                     // Positioned(
                     //   top: verticalScale * 475,
@@ -1567,7 +1626,11 @@ class _LandingScreenState extends State<LandingScreen> {
                                   InkWell(
                                     onTap: () {
                                       GoRouter.of(context)
-                                          .pushReplacementNamed('myCourses');
+                                          .pushReplacementNamed('myCourses',
+                                        queryParams: {
+                                          "isReviewed": isReviewedCourse,
+                                        }
+                                      );
                                     },
                                     child: Row(
                                       children: [
@@ -1636,6 +1699,7 @@ class _LandingScreenState extends State<LandingScreen> {
                                                                 .toString(),
                                                         'id': course[index]
                                                             .courseId,
+                                                        "isReviewed": isReviewedCourse,
                                                       });
                                                 } else if (!course[index]
                                                     .isItComboCourse) {
@@ -1713,6 +1777,7 @@ class _LandingScreenState extends State<LandingScreen> {
                                                                 .toString(),
                                                         'id': course[index]
                                                             .courseId,
+                                                        "isReviewed": isReviewedCourse,
                                                       });
                                                 } else if (!course[index]
                                                     .isItComboCourse) {
@@ -1795,7 +1860,8 @@ class _LandingScreenState extends State<LandingScreen> {
                                                         'courseId':
                                                             course[index]
                                                                 .courseId,
-                                                        'courseName': courseName
+                                                        'courseName': courseName,
+                                                        "isReviewed": isReviewedCourse,
                                                       });
                                                   // Navigator.push(
                                                   //   context,
@@ -2037,6 +2103,7 @@ class _LandingScreenState extends State<LandingScreen> {
                                                                                 GoRouter.of(context).pushNamed('MultiComboCourseScreen', queryParams: {
                                                                                   'courseName': course[index].courseName.toString(),
                                                                                   'id': course[index].courseId,
+                                                                                  "isReviewed": isReviewedCourse,
                                                                                 });
                                                                               } else if (!course[index].isItComboCourse) {
                                                                                 GoRouter.of(context).pushNamed('videoScreen', queryParams: {
@@ -2093,6 +2160,7 @@ class _LandingScreenState extends State<LandingScreen> {
                                                                                 GoRouter.of(context).pushNamed('MultiComboCourseScreen', queryParams: {
                                                                                   'courseName': course[index].courseName.toString(),
                                                                                   'id': course[index].courseId,
+                                                                                  "isReviewed": isReviewedCourse,
                                                                                 });
                                                                               } else if (!course[index].isItComboCourse) {
                                                                                 if (course[index].courseContent == 'pdf') {
@@ -2140,7 +2208,8 @@ class _LandingScreenState extends State<LandingScreen> {
                                                                                 mainCourseId = course[index].courseId;
                                                                                 GoRouter.of(context).pushNamed('NewComboCourseScreen', queryParams: {
                                                                                   'courseId': course[index].courseId,
-                                                                                  'courseName': courseName
+                                                                                  'courseName': courseName,
+                                                                                  "isReviewed": isReviewedCourse,
                                                                                 });
                                                                                 // Navigator.push(
                                                                                 //   context,
@@ -4250,7 +4319,9 @@ class _LandingScreenState extends State<LandingScreen> {
                                 InkWell(
                                   onTap: () {
                                     GoRouter.of(context)
-                                        .pushReplacementNamed('myCourses');
+                                        .pushReplacementNamed('myCourses',queryParams: {
+                                      "isReviewed": isReviewedCourse,
+                                    });
                                   },
                                   child: Row(
                                     children: [
@@ -4317,6 +4388,7 @@ class _LandingScreenState extends State<LandingScreen> {
                                                               .toString(),
                                                       'id': course[index]
                                                           .courseId,
+                                                      "isReviewed": isReviewedCourse,
                                                     });
                                               } else if (!course[index]
                                                   .isItComboCourse) {
@@ -4371,6 +4443,7 @@ class _LandingScreenState extends State<LandingScreen> {
                                                               .toString(),
                                                       'id': course[index]
                                                           .courseId,
+                                                      "isReviewed": isReviewedCourse,
                                                     });
                                               } else if (!course[index]
                                                   .isItComboCourse) {
@@ -4446,7 +4519,8 @@ class _LandingScreenState extends State<LandingScreen> {
                                                     queryParams: {
                                                       'courseId': course[index]
                                                           .courseId,
-                                                      'courseName': courseName
+                                                      'courseName': courseName,
+                                                      "isReviewed": isReviewedCourse,
                                                     });
                                               }
                                             }
@@ -4761,6 +4835,7 @@ class _LandingScreenState extends State<LandingScreen> {
                                                                             queryParams: {
                                                                               'courseName': course[index].courseName.toString(),
                                                                               'id': course[index].courseId,
+                                                                              "isReviewed": isReviewedCourse,
                                                                             });
                                                                       } else if (!course[
                                                                               index]
@@ -4831,6 +4906,7 @@ class _LandingScreenState extends State<LandingScreen> {
                                                                             queryParams: {
                                                                               'courseName': course[index].courseName.toString(),
                                                                               'id': course[index].courseId,
+                                                                              "isReviewed": isReviewedCourse,
                                                                             });
                                                                       } else if (!course[
                                                                               index]

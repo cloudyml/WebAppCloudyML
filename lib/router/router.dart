@@ -27,6 +27,7 @@ import 'package:cloudyml_app2/screens/quiz/quiz_new_combo_course.dart';
 import 'package:cloudyml_app2/screens/splash.dart';
 import 'package:cloudyml_app2/screens/student_review/review_screen.dart';
 import 'package:cloudyml_app2/store.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:path/path.dart';
@@ -53,6 +54,8 @@ import '../screens/quiz/quizesofenrolledcourses.dart';
 import '../screens/review_screen/review_screen.dart';
 import '../screens/student_review/postReviewScreen.dart';
 import 'login_state_check.dart';
+
+
 
 class MyRouter {
   final LoginState loginState;
@@ -183,11 +186,13 @@ class MyRouter {
             pageBuilder: (context, state) {
               final String courseId = state.queryParams['courseId']!;
               final String courseName = state.queryParams['courseName']!;
+              final String isReviewed = state.queryParams['isReviewed']!;
               return MaterialPage(
                   key: state.pageKey,
                   child: NewComboCourse(
                     courseName: courseName,
                     courseIdd: courseId,
+                    isReviewed: isReviewed,
                   ));
             }),
         GoRoute(
@@ -234,11 +239,13 @@ class MyRouter {
               final String id = state.queryParams['id']!;
               final String courseName = state.queryParams['courseName']!;
               //           final String coursePrice = state.queryParams['coursePrice']!;
+              final String isReviewed = state.queryParams['isReviewed']!;
               return MaterialPage(
                   key: state.pageKey,
                   child: MultiComboCourse(
                     id: id,
                     courseName: courseName,
+                    isReviewed: isReviewed,
                     // coursePrice: coursePrice,
                     // cID: cID,
                   ));
@@ -276,7 +283,10 @@ class MyRouter {
           name: 'myCourses',
           path: '/myCourses',
           pageBuilder: (context, state) {
-            return MaterialPage(key: state.pageKey, child: HomeScreen());
+            final String isReviewed = state.queryParams['isReviewed']!;
+            return MaterialPage(key: state.pageKey, child: HomeScreen(
+              isReviewed: isReviewed,
+            ));
           },
         ),
         GoRoute(

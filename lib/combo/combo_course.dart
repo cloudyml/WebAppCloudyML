@@ -123,7 +123,11 @@ class _ComboCourseState extends State<ComboCourse> {
         leading: InkWell(
           onTap: () {
             // Navigator.of(context).pop();
-            GoRouter.of(context).pushReplacementNamed('myCourses');
+            GoRouter.of(context).pushReplacementNamed('myCourses',
+                queryParams: {
+                  "isReviewed": "true"
+                }
+            );
             // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=> Home()));
           },
           child: Padding(
