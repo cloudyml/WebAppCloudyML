@@ -429,7 +429,7 @@ class _LoginPageState extends State<LoginPage> {
                                                     decoration: BoxDecoration(
                                                       borderRadius:
                                                           const BorderRadius
-                                                                  .all(
+                                                              .all(
                                                               Radius.circular(
                                                                   20)),
                                                       color: MyColors
@@ -1002,14 +1002,17 @@ class _LoginPageState extends State<LoginPage> {
             .get();
 
         print("4");
-
-        await FirebaseFirestore.instance
-            .collection('Users')
-            .where('mobilenumber', isEqualTo: phoneNumber)
-            .get()
-            .then((QuerySnapshot snapshot) {
-          snapshot.docs.forEach((f) => items.add(f.data()));
-        });
+        try {
+          await FirebaseFirestore.instance
+              .collection('Users')
+              .where('mobilenumber', isEqualTo: phoneNumber)
+              .get()
+              .then((QuerySnapshot snapshot) {
+            snapshot.docs.forEach((f) => items.add(f.data()));
+          });
+        } catch (e) {
+          print("error code efjowje: ${e}");
+        }
       }
 
       // if (items.length == 0) {
@@ -1031,10 +1034,15 @@ class _LoginPageState extends State<LoginPage> {
       // }
 
       if (items.length == 0) {
-        final docSnapshot = await FirebaseFirestore.instance
-            .collection('UserData')
-            .doc()
-            .set({"phone": phoneNumber, "date": DateTime.now()});
+        print("iwejfiowj");
+        try {
+          final docSnapshot = await FirebaseFirestore.instance
+              .collection('UserData')
+              .doc()
+              .set({"phone": phoneNumber, "date": DateTime.now()});
+        } catch (e) {
+          print("error code wjeofw: ${e.toString()}");
+        }
       }
 
       Map data = items[0];
@@ -1069,74 +1077,81 @@ class _LoginPageState extends State<LoginPage> {
       setState(() {
         loading = true;
       });
-      await _auth.verifyPhoneNumber(
-          phoneNumber: phoneNumber,
-          timeout: const Duration(seconds: 60),
-          verificationCompleted: (AuthCredential auth) async {
-            await _auth.signInWithCredential(auth).then((dynamic value) {
-              print("1");
-              if (value != null && value.user != null) {
-                setState(() {
-                  loading = false;
-                  print("2");
+
+      print(phoneNumber);
+      print(phoneNumber.length);
+      await _auth
+          .verifyPhoneNumber(
+              phoneNumber: phoneNumber,
+              timeout: const Duration(seconds: 60),
+              verificationCompleted: (AuthCredential auth) async {
+                await _auth.signInWithCredential(auth).then((dynamic value) {
+                  print("1");
+                  if (value != null && value.user != null) {
+                    setState(() {
+                      loading = false;
+                      print("2");
+                    });
+                    print('Authentication successful');
+                  } else {
+                    setState(() {
+                      loading = false;
+                    });
+                    SnackBar(
+                      behavior: SnackBarBehavior.floating,
+                      backgroundColor: Colors.red,
+                      content: Text(
+                        'Invalid code/invalid authentication',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    );
+                    print("3");
+                  }
+                }).catchError((error) {
+                  setState(() {
+                    loading = false;
+                  });
+                  Toast.show(error);
                 });
-                print('Authentication successful');
-              } else {
-                setState(() {
-                  loading = false;
-                });
+              },
+              verificationFailed: (dynamic authException) {
+                print("herrr: ${authException}");
+                Toast.show('Error message: ' + authException.message);
+                print('Error message: ' + authException.message);
                 SnackBar(
                   behavior: SnackBarBehavior.floating,
                   backgroundColor: Colors.red,
                   content: Text(
-                    'Invalid code/invalid authentication',
+                    'The phone number format is incorrect. Please enter your number in E.164 format. [+][country code][number]',
                     style: TextStyle(color: Colors.white),
                   ),
                 );
-                print("3");
-              }
-            }).catchError((error) {
-              setState(() {
-                loading = false;
-              });
-              Toast.show(error);
-            });
-          },
-          verificationFailed: (dynamic authException) {
-            Toast.show('Error message: ' + authException.message);
-            print('Error message: ' + authException.message);
-            SnackBar(
-              behavior: SnackBarBehavior.floating,
-              backgroundColor: Colors.red,
-              content: Text(
-                'The phone number format is incorrect. Please enter your number in E.164 format. [+][country code][number]',
-                style: TextStyle(color: Colors.white),
-              ),
-            );
-            setState(() {
-              loading = false;
-            });
-          },
-          codeSent: (String verificationId, int? forceResendingToken) async {
-            setState(() {
-              loading = false;
-            });
-            actualCode = verificationId;
-            globals.actualCode = verificationId;
-            globals.phone = phoneNumber;
-            print(
-                "tttttttttttttttttttttttttttttttttttttttttttttttttttttttt ${phoneNumber}");
+                setState(() {
+                  loading = false;
+                });
+              },
+              codeSent:
+                  (String verificationId, int? forceResendingToken) async {
+                setState(() {
+                  loading = false;
+                });
+                actualCode = verificationId;
+                globals.actualCode = verificationId;
+                globals.phone = phoneNumber;
+                print(
+                    "tttttttttttttttttttttttttttttttttttttttttttttttttttttttt ${phoneNumber}");
 
-            setState(() {
-              loading = false;
-            });
-            await Navigator.of(context)
-                .push(MaterialPageRoute(builder: (_) => OtpPage('')));
-          },
-          codeAutoRetrievalTimeout: (String verificationId) {
-            actualCode = verificationId;
-            globals.actualCode = verificationId;
-          });
+                setState(() {
+                  loading = false;
+                });
+                await Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (_) => OtpPage('')));
+              },
+              codeAutoRetrievalTimeout: (String verificationId) {
+                actualCode = verificationId;
+                globals.actualCode = verificationId;
+              })
+          .catchError((onError) => print('error code ifowej: $onError'));
     }
   }
 // Future<void> onAuthenticationSuccessful(

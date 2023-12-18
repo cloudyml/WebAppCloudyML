@@ -228,7 +228,12 @@ class _PaymentScreenState extends State<PaymentScreen> with CouponCodeMixin {
       var url = Uri.parse(
           'https://us-central1-cloudyml-app.cloudfunctions.net/checkCouponCode');
       var data = {"couponCode": "$couponCode", "course": cID};
+
       var body = json.encode({"data": data});
+      return await checkCouponCode({"data": data}).then((result) {
+        print('Result: $result');
+        return result;
+      });
       print(body);
       var response = await http.post(url, body: body, headers: {
         "Authorization": "Bearer $token",
@@ -249,6 +254,324 @@ class _PaymentScreenState extends State<PaymentScreen> with CouponCodeMixin {
     } catch (e) {
       print(e);
       return "Failed to get coupon!";
+    }
+  }
+
+  // Function for checking if the coupon code is valid or not
+  Future<dynamic> checkCouponCode(Map<String, dynamic> data) async {
+    final couponCode = data['data']['couponCode'];
+    print(couponCode);
+    print('iweofjwj61 ${data['data']}');
+    final couponRef = FirebaseFirestore.instance.collection('coupons');
+    print('iweofjwj2');
+    final query = couponRef.where('couponCode', isEqualTo: couponCode);
+    print('iweofjwj3 $query');
+    try {
+      final querySnapshot = await query.get();
+      print('iweofjwj4');
+      final couponData = querySnapshot.docs[0].data();
+      print('iweofjwj5 ${querySnapshot.docs[0].data().entries}');
+
+      if (couponData['couponType'] == 'course') {
+        print('iweofjwj6 ${couponData['course']} ${data['course']}');
+        if (couponData['course'] == data['data']['course']) {
+          print('iweofjwj7');
+          // Do something if the coupon code is valid for the course
+        } else {
+          print('This coupon code belongs to another course.');
+          print('iweofjwj8');
+          return 'This coupon code belongs to another course.';
+        }
+      }
+
+      print('This is the coupon code: ${couponData}');
+      print('iweofjwj9');
+      return await searchCouponInUserDocOrCouponsCollection(data, couponData);
+    } catch (e) {
+      print('iweofjwj10');
+      print('Error in checkCouponCode: $e');
+      return 'Invalid Coupon Code';
+    }
+  }
+
+// Check if the couponCode already exists in the user document in the Coupons array
+  Future<dynamic> searchCouponInUserDocOrCouponsCollection(
+      Map<String, dynamic> data, coupon) async {
+    print('iweofjwj11 $data');
+    final couponCode = data['data']['couponCode'];
+    final userRef = FirebaseFirestore.instance
+        .collection('Users')
+        .doc(FirebaseAuth.instance.currentUser!.uid);
+    print('iweofjwj12');
+    final userDoc = await userRef.get();
+    print('iweofjwj13');
+    final user = userDoc.data();
+    print('iweofjwj14');
+    final coupons = user?['Coupons'];
+    print('iweofjwj15');
+
+    if (coupons == null) {
+      print('iweofjwj160');
+      return await searchCouponInCouponsCollection(data, coupon);
+    } else {
+      try {
+        print('iweofjwj16');
+        for (final coupon in coupons) {
+          print('iweofjwj17');
+          if (coupon != null && coupon['couponCode'] == couponCode) {
+            print('iweofjwj18');
+            return {
+              "Success": true,
+              "message": jsonEncode({"result": coupon})
+            };
+          }
+        }
+        print('iweofjwj19');
+        return await searchCouponInCouponsCollection(data, coupon);
+      } catch (e) {
+        print('iweofjwj20');
+        print('Error in searchCouponInUserDocOrCouponsCollection: $e');
+        return await searchCouponInCouponsCollection(data, coupon);
+      }
+    }
+  }
+
+// Search for the coupon in the Coupons collection
+  Future<dynamic> searchCouponInCouponsCollection(
+      Map<String, dynamic> data, coupon) async {
+    print('iweofjwj21${coupon['couponType']}');
+    var couponData;
+    try {
+      // Example Dart code for the specific case
+      if (coupon['couponType'] == 'scholarship') {
+        print('iweofjwj22');
+        // Additional Dart code for handling scholarship type...
+        if (coupon['creator']['uid'] ==
+            FirebaseAuth.instance.currentUser!.uid) {
+          print('iweofjwj23');
+          final currentDate = DateTime.now();
+          print("wiefwoefjwiojefoiw1");
+          print('iweofjwj24');
+
+          final expiryDate = currentDate
+              .add(Duration(hours: int.parse(coupon['validforhours'])));
+          print('iweofjwj25');
+          print("wiefwoefjwiojefoiw2");
+
+          final userRef = FirebaseFirestore.instance
+              .collection("Users")
+              .doc(FirebaseAuth.instance.currentUser!.uid);
+          print("wiefwoefjwiojefoiw4");
+          print('iweofjwj26');
+
+          try {
+            final userDoc = await userRef.get();
+            print('iweofjwj27');
+            print("wiefwoefjwiojefoiw5");
+            print('iweofjwj28');
+            final user = userDoc.data();
+            print('iweofjwj29');
+            print("wiefwoefjwiojefoiw6");
+
+            if (user != null) {
+              print('iweofjwj30');
+              couponData = {
+                "couponCode": coupon['couponCode'],
+                "couponId": coupon['couponId'],
+                "couponType": coupon['couponType'],
+                "couponValue": coupon['couponValue'],
+                "couponDescription": coupon['couponDescription'],
+                "couponName": coupon['couponName'],
+                "couponImage": coupon['couponImage'],
+                "couponStatus": coupon['couponStatus'],
+                "couponExpiryDate": expiryDate.toString(),
+                "couponStartDate": currentDate.toString(),
+                "creator": coupon['creator'],
+              };
+              print('iweofjwj31');
+              final Coupons = user['Coupons'] ?? [];
+              print('iweofjwj32');
+              if (Coupons.isNotEmpty) {
+                print('iweofjwj1');
+                print("Coupons1" + Coupons.toString());
+                print('iweofjwj1');
+                Coupons.add(couponData);
+                print('iweofjwj1');
+                await userRef.update({"Coupons": Coupons});
+              } else {
+                print('iweofjwj1');
+                print("Coupons2" + Coupons.toString());
+                print('iweofjwj1');
+                await userRef.update({
+                  "Coupons": [couponData]
+                });
+              }
+            }
+          } catch (e) {
+            print('iweofjwj33');
+            print("Error: $e");
+            rethrow; // You might want to handle the error appropriately
+          }
+        } else {
+          print('iweofjwj34');
+          throw Exception(
+              "This coupon code is not assigned to the current user!");
+        }
+      } else if (coupon['couponType'] == 'individual') {
+        print('iweofjwj35');
+        // Additional Dart code for handling individual type...
+        final currentDate = DateTime.now();
+        print("wiefwoefjwiojefoiw11");
+        print('iweofjwj36');
+
+        final expiryDate = currentDate
+            .add(Duration(hours: int.parse(coupon['validforhours'])));
+        print("wiefwoefjwiojefoiw2");
+        print('iweofjwj37');
+        final userRef = FirebaseFirestore.instance
+            .collection("Users")
+            .doc(FirebaseAuth.instance.currentUser!.uid);
+        print("wiefwoefjwiojefoiw4");
+        print('iweofjwj38');
+
+        try {
+          final userDoc = await userRef.get();
+          print("wiefwoefjwiojefoiw5");
+          print('iweofjwj39');
+          final user = userDoc.data();
+          print("wiefwoefjwiojefoiw6");
+
+          print('iweofjwj40');
+          if (user != null) {
+            couponData = {
+              "couponCode": "${coupon['couponCode']}",
+              "couponId": "${coupon['couponId']}",
+              "couponType": "${coupon['couponType']}",
+              "couponValue": "${json.encode(coupon['couponValue'])}",
+              "couponDescription": "${coupon['couponDescription']}",
+              "couponName": "${coupon['couponName']}",
+              "couponImage": "${coupon['couponImage']}",
+              "couponStatus": "${coupon['couponStatus']}",
+              "couponExpiryDate": "${expiryDate.toString()}",
+              "couponStartDate": "${currentDate.toString()}",
+              "creator": coupon['creator'] ??
+                  {"uid": "", "phone": "", "name": "", "email": ""},
+            };
+
+            print('iweofjwj41');
+            final Coupons = user['Coupons'] ?? [];
+            print('iweofjwj42');
+            if (Coupons.isNotEmpty) {
+              print('iweofjwj43');
+              print("Coupons1" + Coupons.toString());
+              print('iweofjwj44');
+              Coupons.add(couponData);
+              print('iweofjwj45');
+              await userRef.update({"Coupons": Coupons});
+            } else {
+              print('iweofjwj46');
+              print("Coupons2" + Coupons.toString());
+              print('iweofjwj47');
+              await userRef.update({
+                "Coupons": [couponData]
+              });
+            }
+          }
+        } catch (e) {
+          print("Error: $e");
+          print('iweofjwj48');
+          // Handle the error appropriately
+        }
+      } else if (coupon['couponType'] == 'global') {
+        print('iweofjwj49');
+        // Additional Dart code for handling global type...
+        final userRef = FirebaseFirestore.instance
+            .collection("Users")
+            .doc(FirebaseAuth.instance.currentUser!.uid);
+        final userDoc = await userRef.get();
+        print('iweofjwj50');
+        final user = userDoc.data();
+
+        if (user != null) {
+          print('iweofjwj51');
+          couponData = {
+            "couponCode": coupon['couponCode'],
+            "couponId": coupon['couponId'],
+            "couponType": coupon['couponType'],
+            "couponValue": coupon['couponValue'],
+            "couponDescription": coupon['couponDescription'],
+            "couponName": coupon['couponName'],
+            "couponImage": coupon['couponImage'],
+            "couponStatus": coupon['couponStatus'],
+            "couponExpiryDate": coupon['couponExpiryDate'],
+            "couponStartDate": coupon['couponStartDate'],
+            "creator": coupon['creator'],
+          };
+          print('iweofjwj52');
+
+          final Coupons = user['Coupons'] ?? [];
+          print('iweofjwj53');
+          if (Coupons.isNotEmpty) {
+            Coupons.add(couponData);
+            print('iweofjwj54');
+            print("Coupons3 $Coupons");
+            await userRef.update({"Coupons": Coupons});
+          } else {
+            print("Coupons4 $Coupons");
+            print('iweofjwj55');
+            await userRef.update({
+              "Coupons": [couponData]
+            });
+          }
+        }
+      } else if (coupon['couponType'] == 'course') {
+        // Additional Dart code for handling course type...
+        final userRef = FirebaseFirestore.instance
+            .collection("Users")
+            .doc(FirebaseAuth.instance.currentUser!.uid);
+        final userDoc = await userRef.get();
+        final user = userDoc.data();
+
+        if (user != null) {
+          couponData = {
+            "course": coupon['course'],
+            "couponCode": coupon['couponCode'],
+            "couponId": coupon['couponId'],
+            "couponType": coupon['couponType'],
+            "couponValue": coupon['couponValue'],
+            "couponDescription": coupon['couponDescription'],
+            "couponName": coupon['couponName'],
+            "couponImage": coupon['couponImage'],
+            "couponStatus": coupon['couponStatus'],
+            "couponExpiryDate": coupon['couponExpiryDate'],
+            "couponStartDate": coupon['couponStartDate'],
+            "creator": coupon['creator'],
+          };
+
+          final Coupons = user['Coupons'] ?? [];
+
+          if (Coupons.isNotEmpty) {
+            Coupons.add(couponData);
+            print("Coupons5 $Coupons");
+
+            await userRef.update({"Coupons": Coupons});
+          } else {
+            print("Coupons6 $Coupons");
+
+            await userRef.update({
+              "Coupons": [couponData]
+            });
+          }
+        }
+      }
+
+      return {
+        "Success": true,
+        "message": jsonEncode({"result": couponData})
+      };
+    } catch (e) {
+      print('Error in searchCouponInCouponsCollection: $e');
+      throw Exception('Coupon not found');
     }
   }
 
@@ -688,6 +1011,8 @@ class _PaymentScreenState extends State<PaymentScreen> with CouponCodeMixin {
                                                                     couponCodeController
                                                                         .text,
                                                                     widget.cID);
+                                                                print(
+                                                                    "jjwioewfjjwefj: ${couponAPI}");
                                                                 if (couponAPI !=
                                                                     null) {
                                                                   setState(() {
@@ -696,20 +1021,18 @@ class _PaymentScreenState extends State<PaymentScreen> with CouponCodeMixin {
                                                                   });
                                                                 }
                                                                 print(
-                                                                    'towards logic');
-                                                                if (couponData !=
+                                                                    'towards logic $couponAPI');
+                                                                if (couponAPI !=
                                                                     null) {
+                                                                  print(
+                                                                      'qwasm0');
                                                                   print(
                                                                       couponAPI);
                                                                   var value = json.decode(
                                                                       couponAPI[
                                                                           'message']);
                                                                   print(
-                                                                      "return value: ${value['result']}");
-                                                                  print(
-                                                                      "return value: ${value['result']['couponType']}");
-                                                                  print(
-                                                                      "return value: ${value['result']['couponStartDate']}");
+                                                                      'qwasm1');
 
                                                                   if (value['result']
                                                                           [
@@ -1013,17 +1336,17 @@ class _PaymentScreenState extends State<PaymentScreen> with CouponCodeMixin {
                                                                         value['result']
                                                                             [
                                                                             'couponExpiryDate'];
+
                                                                     DateTime
-                                                                        dateTime =
-                                                                        DateFormat("EEE MMM dd yyyy HH:mm:ss 'GMT'Z").parse(
-                                                                            endTime,
-                                                                            true);
-                                                                    print(
-                                                                        "dateTime: ${dateTime}");
+                                                                        dateObject =
+                                                                        DateTime.parse(
+                                                                            endTime);
+
+                                                                    // Format DateTime to a custom pattern
                                                                     String
                                                                         formattedDateTime =
-                                                                        DateFormat('HH:mm a')
-                                                                            .format(dateTime.toLocal());
+                                                                        DateFormat("yyyy-MM-dd HH:mm:ss.SSS")
+                                                                            .format(dateObject);
 
                                                                     print(
                                                                         "printing formatted date ${formattedDateTime}");
@@ -1031,7 +1354,9 @@ class _PaymentScreenState extends State<PaymentScreen> with CouponCodeMixin {
                                                                     if (DateTime
                                                                             .now()
                                                                         .isAfter(
-                                                                            dateTime)) {
+                                                                            DateTime.parse(formattedDateTime))) {
+                                                                      print(
+                                                                          'wijfow');
                                                                       setState(
                                                                           () {
                                                                         emptyCode =
@@ -1050,13 +1375,20 @@ class _PaymentScreenState extends State<PaymentScreen> with CouponCodeMixin {
                                                                             false;
                                                                       });
                                                                     } else {
-                                                                      if (value['result']['couponValue']
+                                                                      print(
+                                                                          'gffgmfhm0 ');
+                                                                      print(json.decode(
+                                                                          value['result']
                                                                               [
+                                                                              'couponValue'])['type']);
+                                                                      if (json.decode(value['result']['couponValue'])[
                                                                               'type'] ==
                                                                           'percentage') {
+                                                                        print(
+                                                                            'gffgmfhm1');
                                                                         // code for percentage type of coupon
                                                                         var percentageValue =
-                                                                            int.parse(value['result']['couponValue']['value']) *
+                                                                            int.parse(json.decode(value['result']['couponValue'])['value']) *
                                                                                 0.01;
                                                                         print(
                                                                             'this is value in $percentageValue');
@@ -1088,14 +1420,18 @@ class _PaymentScreenState extends State<PaymentScreen> with CouponCodeMixin {
                                                                         print(totalAmount
                                                                             .toString());
                                                                         // showToast('Coupon code applied successfully.');
-                                                                      } else if (value['result']['couponValue']
+                                                                      } else if (json.decode(value['result']
                                                                               [
-                                                                              'type'] ==
+                                                                              'couponValue'])['type'] ==
                                                                           'number') {
+                                                                        print(
+                                                                            'gffgmfhm2');
                                                                         // code for direct amount type of coupon
 
                                                                         var numberValue =
-                                                                            int.parse(value['result']['couponValue']['value']);
+                                                                            int.parse(json.decode(value['result']['couponValue'])['value']);
+                                                                        print(
+                                                                            'gffgmfhm3');
                                                                         print(
                                                                             'this is value in $numberValue');
                                                                         discountvalue =
@@ -1147,15 +1483,14 @@ class _PaymentScreenState extends State<PaymentScreen> with CouponCodeMixin {
                                                                         // showToast('invalid subtype of coupon applied.');
                                                                       }
                                                                     }
-                                                                  }else if (value[
-                                                                              'result']
-                                                                          [
-                                                                          'couponType'] ==
+                                                                  } else if (json
+                                                                          .decode(value['result']
+                                                                              [
+                                                                              'couponValue'])['type'] ==
                                                                       'scholarship') {
                                                                     var endTime =
-                                                                        value['result']
-                                                                            [
-                                                                            'couponExpiryDate'];
+                                                                        json.decode(
+                                                                            value['result'])['couponExpiryDate'];
                                                                     DateTime
                                                                         dateTime =
                                                                         DateFormat("EEE MMM dd yyyy HH:mm:ss 'GMT'Z").parse(
@@ -1193,13 +1528,12 @@ class _PaymentScreenState extends State<PaymentScreen> with CouponCodeMixin {
                                                                             false;
                                                                       });
                                                                     } else {
-                                                                      if (value['result']['couponValue']
-                                                                              [
+                                                                      if (json.decode(value['result']['couponValue'])[
                                                                               'type'] ==
                                                                           'percentage') {
                                                                         // code for percentage type of coupon
                                                                         var percentageValue =
-                                                                            int.parse(value['result']['couponValue']['value']) *
+                                                                            int.parse(json.decode(value['result']['couponValue'])['value']) *
                                                                                 0.01;
                                                                         print(
                                                                             'this is value in $percentageValue');
@@ -1231,14 +1565,14 @@ class _PaymentScreenState extends State<PaymentScreen> with CouponCodeMixin {
                                                                         print(totalAmount
                                                                             .toString());
                                                                         // showToast('Coupon code applied successfully.');
-                                                                      } else if (value['result']['couponValue']
+                                                                      } else if (json.decode(value['result']
                                                                               [
-                                                                              'type'] ==
+                                                                              'couponValue'])['type'] ==
                                                                           'number') {
                                                                         // code for direct amount type of coupon
 
                                                                         var numberValue =
-                                                                            int.parse(value['result']['couponValue']['value']);
+                                                                            int.parse(json.decode(value['result']['couponValue'])['value']);
                                                                         print(
                                                                             'this is value in $numberValue');
                                                                         discountvalue =
@@ -2117,33 +2451,38 @@ class _PaymentScreenState extends State<PaymentScreen> with CouponCodeMixin {
                                                                       .text,
                                                                   widget.cID);
                                                           print(
-                                                              'towards logic');
-                                                          if (couponData !=
+                                                              'towards logic020');
+                                                          if (couponAPI !=
                                                               null) {
                                                             setState(() {
                                                               loading = false;
                                                             });
                                                             print(couponAPI);
+                                                            print('LLLL08');
                                                             var value = json
                                                                 .decode(couponAPI[
                                                                     'message']);
+                                                            print('LLLL09');
                                                             print(
-                                                                "return value: ${value['result']}");
+                                                                "return value: ${json.decode(value['result'])}");
                                                             print(
-                                                                "return value: ${value['result']['couponType']}");
+                                                                "return value: ${json.decode(value['result'])['couponType']}");
                                                             print(
-                                                                "return value: ${value['result']['couponStartDate']}");
+                                                                "return value: ${json.decode(value['result'])['couponStartDate']}");
 
-                                                            if (value['result'][
+                                                            if (json.decode(value[
+                                                                        'result'])[
                                                                     'couponType'] ==
                                                                 'global') {
-                                                              var startTime = value[
-                                                                      'result'][
+                                                              var startTime = json
+                                                                      .decode(value[
+                                                                          'result'])[
                                                                   'couponStartDate'];
                                                               print(startTime);
 
-                                                              var endTime = value[
-                                                                      'result'][
+                                                              var endTime = json
+                                                                      .decode(value[
+                                                                          'result'])[
                                                                   'couponExpiryDate'];
                                                               print(endTime);
                                                               //
@@ -2218,15 +2557,14 @@ class _PaymentScreenState extends State<PaymentScreen> with CouponCodeMixin {
                                                                 });
                                                                 // showToast('Sorry, The coupon has expired.');
                                                               } else {
-                                                                if (value['result']
-                                                                            [
-                                                                            'couponValue']
+                                                                if (json.decode(
+                                                                            value['result'])['couponValue']
                                                                         [
                                                                         'type'] ==
                                                                     'percentage') {
                                                                   // code for percentage type of coupon
                                                                   var percentageValue =
-                                                                      int.parse(value['result']['couponValue']
+                                                                      int.parse(json.decode(value['result'])['couponValue']
                                                                               [
                                                                               'value']) *
                                                                           0.01;
@@ -2263,20 +2601,18 @@ class _PaymentScreenState extends State<PaymentScreen> with CouponCodeMixin {
                                                                   print(totalAmount
                                                                       .toString());
                                                                   // showToast('Coupon code applied successfully.');
-                                                                } else if (value['result']
-                                                                            [
-                                                                            'couponValue']
+                                                                } else if (json.decode(
+                                                                            value['result'])['couponValue']
                                                                         [
                                                                         'type'] ==
                                                                     'number') {
                                                                   // code for direct amount type of coupon
 
                                                                   var numberValue =
-                                                                      int.parse(value['result']
+                                                                      int.parse(
+                                                                          json.decode(value['result'])['couponValue']
                                                                               [
-                                                                              'couponValue']
-                                                                          [
-                                                                          'value']);
+                                                                              'value']);
                                                                   print(
                                                                       'this is value in $numberValue');
                                                                   discountvalue =
@@ -2326,18 +2662,20 @@ class _PaymentScreenState extends State<PaymentScreen> with CouponCodeMixin {
                                                                   // showToast('invalid type of coupon applied.');
                                                                 }
                                                               }
-                                                            } else if (value[
-                                                                        'result']
-                                                                    [
+                                                            } else if (json.decode(
+                                                                        value[
+                                                                            'result'])[
                                                                     'couponType'] ==
                                                                 'course') {
-                                                              var startTime = value[
-                                                                      'result'][
+                                                              var startTime = json
+                                                                      .decode(value[
+                                                                          'result'])[
                                                                   'couponStartDate'];
                                                               print(startTime);
 
-                                                              var endTime = value[
-                                                                      'result'][
+                                                              var endTime = json
+                                                                      .decode(value[
+                                                                          'result'])[
                                                                   'couponExpiryDate'];
                                                               DateTime
                                                                   dateTime =
@@ -2373,15 +2711,14 @@ class _PaymentScreenState extends State<PaymentScreen> with CouponCodeMixin {
                                                                 });
                                                                 // showToast('Sorry, The coupon has expired.');
                                                               } else {
-                                                                if (value['result']
-                                                                            [
-                                                                            'couponValue']
+                                                                if (json.decode(
+                                                                            value['result'])['couponValue']
                                                                         [
                                                                         'type'] ==
                                                                     'percentage') {
                                                                   // code for percentage type of coupon
                                                                   var percentageValue =
-                                                                      int.parse(value['result']['couponValue']
+                                                                      int.parse(json.decode(value['result'])['couponValue']
                                                                               [
                                                                               'value']) *
                                                                           0.01;
@@ -2418,20 +2755,18 @@ class _PaymentScreenState extends State<PaymentScreen> with CouponCodeMixin {
                                                                   print(totalAmount
                                                                       .toString());
                                                                   // showToast('Coupon code applied successfully.');
-                                                                } else if (value['result']
-                                                                            [
-                                                                            'couponValue']
+                                                                } else if (json.decode(
+                                                                            value['result'])['couponValue']
                                                                         [
                                                                         'type'] ==
                                                                     'number') {
                                                                   // code for direct amount type of coupon
 
                                                                   var numberValue =
-                                                                      int.parse(value['result']
+                                                                      int.parse(
+                                                                          json.decode(value['result'])['couponValue']
                                                                               [
-                                                                              'couponValue']
-                                                                          [
-                                                                          'value']);
+                                                                              'value']);
                                                                   print(
                                                                       'this is value in $numberValue');
                                                                   discountvalue =
@@ -2481,13 +2816,14 @@ class _PaymentScreenState extends State<PaymentScreen> with CouponCodeMixin {
                                                                   // showToast('invalid type of coupon applied.');
                                                                 }
                                                               }
-                                                            } else if (value[
-                                                                        'result']
-                                                                    [
+                                                            } else if (json.decode(
+                                                                        value[
+                                                                            'result'])[
                                                                     'couponType'] ==
                                                                 'scholarship') {
-                                                              var endTime = value[
-                                                                      'result'][
+                                                              var endTime = json
+                                                                      .decode(value[
+                                                                          'result'])[
                                                                   'couponExpiryDate'];
                                                               DateTime
                                                                   dateTime =
@@ -2525,15 +2861,14 @@ class _PaymentScreenState extends State<PaymentScreen> with CouponCodeMixin {
                                                                       false;
                                                                 });
                                                               } else {
-                                                                if (value['result']
-                                                                            [
-                                                                            'couponValue']
+                                                                if (json.decode(
+                                                                            value['result'])['couponValue']
                                                                         [
                                                                         'type'] ==
                                                                     'percentage') {
                                                                   // code for percentage type of coupon
                                                                   var percentageValue =
-                                                                      int.parse(value['result']['couponValue']
+                                                                      int.parse(json.decode(value['result'])['couponValue']
                                                                               [
                                                                               'value']) *
                                                                           0.01;
@@ -2569,20 +2904,18 @@ class _PaymentScreenState extends State<PaymentScreen> with CouponCodeMixin {
                                                                   print(totalAmount
                                                                       .toString());
                                                                   // showToast('Coupon code applied successfully.');
-                                                                } else if (value['result']
-                                                                            [
-                                                                            'couponValue']
+                                                                } else if (json.decode(
+                                                                            value['result'])['couponValue']
                                                                         [
                                                                         'type'] ==
                                                                     'number') {
                                                                   // code for direct amount type of coupon
 
                                                                   var numberValue =
-                                                                      int.parse(value['result']
+                                                                      int.parse(
+                                                                          json.decode(value['result'])['couponValue']
                                                                               [
-                                                                              'couponValue']
-                                                                          [
-                                                                          'value']);
+                                                                              'value']);
                                                                   print(
                                                                       'this is value in $numberValue');
                                                                   discountvalue =
@@ -2633,13 +2966,14 @@ class _PaymentScreenState extends State<PaymentScreen> with CouponCodeMixin {
                                                                   // showToast('invalid subtype of coupon applied.');
                                                                 }
                                                               }
-                                                            } else if (value[
-                                                                        'result']
-                                                                    [
+                                                            } else if (json.decode(
+                                                                        value[
+                                                                            'result'])[
                                                                     'couponType'] ==
                                                                 'individual') {
-                                                              var endTime = value[
-                                                                      'result'][
+                                                              var endTime = json
+                                                                      .decode(value[
+                                                                          'result'])[
                                                                   'couponExpiryDate'];
                                                               DateTime
                                                                   dateTime =
@@ -2677,15 +3011,14 @@ class _PaymentScreenState extends State<PaymentScreen> with CouponCodeMixin {
                                                                       false;
                                                                 });
                                                               } else {
-                                                                if (value['result']
-                                                                            [
-                                                                            'couponValue']
+                                                                if (json.decode(
+                                                                            value['result'])['couponValue']
                                                                         [
                                                                         'type'] ==
                                                                     'percentage') {
                                                                   // code for percentage type of coupon
                                                                   var percentageValue =
-                                                                      int.parse(value['result']['couponValue']
+                                                                      int.parse(json.decode(value['result'])['couponValue']
                                                                               [
                                                                               'value']) *
                                                                           0.01;
@@ -2721,20 +3054,18 @@ class _PaymentScreenState extends State<PaymentScreen> with CouponCodeMixin {
                                                                   print(totalAmount
                                                                       .toString());
                                                                   // showToast('Coupon code applied successfully.');
-                                                                } else if (value['result']
-                                                                            [
-                                                                            'couponValue']
+                                                                } else if (json.decode(
+                                                                            value['result'])['couponValue']
                                                                         [
                                                                         'type'] ==
                                                                     'number') {
                                                                   // code for direct amount type of coupon
 
                                                                   var numberValue =
-                                                                      int.parse(value['result']
+                                                                      int.parse(
+                                                                          json.decode(value['result'])['couponValue']
                                                                               [
-                                                                              'couponValue']
-                                                                          [
-                                                                          'value']);
+                                                                              'value']);
                                                                   print(
                                                                       'this is value in $numberValue');
                                                                   discountvalue =

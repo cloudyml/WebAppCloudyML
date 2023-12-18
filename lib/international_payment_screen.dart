@@ -244,6 +244,10 @@ class _InternationalPaymentScreenState extends State<InternationalPaymentScreen>
           'https://us-central1-cloudyml-app.cloudfunctions.net/checkCouponCode');
       var data = {"couponCode": "$couponCode"};
       var body = json.encode({"data": data});
+      checkCouponCode({"data": data}).then((result) {
+        print('Result: $result');
+        return result;
+      });
       print(body);
       var response = await http.post(url, body: body, headers: {
         "Authorization": "Bearer $token",
@@ -263,6 +267,267 @@ class _InternationalPaymentScreenState extends State<InternationalPaymentScreen>
     } catch (e) {
       print(e);
       return "Failed to get coupon!";
+    }
+  }
+
+  // Function for checking if the coupon code is valid or not
+  Future<dynamic> checkCouponCode(Map<String, dynamic> data) async {
+    final couponCode = data['couponCode'];
+    final couponRef = FirebaseFirestore.instance.collection('coupons');
+    final query = couponRef.where('couponCode', isEqualTo: couponCode);
+
+    try {
+      final querySnapshot = await query.get();
+      final couponData = querySnapshot.docs[0].data();
+
+      if (couponData['couponType'] == 'course') {
+        if (couponData['course'] == data['course']) {
+          // Do something if the coupon code is valid for the course
+        } else {
+          print('This coupon code belongs to another course.');
+          return 'This coupon code belongs to another course.';
+        }
+      }
+
+      print('This is the coupon code: ${couponData['couponCode']}');
+      return await searchCouponInUserDocOrCouponsCollection(data, couponData);
+    } catch (e) {
+      print('Error in checkCouponCode: $e');
+      return 'Invalid Coupon Code';
+    }
+  }
+
+// Check if the couponCode already exists in the user document in the Coupons array
+  Future<dynamic> searchCouponInUserDocOrCouponsCollection(
+      Map<String, dynamic> data, couponData) async {
+    final couponCode = data['couponCode'];
+    final userRef =
+        FirebaseFirestore.instance.collection('Users').doc(data['uid']);
+    final userDoc = await userRef.get();
+    final user = userDoc.data();
+    final coupons = user?['Coupons'] as List<dynamic>;
+
+    if (coupons == null) {
+      return await searchCouponInCouponsCollection(data, couponData);
+    } else {
+      try {
+        for (final coupon in coupons) {
+          if (coupon != null && coupon['couponCode'] == couponCode) {
+            return coupon;
+          }
+        }
+        return await searchCouponInCouponsCollection(data, couponData);
+      } catch (e) {
+        print('Error in searchCouponInUserDocOrCouponsCollection: $e');
+        return await searchCouponInCouponsCollection(data, couponData);
+      }
+    }
+  }
+
+// Search for the coupon in the Coupons collection
+  Future<dynamic> searchCouponInCouponsCollection(
+      Map<String, dynamic> data, coupon) async {
+    try {
+      // Your existing code for searching in Coupons collection...
+
+      // Example Dart code for the specific case
+      if (couponData['couponType'] == 'scholarship') {
+        // Additional Dart code for handling scholarship type...
+        if (coupon['creator']['uid'] ==
+            FirebaseAuth.instance.currentUser!.uid) {
+          final currentDate = DateTime.now();
+          print("wiefwoefjwiojefoiw1");
+
+          final expiryDate = currentDate
+              .add(Duration(hours: int.parse(coupon['validforhours'])));
+          print("wiefwoefjwiojefoiw2");
+
+          final userRef = FirebaseFirestore.instance
+              .collection("Users")
+              .doc(FirebaseAuth.instance.currentUser!.uid);
+          print("wiefwoefjwiojefoiw4");
+
+          try {
+            final userDoc = await userRef.get();
+            print("wiefwoefjwiojefoiw5");
+
+            final user = userDoc.data();
+            print("wiefwoefjwiojefoiw6");
+
+            var couponData;
+
+            if (user != null) {
+              couponData = {
+                "couponCode": coupon['couponCode'],
+                "couponId": coupon['couponId'],
+                "couponType": coupon['couponType'],
+                "couponValue": coupon['couponValue'],
+                "couponDescription": coupon['couponDescription'],
+                "couponName": coupon['couponName'],
+                "couponImage": coupon['couponImage'],
+                "couponStatus": coupon['couponStatus'],
+                "couponExpiryDate": expiryDate.toString(),
+                "couponStartDate": currentDate.toString(),
+                "creator": coupon['creator'],
+              };
+
+              final Coupons = user['Coupons'] ?? [];
+
+              if (Coupons.isNotEmpty) {
+                print("Coupons1" + Coupons.toString());
+                Coupons.add(couponData);
+                await userRef.update({"Coupons": Coupons});
+              } else {
+                print("Coupons2" + Coupons.toString());
+                await userRef.update({
+                  "Coupons": [couponData]
+                });
+              }
+            }
+          } catch (e) {
+            print("Error: $e");
+            rethrow; // You might want to handle the error appropriately
+          }
+        } else {
+          throw Exception(
+              "This coupon code is not assigned to the current user!");
+        }
+      } else if (couponData['couponType'] == 'individual') {
+        // Additional Dart code for handling individual type...
+        final currentDate = DateTime.now();
+        print("wiefwoefjwiojefoiw11");
+
+        final expiryDate = currentDate
+            .add(Duration(hours: int.parse(coupon['validforhours'])));
+        print("wiefwoefjwiojefoiw2");
+
+        final userRef = FirebaseFirestore.instance
+            .collection("Users")
+            .doc(FirebaseAuth.instance.currentUser!.uid);
+        print("wiefwoefjwiojefoiw4");
+
+        try {
+          final userDoc = await userRef.get();
+          print("wiefwoefjwiojefoiw5");
+
+          final user = userDoc.data();
+          print("wiefwoefjwiojefoiw6");
+
+          var couponData;
+
+          if (user != null) {
+            couponData = {
+              "couponCode": coupon['couponCode'],
+              "couponId": coupon['couponId'],
+              "couponType": coupon['couponType'],
+              "couponValue": coupon['couponValue'],
+              "couponDescription": coupon['couponDescription'],
+              "couponName": coupon['couponName'],
+              "couponImage": coupon['couponImage'],
+              "couponStatus": coupon['couponStatus'],
+              "couponExpiryDate": expiryDate.toString(),
+              "couponStartDate": currentDate.toString(),
+              "creator": coupon['creator'],
+            };
+
+            final Coupons = user['Coupons'] ?? [];
+
+            if (Coupons.isNotEmpty) {
+              print("Coupons1" + Coupons.toString());
+              Coupons.add(couponData);
+              await userRef.update({"Coupons": Coupons});
+            } else {
+              print("Coupons2" + Coupons.toString());
+              await userRef.update({
+                "Coupons": [couponData]
+              });
+            }
+          }
+        } catch (e) {
+          print("Error: $e");
+          // Handle the error appropriately
+        }
+      } else if (couponData['couponType'] == 'global') {
+        // Additional Dart code for handling global type...
+        final userRef = FirebaseFirestore.instance
+            .collection("Users")
+            .doc(FirebaseAuth.instance.currentUser!.uid);
+        final userDoc = await userRef.get();
+        final user = userDoc.data();
+
+        if (user != null) {
+          var couponData = {
+            "couponCode": coupon['couponCode'],
+            "couponId": coupon['couponId'],
+            "couponType": coupon['couponType'],
+            "couponValue": coupon['couponValue'],
+            "couponDescription": coupon['couponDescription'],
+            "couponName": coupon['couponName'],
+            "couponImage": coupon['couponImage'],
+            "couponStatus": coupon['couponStatus'],
+            "couponExpiryDate": coupon['couponExpiryDate'],
+            "couponStartDate": coupon['couponStartDate'],
+            "creator": coupon['creator'],
+          };
+
+          final Coupons = user['Coupons'] ?? [];
+
+          if (Coupons.isNotEmpty) {
+            Coupons.add(couponData);
+            print("Coupons3 $Coupons");
+            await userRef.update({"Coupons": Coupons});
+          } else {
+            print("Coupons4 $Coupons");
+            await userRef.update({
+              "Coupons": [couponData]
+            });
+          }
+        }
+      } else if (couponData['couponType'] == 'course') {
+        // Additional Dart code for handling course type...
+        final userRef = FirebaseFirestore.instance
+            .collection("Users")
+            .doc(FirebaseAuth.instance.currentUser!.uid);
+        final userDoc = await userRef.get();
+        final user = userDoc.data();
+
+        if (user != null) {
+          var couponData = {
+            "course": coupon['course'],
+            "couponCode": coupon['couponCode'],
+            "couponId": coupon['couponId'],
+            "couponType": coupon['couponType'],
+            "couponValue": coupon['couponValue'],
+            "couponDescription": coupon['couponDescription'],
+            "couponName": coupon['couponName'],
+            "couponImage": coupon['couponImage'],
+            "couponStatus": coupon['couponStatus'],
+            "couponExpiryDate": coupon['couponExpiryDate'],
+            "couponStartDate": coupon['couponStartDate'],
+            "creator": coupon['creator'],
+          };
+
+          final Coupons = user['Coupons'] ?? [];
+
+          if (Coupons.isNotEmpty) {
+            Coupons.add(couponData);
+            print("Coupons5 $Coupons");
+
+            await userRef.update({"Coupons": Coupons});
+          } else {
+            print("Coupons6 $Coupons");
+
+            await userRef.update({
+              "Coupons": [couponData]
+            });
+          }
+        }
+      }
+
+      return couponData;
+    } catch (e) {
+      print('Error in searchCouponInCouponsCollection: $e');
+      throw Exception('Coupon not found');
     }
   }
 
