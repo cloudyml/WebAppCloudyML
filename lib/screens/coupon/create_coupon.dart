@@ -53,7 +53,6 @@ class _CreateCouponState extends State<CreateCoupon> {
   @override
   void dispose() {
     super.dispose();
-    globals.courseList.remove("Select Course Name");
   }
 
   @override
@@ -63,7 +62,6 @@ class _CreateCouponState extends State<CreateCoupon> {
   }
 
   getallcoursename() async {
-    globals.courseList.add(tempcoursename);
     setState(() {
       loading = true;
     });

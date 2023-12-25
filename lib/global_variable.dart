@@ -22,7 +22,7 @@ dynamic credental;
 String googleAuth = 'false';
 List moduleList = [];
 List courseList = [
-  "Course Name"
+  "Select Course Name"
 ];
 Map coursemoduelmap = {
   "Data Analyst Case Studies": [

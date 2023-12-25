@@ -236,6 +236,7 @@ class _InternationalPaymentScreenState extends State<InternationalPaymentScreen>
 
   var couponData;
   var errorOfCouponCode;
+  
   verifyCoupon(couponCode) async {
     try {
       // get firebase id token for authentication
