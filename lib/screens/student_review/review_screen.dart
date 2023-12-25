@@ -866,7 +866,7 @@ class _StudentReviewScreenState extends State<StudentReviewScreen> {
       builder: (context) {
         double rating = 0.0; // Initial rating value
         return AlertDialog(
-          title: Text('Rate our service'),
+          title: Text(''),
           content: RatingBar.builder(
             initialRating: rating,
             minRating: 1,
