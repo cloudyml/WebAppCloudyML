@@ -561,12 +561,7 @@ class _StudentReviewScreenState extends State<StudentReviewScreen> {
                                                                                   Icons.delete,
                                                                                   color: Colors.red,
                                                                                 )),
-                                                                            IconButton(
-                                                                                onPressed: () => showEditBoxDialog(context, reviews[index]),
-                                                                                icon: Icon(
-                                                                                  Icons.edit,
-                                                                                  color: const Color.fromARGB(255, 54, 244, 168),
-                                                                                ))
+                                                                          
                                                                           ],
                                                                         )
                                                                 ],
@@ -715,13 +710,7 @@ class _StudentReviewScreenState extends State<StudentReviewScreen> {
                                                                               Icons.delete,
                                                                               color: Colors.red,
                                                                             )),
-                                                                        IconButton(
-                                                                            onPressed: () =>
-                                                                                showEditBoxDialog(context, reviews[index]),
-                                                                            icon: Icon(
-                                                                              Icons.edit,
-                                                                              color: const Color.fromARGB(255, 54, 244, 168),
-                                                                            ))
+                                                                    
                                                                       ],
                                                                     )
                                                             ],

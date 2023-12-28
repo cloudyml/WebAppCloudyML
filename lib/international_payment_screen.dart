@@ -236,7 +236,7 @@ class _InternationalPaymentScreenState extends State<InternationalPaymentScreen>
 
   var couponData;
   var errorOfCouponCode;
-  
+
   verifyCoupon(couponCode) async {
     try {
       // get firebase id token for authentication
@@ -952,22 +952,26 @@ class _InternationalPaymentScreenState extends State<InternationalPaymentScreen>
                                                                     [
                                                                     'couponExpiryDate'];
                                                                 DateTime
-                                                                    dateTime =
+                                                                    dateObject =
                                                                     DateTime.parse(
                                                                         endTime);
+
+                                                                // Format DateTime to a custom pattern
                                                                 String
                                                                     formattedDateTime =
                                                                     DateFormat(
-                                                                            'yyyy-MM-dd HH:mm a')
+                                                                            "yyyy-MM-dd HH:mm:ss.SSS")
                                                                         .format(
-                                                                            dateTime.toLocal());
+                                                                            dateObject);
+
                                                                 print(
-                                                                    formattedDateTime); // prints "2023-04-15"
+                                                                    "printing formatted date ${formattedDateTime}");
 
                                                                 if (DateTime
                                                                         .now()
-                                                                    .isAfter(
-                                                                        dateTime)) {
+                                                                    .isAfter(DateTime
+                                                                        .parse(
+                                                                            formattedDateTime))) {
                                                                   setState(() {
                                                                     emptyCode =
                                                                         false;
@@ -1103,29 +1107,31 @@ class _InternationalPaymentScreenState extends State<InternationalPaymentScreen>
                                                                         'result']
                                                                     [
                                                                     'couponExpiryDate'];
+
                                                                 DateTime
-                                                                    dateTime =
-                                                                    DateFormat(
-                                                                            "EEE MMM dd yyyy HH:mm:ss 'GMT'Z")
-                                                                        .parse(
-                                                                            endTime,
-                                                                            true);
-                                                                print(
-                                                                    "dateTime: ${dateTime}");
+                                                                    dateObject =
+                                                                    DateTime.parse(
+                                                                        endTime);
+
+                                                                // Format DateTime to a custom pattern
                                                                 String
                                                                     formattedDateTime =
                                                                     DateFormat(
-                                                                            'HH:mm a')
+                                                                            "yyyy-MM-dd HH:mm:ss.SSS")
                                                                         .format(
-                                                                            dateTime.toLocal());
+                                                                            dateObject);
+
+                                                                print(
+                                                                    "printing formatted date ${formattedDateTime}");
 
                                                                 print(
                                                                     "printing formatted date ${formattedDateTime}");
 
                                                                 if (DateTime
                                                                         .now()
-                                                                    .isAfter(
-                                                                        dateTime)) {
+                                                                    .isAfter(DateTime
+                                                                        .parse(
+                                                                            formattedDateTime))) {
                                                                   setState(() {
                                                                     emptyCode =
                                                                         false;
