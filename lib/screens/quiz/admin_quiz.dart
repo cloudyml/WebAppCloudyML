@@ -154,7 +154,7 @@ class _AdminQuizPanelState extends State<AdminQuizPanel> {
     setState(() {
       globals.courseList;
     });
-    }
+  }
 
   @override
   void dispose() {
@@ -2604,6 +2604,7 @@ class _AdminQuizPanelState extends State<AdminQuizPanel> {
                                                     print(
                                                         "sdfoisjiofjisojdfoisjoidfjsiojfdiosjiodfjsoijdfosjd${tempcoursename} ${tempmodulename}");
                                                     try {
+                                                      print("$tempcoursename");
                                                       FirebaseFirestore.instance
                                                           .collection("courses")
                                                           .where("name",
@@ -2612,28 +2613,45 @@ class _AdminQuizPanelState extends State<AdminQuizPanel> {
                                                                       .toString())
                                                           .get()
                                                           .then((value) {
-                                                        coursedata = value
-                                                                    .docs.first
-                                                                    .data()[
-                                                                'curriculum1'][
-                                                            tempcoursename
-                                                                .toString()];
+                                                        print('iwejfowie1');
+                                                        try {
+                                                          coursedata = value
+                                                                      .docs.first
+                                                                      .data()[
+                                                                  'curriculum1']
+                                                              [tempcoursename
+                                                                  .toString()];
+                                                        } catch (e) {
+                                                          print("ygubjub$e");
+                                                        }
 
-                                                        var curriculum1 = value
-                                                                .docs.first
-                                                                .data()[
-                                                            'curriculum1'];
+                                                        print('iwejfowie2');
+                                                        var curriculum1;
+                                                        try {
+                                                          curriculum1 = value
+                                                                  .docs.first
+                                                                  .data()[
+                                                              'curriculum1'];
+                                                        } catch (e) {
+                                                          print("yubhj$e");
+                                                        }
+
+                                                        print('iwejfowie3');
 
                                                         id = value.docs.first
                                                             .data()['docid'];
+                                                        print('iwejfowie4');
                                                         if (tempcoursename ==
                                                             'Course Name') {
+                                                          print('iwejfowie5');
                                                           Toast.show(
                                                               "Select Course Name!");
                                                         } else {
+                                                          print('iwejfowie6');
                                                           // to insert quiz in course
                                                           if (tempmodulename ==
                                                               'Module Name') {
+                                                            print('iwejfowie7');
                                                             var quizdata = {
                                                               "numberofattempt":
                                                                   numberofattempt
@@ -2662,6 +2680,7 @@ class _AdminQuizPanelState extends State<AdminQuizPanel> {
                                                                   tempcoursename,
                                                               "type": "quiz"
                                                             };
+                                                            print('iwejfowie1');
                                                             print(
                                                                 "quizdata: ${quizdata}");
                                                             print("id: ${id}");
@@ -2681,8 +2700,6 @@ class _AdminQuizPanelState extends State<AdminQuizPanel> {
                                                                       () {
                                                                 Toast.show(
                                                                     "successfully uploaded");
-                                                                print(
-                                                                    "iiioopp ${curriculum1}");
                                                               });
                                                             } else {
                                                               FirebaseFirestore
