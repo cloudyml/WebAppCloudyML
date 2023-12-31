@@ -18,7 +18,7 @@ import 'package:timeago/timeago.dart' as timeago;
 import 'package:toast/toast.dart';
 
 class StudentReviewScreen extends StatefulWidget {
-  const StudentReviewScreen({Key? key}) : super(key: key);
+  const StudentReviewScreen( {Key? key}) : super(key: key);
 
   @override
   State<StudentReviewScreen> createState() => _StudentReviewScreenState();

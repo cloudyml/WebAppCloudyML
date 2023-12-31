@@ -18,7 +18,8 @@ import '../module/video_screen.dart';
 import 'dart:html' as html;
 
 class ScholarshipQuiz extends StatefulWidget {
-  ScholarshipQuiz({Key? key}) : super(key: key);
+  String? fullpath;
+  ScholarshipQuiz(this.fullpath, {Key? key}) : super(key: key);
 
   @override
   State<ScholarshipQuiz> createState() => _ScholarshipQuizState();
@@ -31,13 +32,14 @@ class _ScholarshipQuizState extends State<ScholarshipQuiz> {
   @override
   void initState() {
     super.initState();
+    print('currentURL1: ${widget.fullpath}');
     getScholarshipQuiz();
     print('wjefoiwjo:0');
   }
 
   var docid;
   Future<List<dynamic>> getScholarshipQuiz() async {
-    String currentURL = html.window.location.href;
+    String currentURL = widget.fullpath!;
     print('currentURL: $currentURL');
     docid = currentURL.split('wadsf')[1];
     try {
