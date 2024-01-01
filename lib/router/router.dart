@@ -72,17 +72,22 @@ class MyRouter {
         // final dc = state.location == ('/comboPaymentPortal?cID=aEGX6kMfHzQrVgP3WCwU');
 
         // final pc=state.location==('/featuredCourses?cID=aEGX6kMfHzQrVgP3WCwU&courseName=Data+Science+%26+Analytics+Placement+Assurance+Program&id=0&coursePrice=9999');
-        currentURL = html.window.location.href;
+        if (currentURL.isEmpty) {
+          currentURL = html.window.location.href;
+        }
+
         print('currentURL2: $currentURL');
+        print("ygugu: ${goingToLogin}");
         if (currentURL.contains("/students/review")) {
           return ('/students/review');
         } else {
-          // if (!loggedIn && !goingToLogin) {
-          //   return ('/');
-          // } else if (loggedIn && goingToLogin) {
-          //   return ('/home');
-          // }
+          if (!loggedIn && !goingToLogin) {
+            return ('/');
+          } else if (loggedIn && goingToLogin) {
+            return ('/home');
+          }
         }
+
         //ScholarshipQuiz
       },
       routes: <RouteBase>[
@@ -115,12 +120,13 @@ class MyRouter {
         GoRoute(
             path: '/',
             pageBuilder: (context, state) {
-              return MaterialPage(child: splash());
+              return MaterialPage(child: splash(url: currentURL));
             }),
         GoRoute(
+          name: 'login',
           path: '/login',
           pageBuilder: (context, state) {
-            return MaterialPage(child: LoginPage());
+            return MaterialPage(child: LoginPage(url: currentURL));
           },
         ),
         GoRoute(

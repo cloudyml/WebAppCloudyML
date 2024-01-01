@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'dart:html';
 import 'dart:math';
-
+import 'dart:html' as html;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloudyml_app2/home.dart';
+import 'package:cloudyml_app2/router/router.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +30,8 @@ import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 class LoginPage extends StatefulWidget {
   String? name;
-  LoginPage({Key? key, this.name}) : super(key: key);
+  String? url;
+  LoginPage({Key? key, this.name, this.url}) : super(key: key);
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -59,6 +61,9 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     GRecaptchaV3.hideBadge();
 
+    print('iowefjow6$currentURL');
+    widget.url = currentURL;
+    print('iowefjow${widget.url}');
     final el = window.document.getElementById('__ff-recaptcha-container');
     if (el != null) {
       el.style.visibility = 'hidden';
@@ -1144,8 +1149,8 @@ class _LoginPageState extends State<LoginPage> {
                 setState(() {
                   loading = false;
                 });
-                await Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (_) => OtpPage('')));
+                await Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => OtpPage('', url: widget.url)));
               },
               codeAutoRetrievalTimeout: (String verificationId) {
                 actualCode = verificationId;

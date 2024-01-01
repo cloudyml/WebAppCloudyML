@@ -6,6 +6,7 @@ import 'package:cloudyml_app2/globals.dart';
 import 'package:cloudyml_app2/home.dart';
 import 'package:cloudyml_app2/homescreen/homescreen.dart';
 import 'package:cloudyml_app2/payment_screen.dart';
+import 'package:cloudyml_app2/scholarship/quiz.dart';
 import 'package:cloudyml_app2/screens/review_screen/review_screen.dart';
 import 'package:flutter/services.dart';
 import 'package:g_recaptcha_v3/g_recaptcha_v3.dart';
@@ -27,7 +28,8 @@ import 'login_email.dart';
 
 class OtpPage extends StatefulWidget {
   String fromemailpage;
-  OtpPage(this.fromemailpage, {Key? key}) : super(key: key);
+  String? url;
+  OtpPage(this.fromemailpage, {Key? key, this.url}) : super(key: key);
   @override
   _OtpPageState createState() => _OtpPageState();
 }
@@ -134,7 +136,7 @@ class _OtpPageState extends State<OtpPage> {
 
     print("url is=====$interntnl");
 
-    promEng= await FirebaseFirestore.instance
+    promEng = await FirebaseFirestore.instance
         .collection("Notice")
         .doc("HX4neryeAOB1dzUeIAg1_prompt")
         .get()
@@ -284,6 +286,7 @@ class _OtpPageState extends State<OtpPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    print('iowefjow1 ${widget.url}');
     url();
     GRecaptchaV3.hideBadge();
     // url();
@@ -572,7 +575,7 @@ class _OtpPageState extends State<OtpPage> {
                                                     decoration: BoxDecoration(
                                                       borderRadius:
                                                           const BorderRadius
-                                                                  .all(
+                                                              .all(
                                                               Radius.circular(
                                                                   20)),
                                                       color: MyColors
@@ -780,6 +783,12 @@ class _OtpPageState extends State<OtpPage> {
                 print(GoRouter.of(context).location);
                 // GoRouter.of(context).pushReplacement('/home');
                 String location = GoRouter.of(context).location;
+                try {
+                  print('iowefjow7${widget.url}');
+                  if (widget.url!.isNotEmpty) {}
+                } catch (e) {
+                  print("jghbjkuj: ${e}");
+                }
 
                 if (feaurl == 'aEGX6kMfHzQrVgP3WCwU') {
                   final id = "0";
@@ -853,7 +862,7 @@ class _OtpPageState extends State<OtpPage> {
                     //   'cID': cID,
                     //   }
                   );
-                }else if (depayurl == 'F9gxnjW9nf5Lxg5A6758') {
+                } else if (depayurl == 'F9gxnjW9nf5Lxg5A6758') {
                   final cID = "F9gxnjW9nf5Lxg5A6758";
                   GoRouter.of(context).go(
                     '/comboPaymentPortal?cID=F9gxnjW9nf5Lxg5A6758',

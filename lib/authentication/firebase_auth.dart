@@ -31,6 +31,8 @@ String? gimageUrl;
 // ValueNotifier<bool> isVerifyy=ValueNotifier(false);
 
 class Authenticate extends StatefulWidget {
+  String? url;
+  Authenticate({Key? key, this.url}) : super(key: key);
   @override
   State<Authenticate> createState() => _AuthenticateState();
 }
@@ -38,6 +40,7 @@ class Authenticate extends StatefulWidget {
 class _AuthenticateState extends State<Authenticate> {
   @override
   void initState() {
+    print('iowefjow4${widget.url}');
     super.initState();
   }
 
@@ -75,10 +78,14 @@ class _AuthenticateState extends State<Authenticate> {
           }
         }
       } else {
-        return LoginPage();
+        print('iowefjow5${widget.url}');
+        return LoginPage(
+          url: widget.url,
+        );
       }
     } else {
-      return LoginPage();
+      print('iowefjow6${widget.url}');
+      return LoginPage(url: widget.url);
     }
   }
 }
@@ -343,7 +350,7 @@ void userprofile({
       "couponCodeDetails": {},
       "payInPartsDetails": {},
       "image": image,
-      "date":DateFormat('yyyy-MM-dd').format(DateTime.now())
+      "date": DateFormat('yyyy-MM-dd').format(DateTime.now())
     });
   }
 }
