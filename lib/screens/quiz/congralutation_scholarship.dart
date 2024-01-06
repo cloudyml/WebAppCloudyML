@@ -89,7 +89,7 @@ class _ScholarshipCongratulationsWidgetState
       couponName: '',
       couponType: 'scholarship',
       couponValue: CouponValue(
-          type: 'percentage', value: "${widget.total.toStringAsFixed(0)}"),
+          type: 'number', value: "${(widget.total*20).toStringAsFixed(0)}"),//
       couponStartDate: DateTime.now().toIso8601String(),
       couponExpiryDate: couponExpiryDate,
       couponImage: '',
@@ -100,6 +100,7 @@ class _ScholarshipCongratulationsWidgetState
     );
     await CreateCouponApi.createCoupon(createCouponInfo);
     hitApiEndpoint(couponcode, couponExpiryDate);
+    print('coupon done');
   }
 
   Future<void> hitApiEndpoint(couponcode, couponExpiryDate) async {
@@ -149,7 +150,7 @@ class _ScholarshipCongratulationsWidgetState
               content: Column(
                 children: [
                   Text(
-                      'Congratulations, Checkout your email for Coupon Code of ${widget.total.toStringAsFixed(0)}% Discount!'),
+                      'Congratulations, Checkout your email for Coupon Code of ${(widget.total*20).toStringAsFixed(0)} Discount!'),
                   Lottie.asset(
                     'assets/cong.json',
                     width: 500,

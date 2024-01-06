@@ -17,7 +17,8 @@ import 'package:g_recaptcha_v3/g_recaptcha_v3.dart';
 import '../global_variable.dart' as globals;
 
 class splash extends StatefulWidget {
-  const splash({Key? key}) : super(key: key);
+  String? url;
+  splash({Key? key, this.url}) : super(key: key);
 
   @override
   State<splash> createState() => _splashState();
@@ -28,13 +29,12 @@ class _splashState extends State<splash> {
       _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   final myBox = Hive.box('myBox');
 
-
-
   @override
   void initState() {
     // TODO:implement initState
     super.initState();
     GRecaptchaV3.hideBadge();
+    print('iowefjow2${widget.url}');
     Timer(Duration(seconds: 0), () => GoRouter.of(context).push('/login')
 
         //     Navigator.pushReplacement(
@@ -207,10 +207,11 @@ class _splashState extends State<splash> {
   }
 
   void pushToHome() {
+    print('iowefjow3${widget.url}');
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => Authenticate(),
+        builder: (context) => Authenticate(url: widget.url),
       ),
     );
   }

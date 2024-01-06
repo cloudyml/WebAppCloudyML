@@ -39,6 +39,7 @@ import 'package:renderer_switcher/renderer_switcher.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'package:go_router/go_router.dart';
+import 'package:vdocipher_flutter/vdocipher_flutter.dart';
 
 import 'authentication_screens/phone_auth.dart';
 import 'homepage.dart';
@@ -87,7 +88,10 @@ Future<void> main() async {
     RendererSwitcher.switchWebRenderer(WebRenderer.html);
   }
 
-  print('this is url ${Uri.base.path}');
+  print('this is url ${Uri.base.path.split('/')}');
+    print('this is url ${Uri.base.path.split('/')[2]}');
+
+
   print(DateFormat('dd-MM-yyyy').format(DateTime.now()));
 
   if (Uri.base.path == '/comboPaymentPortal') {
@@ -121,8 +125,9 @@ Future<void> main() async {
 
     final url = Uri.base.path;
 
-    print('pushed');
-  } else if (Uri.base.path == '/InternationalPaymentScreen') {
+    print('url');
+  } 
+  else if (Uri.base.path == '/InternationalPaymentScreen') {
     final url = Uri.base.path;
     FirebaseFirestore.instance
         .collection("Notice")
@@ -130,7 +135,8 @@ Future<void> main() async {
         .set({'url': url});
 
     print('pushed');
-  } else if (Uri.base.path == '/NewFeature') {
+  }
+   else if (Uri.base.path == '/NewFeature') {
     if (Uri.base.queryParameters['cID'] == 'aEGX6kMfHzQrVgP3WCwU') {
       final url = Uri.base.queryParameters['cID'];
       FirebaseFirestore.instance
@@ -151,7 +157,8 @@ Future<void> main() async {
           .set({'url': url});
     }
     print('pushed');
-  } else if (Uri.base.path == '/multiComboFeatureScreen') {
+  }
+   else if (Uri.base.path == '/multiComboFeatureScreen') {
     if (Uri.base.queryParameters['cID'] == 'XSNqt0oNpuY7i2kb7zsW') {
       final url = Uri.base.queryParameters['cID'];
       FirebaseFirestore.instance
@@ -159,6 +166,16 @@ Future<void> main() async {
           .doc("JnCFQ1bT36xl0xKjDL3a_superstar")
           .set({'url': url});
     }
+  } 
+  else if (Uri.base.path.split('/')[1] == 'scholarship') {
+    final url = Uri.base.path.split('/')[2].toString().split('wads')[1];
+    print(url);
+    FirebaseFirestore.instance
+        .collection("Notice")
+        .doc("2OePOtTIa8B1Jd0WiQoj_scholarship_quiz")
+        .set({'url': url});
+
+    print('pushed');
   }
 }
 
@@ -217,6 +234,7 @@ class _MyAppState extends State<MyApp> {
                 routerDelegate: router.routerDelegate,
                 routeInformationParser: router.routeInformationParser,
                 routeInformationProvider: router.routeInformationProvider,
+                navigatorObservers: [VdoPlayerController.navigatorObserver('/player/(.*)')],
                 debugShowCheckedModeBanner: false,
                 title: 'CloudyML',
                 scrollBehavior: MyCustomScrollBehavior(),

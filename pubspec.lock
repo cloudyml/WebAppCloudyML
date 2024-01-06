@@ -2064,6 +2064,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.4"
+  shimmer:
+    dependency: "direct main"
+    description:
+      name: shimmer
+      sha256: "5f88c883a22e9f9f299e5ba0e4f7e6054857224976a5d9f839d4ebdc94a14ac9"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
   sizer:
     dependency: "direct main"
     description:
@@ -2373,6 +2381,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.7"
+  vdocipher_flutter:
+    dependency: "direct main"
+    description:
+      name: vdocipher_flutter
+      sha256: "9ea1cb7946fad24661f35b90a23e4ca7533e13be1739b3a872b8d164a25bc0ae"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.4.5"
   vector_math:
     dependency: transitive
     description:

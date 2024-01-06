@@ -6,6 +6,7 @@ import 'package:cloudyml_app2/globals.dart';
 import 'package:cloudyml_app2/home.dart';
 import 'package:cloudyml_app2/homescreen/homescreen.dart';
 import 'package:cloudyml_app2/payment_screen.dart';
+import 'package:cloudyml_app2/scholarship/quiz.dart';
 import 'package:cloudyml_app2/screens/review_screen/review_screen.dart';
 import 'package:flutter/services.dart';
 import 'package:g_recaptcha_v3/g_recaptcha_v3.dart';
@@ -27,7 +28,8 @@ import 'login_email.dart';
 
 class OtpPage extends StatefulWidget {
   String fromemailpage;
-  OtpPage(this.fromemailpage, {Key? key}) : super(key: key);
+  String? url;
+  OtpPage(this.fromemailpage, {Key? key, this.url}) : super(key: key);
   @override
   _OtpPageState createState() => _OtpPageState();
 }
@@ -58,6 +60,8 @@ class _OtpPageState extends State<OtpPage> {
   late String deurl;
   late String supurl;
   late String promEng;
+    late String schlrquiz;
+
 
   late String interntnl;
   FocusNode _buttonFocusNode = FocusNode();
@@ -123,6 +127,18 @@ class _OtpPageState extends State<OtpPage> {
 
     print("url is=====$diurl");
 
+    schlrquiz= await FirebaseFirestore.instance
+        .collection("Notice")
+        .doc("2OePOtTIa8B1Jd0WiQoj_scholarship_quiz")
+        .get()
+        .then((value) {
+      print(value.data()!.values.first);
+      return value.data()!.values.first;
+    });
+
+        print("url is=====$schlrquiz");
+
+
     interntnl = await FirebaseFirestore.instance
         .collection("Notice")
         .doc("7A85zuoLi4YQpbXlbOAh_redirect")
@@ -134,7 +150,7 @@ class _OtpPageState extends State<OtpPage> {
 
     print("url is=====$interntnl");
 
-    promEng= await FirebaseFirestore.instance
+    promEng = await FirebaseFirestore.instance
         .collection("Notice")
         .doc("HX4neryeAOB1dzUeIAg1_prompt")
         .get()
@@ -284,6 +300,7 @@ class _OtpPageState extends State<OtpPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    print('iowefjow1 ${widget.url}');
     url();
     GRecaptchaV3.hideBadge();
     // url();
@@ -572,7 +589,7 @@ class _OtpPageState extends State<OtpPage> {
                                                     decoration: BoxDecoration(
                                                       borderRadius:
                                                           const BorderRadius
-                                                                  .all(
+                                                              .all(
                                                               Radius.circular(
                                                                   20)),
                                                       color: MyColors
@@ -780,6 +797,12 @@ class _OtpPageState extends State<OtpPage> {
                 print(GoRouter.of(context).location);
                 // GoRouter.of(context).pushReplacement('/home');
                 String location = GoRouter.of(context).location;
+                try {
+                  print('iowefjow7${widget.url}');
+                  if (widget.url!.isNotEmpty) {}
+                } catch (e) {
+                  print("jghbjkuj: ${e}");
+                }
 
                 if (feaurl == 'aEGX6kMfHzQrVgP3WCwU') {
                   final id = "0";
@@ -837,7 +860,18 @@ class _OtpPageState extends State<OtpPage> {
                     //   'cID': cID,
                     //   }
                   );
-                } else if (payurl == 'aEGX6kMfHzQrVgP3WCwU') {
+                }
+                // else if (schlrquiz == 'f4ryqNYhKr8usGkOGC4cO') {
+                //   print("i am in otp else");
+                //   final cID = "f4ryqNYhKr8usGkOGC4cO";
+                //   GoRouter.of(context).go(
+                //     '/scholarship/wads${cID}',
+                //     // queryParams: {
+                //     //   'cID': cID,
+                //     //   }
+                //   );
+                // }
+                 else if (payurl == 'aEGX6kMfHzQrVgP3WCwU') {
                   final cID = "aEGX6kMfHzQrVgP3WCwU";
                   GoRouter.of(context).go(
                     '/comboPaymentPortal?cID=aEGX6kMfHzQrVgP3WCwU',
@@ -853,7 +887,7 @@ class _OtpPageState extends State<OtpPage> {
                     //   'cID': cID,
                     //   }
                   );
-                }else if (depayurl == 'F9gxnjW9nf5Lxg5A6758') {
+                } else if (depayurl == 'F9gxnjW9nf5Lxg5A6758') {
                   final cID = "F9gxnjW9nf5Lxg5A6758";
                   GoRouter.of(context).go(
                     '/comboPaymentPortal?cID=F9gxnjW9nf5Lxg5A6758',
