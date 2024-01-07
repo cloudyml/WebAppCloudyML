@@ -60,6 +60,8 @@ class _OtpPageState extends State<OtpPage> {
   late String deurl;
   late String supurl;
   late String promEng;
+    late String schlrquiz;
+
 
   late String interntnl;
   FocusNode _buttonFocusNode = FocusNode();
@@ -124,6 +126,18 @@ class _OtpPageState extends State<OtpPage> {
     });
 
     print("url is=====$diurl");
+
+    schlrquiz= await FirebaseFirestore.instance
+        .collection("Notice")
+        .doc("2OePOtTIa8B1Jd0WiQoj_scholarship_quiz")
+        .get()
+        .then((value) {
+      print(value.data()!.values.first);
+      return value.data()!.values.first;
+    });
+
+        print("url is=====$schlrquiz");
+
 
     interntnl = await FirebaseFirestore.instance
         .collection("Notice")
@@ -846,7 +860,18 @@ class _OtpPageState extends State<OtpPage> {
                     //   'cID': cID,
                     //   }
                   );
-                } else if (payurl == 'aEGX6kMfHzQrVgP3WCwU') {
+                }
+                // else if (schlrquiz == 'f4ryqNYhKr8usGkOGC4cO') {
+                //   print("i am in otp else");
+                //   final cID = "f4ryqNYhKr8usGkOGC4cO";
+                //   GoRouter.of(context).go(
+                //     '/scholarship/wads${cID}',
+                //     // queryParams: {
+                //     //   'cID': cID,
+                //     //   }
+                //   );
+                // }
+                 else if (payurl == 'aEGX6kMfHzQrVgP3WCwU') {
                   final cID = "aEGX6kMfHzQrVgP3WCwU";
                   GoRouter.of(context).go(
                     '/comboPaymentPortal?cID=aEGX6kMfHzQrVgP3WCwU',

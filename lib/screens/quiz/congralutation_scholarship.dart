@@ -100,6 +100,7 @@ class _ScholarshipCongratulationsWidgetState
     );
     await CreateCouponApi.createCoupon(createCouponInfo);
     hitApiEndpoint(couponcode, couponExpiryDate);
+    print('coupon done');
   }
 
   Future<void> hitApiEndpoint(couponcode, couponExpiryDate) async {
