@@ -14,6 +14,7 @@ class CongratulationsWidget extends StatefulWidget {
   var quizdata;
   var total;
   var time;
+  bool? scholarshipQuiz;
   var unanswered;
   var correctanswered;
   var completedata;
@@ -30,6 +31,7 @@ class CongratulationsWidget extends StatefulWidget {
       this.resultString,
       this.time,
       this.totalQuestion,
+      this.scholarshipQuiz,
       {Key? key})
       : super(key: key);
 
@@ -44,6 +46,10 @@ class _CongratulationsWidgetState extends State<CongratulationsWidget> {
   @override
   void initState() {
     super.initState();
+    print("wiefjw ${widget.resultString}");
+    print('iofwjoe ${widget.scholarshipQuiz}');
+    print(widget.scholarshipQuiz == true &&
+        widget.resultString == "Congratulations!");
     getqualifiedscore();
   }
 
@@ -164,32 +170,64 @@ class _CongratulationsWidgetState extends State<CongratulationsWidget> {
                                         0, 20, 0, 0),
                                     child: widget.resultString.length > 20
                                         ? Center(
-                                            child: Text(
-                                              '${widget.resultString}',
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyText1
-                                                      .override(
-                                                        fontFamily: 'Poppins',
-                                                        fontSize: 12,
-                                                        fontWeight:
-                                                            FontWeight.normal,
-                                                      ),
-                                            ),
+                                            child: widget.scholarshipQuiz ==
+                                                        true &&
+                                                    widget.resultString ==
+                                                        "Congratulations!"
+                                                ? Text(
+                                                    'Congratulations, Checkout your email for Coupon Code of ${(widget.total * 20).toStringAsFixed(0)} Discount!',
+                                                    style: FlutterFlowTheme.of(
+                                                            context)
+                                                        .bodyText1
+                                                        .override(
+                                                          fontFamily: 'Poppins',
+                                                          fontSize: 10,
+                                                          fontWeight:
+                                                              FontWeight.normal,
+                                                        ),
+                                                  )
+                                                : Text(
+                                                    '${widget.resultString}',
+                                                    style: FlutterFlowTheme.of(
+                                                            context)
+                                                        .bodyText1
+                                                        .override(
+                                                          fontFamily: 'Poppins',
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.normal,
+                                                        ),
+                                                  ),
                                           )
                                         : Center(
-                                            child: Text(
-                                              '${widget.resultString}',
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyText1
-                                                      .override(
-                                                        fontFamily: 'Poppins',
-                                                        fontSize: 25,
-                                                        fontWeight:
-                                                            FontWeight.normal,
-                                                      ),
-                                            ),
+                                            child: widget.scholarshipQuiz ==
+                                                        true &&
+                                                    widget.resultString ==
+                                                        "Congratulations!"
+                                                ? Text(
+                                                    'Congratulations, Checkout your email for Coupon Code of ${(widget.total * 20).toStringAsFixed(0)} Discount!',
+                                                    style: FlutterFlowTheme.of(
+                                                            context)
+                                                        .bodyText1
+                                                        .override(
+                                                          fontFamily: 'Poppins',
+                                                          fontSize: 10,
+                                                          fontWeight:
+                                                              FontWeight.normal,
+                                                        ),
+                                                  )
+                                                : Text(
+                                                    '${widget.resultString}',
+                                                    style: FlutterFlowTheme.of(
+                                                            context)
+                                                        .bodyText1
+                                                        .override(
+                                                          fontFamily: 'Poppins',
+                                                          fontSize: 25,
+                                                          fontWeight:
+                                                              FontWeight.normal,
+                                                        ),
+                                                  ),
                                           ),
                                   ),
                                 ),
@@ -296,56 +334,60 @@ class _CongratulationsWidgetState extends State<CongratulationsWidget> {
                                               'modulelevel'
                                           ? widget.total >
                                                   coursequizpassingpercentage
-                                              ? GestureDetector(
-                                                  onTap: () {
-                                                    _downloadImage();
-                                                    // Navigator.pushReplacement(
-                                                    //     context,
-                                                    //     MaterialPageRoute(
-                                                    //         builder: (context) =>
-                                                    //             Certificate()));
-                                                  },
-                                                  child: Padding(
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(
-                                                                0, 0, 10, 0),
-                                                    child: Container(
-                                                      width: 260,
-                                                      height: 50,
-                                                      decoration: BoxDecoration(
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
+                                              ? widget.scholarshipQuiz == true
+                                                  ? Container()
+                                                  : GestureDetector(
+                                                      onTap: () {
+                                                        _downloadImage();
+                                                        // Navigator.pushReplacement(
+                                                        //     context,
+                                                        //     MaterialPageRoute(
+                                                        //         builder: (context) =>
+                                                        //             Certificate()));
+                                                      },
+                                                      child: Padding(
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(0, 0,
+                                                                    10, 0),
+                                                        child: Container(
+                                                          width: 260,
+                                                          height: 50,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: FlutterFlowTheme
+                                                                    .of(context)
                                                                 .primaryColor,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(50),
-                                                        shape:
-                                                            BoxShape.rectangle,
-                                                      ),
-                                                      child: Align(
-                                                        alignment:
-                                                            AlignmentDirectional(
-                                                                0.05, 0),
-                                                        child: Text(
-                                                          'Download Certificate',
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodyText1
-                                                              .override(
-                                                                fontFamily:
-                                                                    'Poppins',
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .primaryBtnText,
-                                                                fontSize: 17,
-                                                              ),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        50),
+                                                            shape: BoxShape
+                                                                .rectangle,
+                                                          ),
+                                                          child: Align(
+                                                            alignment:
+                                                                AlignmentDirectional(
+                                                                    0.05, 0),
+                                                            child: Text(
+                                                              'Download Certificate',
+                                                              style: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .bodyText1
+                                                                  .override(
+                                                                    fontFamily:
+                                                                        'Poppins',
+                                                                    color: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .primaryBtnText,
+                                                                    fontSize:
+                                                                        17,
+                                                                  ),
+                                                            ),
+                                                          ),
                                                         ),
                                                       ),
-                                                    ),
-                                                  ),
-                                                )
+                                                    )
                                               : Container()
                                           : Container(),
                                       InkWell(
