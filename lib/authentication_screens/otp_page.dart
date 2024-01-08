@@ -60,7 +60,7 @@ class _OtpPageState extends State<OtpPage> {
   late String deurl;
   late String supurl;
   late String promEng;
-    late String schlrquiz;
+  var  schlrquiz;
 
 
   late String interntnl;
@@ -861,16 +861,16 @@ class _OtpPageState extends State<OtpPage> {
                     //   }
                   );
                 }
-                // else if (schlrquiz == 'f4ryqNYhKr8usGkOGC4cO') {
-                //   print("i am in otp else");
-                //   final cID = "f4ryqNYhKr8usGkOGC4cO";
-                //   GoRouter.of(context).go(
-                //     '/scholarship/wads${cID}',
-                //     // queryParams: {
-                //     //   'cID': cID,
-                //     //   }
-                //   );
-                // }
+                else if (schlrquiz) {
+                  print("i am in otp else");
+                  final cID = schlrquiz;
+                  GoRouter.of(context).go(
+                    '/scholarship/wadsf${cID}',
+                    // queryParams: {
+                    //   'cID': cID,
+                    //   }
+                  );
+                }
                  else if (payurl == 'aEGX6kMfHzQrVgP3WCwU') {
                   final cID = "aEGX6kMfHzQrVgP3WCwU";
                   GoRouter.of(context).go(
