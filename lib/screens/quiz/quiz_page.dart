@@ -10,6 +10,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloudyml_app2/MyAccount/myaccount.dart';
 import 'package:cloudyml_app2/screens/quiz/quizsolution.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:pinput/pinput.dart';
 import 'package:toast/toast.dart';
 import '../../global_variable.dart' as globals;
 import 'certificate_api.dart';
@@ -564,6 +565,20 @@ class _QuizPageState extends State<QuizPage> {
         }
       }
 
+      if (widget.scholarshipQuiz == true) {
+        try {
+          FirebaseFirestore.instance
+              .collection("Users")
+              .doc(FirebaseAuth.instance.currentUser!.uid)
+              .update({
+            "list_of_attempted_scholarshipquiz":
+                FieldValue.arrayUnion([widget.docid]),
+          });
+        } catch (e) {
+          print("$e");
+        }
+      }
+
       await FirebaseFirestore.instance.collection("quizTaken").add({
         "uid": FirebaseAuth.instance.currentUser!.uid,
         "quizInfo": quizdata,
@@ -581,24 +596,21 @@ class _QuizPageState extends State<QuizPage> {
       print("isfojsoiefj${total} ${unanswered} ${wronganswered} ${correctint}");
       print("lll7");
 
-    
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => CongratulationsWidget(
-                    quizdata,
-                    total,
-                    unanswered,
-                    wronganswered,
-                    correctint,
-                    widget.quizdata,
-                    resultString,
-                    countUsedTime(),
-                    quizdata.length.toString(),
-                    widget.scholarshipQuiz
-                  )),
-        );
-    
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => CongratulationsWidget(
+                quizdata,
+                total,
+                unanswered,
+                wronganswered,
+                correctint,
+                widget.quizdata,
+                resultString,
+                countUsedTime(),
+                quizdata.length.toString(),
+                widget.scholarshipQuiz)),
+      );
 
       // Navigator.push(
       //   context,
