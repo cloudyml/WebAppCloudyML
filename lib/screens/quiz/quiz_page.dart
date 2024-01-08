@@ -1,5 +1,7 @@
 import 'dart:math';
 import 'dart:ui';
+import 'package:cloudyml_app2/screens/coupon/coupon_api.dart';
+import 'package:cloudyml_app2/screens/coupon/models/createCouponModel.dart';
 import 'package:cloudyml_app2/screens/quiz/certificatemodel.dart';
 import 'package:cloudyml_app2/screens/quiz/congralutation_scholarship.dart';
 import 'package:dio/dio.dart';
@@ -346,6 +348,85 @@ class _QuizPageState extends State<QuizPage> {
     return true;
   }
 
+  String generateRandomCode() {
+    const String charset =
+        '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    Random random = Random();
+    StringBuffer codeBuffer = StringBuffer();
+
+    for (int i = 0; i < 6; i++) {
+      int randomIndex = random.nextInt(charset.length);
+      codeBuffer.write(charset[randomIndex]);
+    }
+
+    return codeBuffer.toString();
+  }
+
+  createCoupon(total) async {
+    var couponcode = generateRandomCode();
+    // Get the current date and time
+    DateTime now = DateTime.now();
+
+    // Add 3 hours to the current date and time
+    int validforhours = 3;
+    DateTime newDateTime = now.add(Duration(hours: validforhours));
+
+    // Convert the updated DateTime to ISO 8601 string
+    String couponExpiryDate = newDateTime.toIso8601String();
+    CreateCouponModel createCouponInfo = CreateCouponModel(
+      course: widget.docid,
+      couponName: '',
+      couponType: 'scholarship',
+      couponValue: CouponValue(
+          type: 'number', value: "${(total * 20).toStringAsFixed(0)}"), //
+      couponStartDate: DateTime.now().toIso8601String(),
+      couponExpiryDate: couponExpiryDate,
+      couponImage: '',
+      couponCode: couponcode,
+      validforhours: validforhours.toString(),
+      couponDescription: '',
+      couponStatus: "not purchased",
+    );
+    await CreateCouponApi.createCoupon(createCouponInfo);
+    hitApiEndpoint(couponcode, couponExpiryDate);
+  }
+
+  Future<void> hitApiEndpoint(couponcode, couponExpiryDate) async {
+    final String apiUrl =
+        'https://us-central1-cloudyml-app.cloudfunctions.net/mailapi/discouponmail';
+
+    final Map<String, dynamic> requestBody = {
+      "couponcode": couponcode,
+      "cname": widget.quizdata['courseName'],
+      "sname": globals.name,
+      "semail": globals.email,
+      "validtilltime": couponExpiryDate
+    };
+
+    try {
+      final http.Response response = await http.post(
+        Uri.parse(apiUrl),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(requestBody),
+      );
+
+      if (response.statusCode == 200) {
+        print('API Request Successful');
+        print('Response: ${response.body}');
+        // You can handle the response here
+      } else {
+        print('API Request Failed with status code: ${response.statusCode}');
+        print('Response: ${response.body}');
+        // You can handle the error response here
+      }
+    } catch (e) {
+      print('Error during API request: $e');
+      // Handle any exceptions that occurred during the request
+    }
+  }
+
   submit() async {
     print("lll1");
     try {
@@ -466,16 +547,20 @@ class _QuizPageState extends State<QuizPage> {
 
       if (widget.quizdata['quizlevel'] == "courselevel") {
         if (resultString == "Congratulations!") {
-          CertificateModel Model = CertificateModel(
-              uid: FirebaseAuth.instance.currentUser!.uid,
-              name: userName,
-              course: courseid,
-              finishdate: DateTime.now().day.toString() +
-                  "-" +
-                  DateTime.now().month.toString() +
-                  "-" +
-                  DateTime.now().year.toString());
-          await certificateApi.getCertificate(Model);
+          if (widget.scholarshipQuiz == true) {
+            await createCoupon(total);
+          } else {
+            CertificateModel Model = CertificateModel(
+                uid: FirebaseAuth.instance.currentUser!.uid,
+                name: userName,
+                course: courseid,
+                finishdate: DateTime.now().day.toString() +
+                    "-" +
+                    DateTime.now().month.toString() +
+                    "-" +
+                    DateTime.now().year.toString());
+            await certificateApi.getCertificate(Model);
+          }
         }
       }
 
@@ -496,38 +581,24 @@ class _QuizPageState extends State<QuizPage> {
       print("isfojsoiefj${total} ${unanswered} ${wronganswered} ${correctint}");
       print("lll7");
 
-      if (widget.scholarshipQuiz!) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => ScholarshipCongratulationsWidget(
-                  quizdata,
-                  total,
-                  unanswered,
-                  wronganswered,
-                  correctint,
-                  widget.quizdata,
-                  resultString,
-                  countUsedTime(),
-                  quizdata.length.toString(),
-                  widget.docid)),
-        );
-      } else {
+    
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
               builder: (context) => CongratulationsWidget(
-                  quizdata,
-                  total,
-                  unanswered,
-                  wronganswered,
-                  correctint,
-                  widget.quizdata,
-                  resultString,
-                  countUsedTime(),
-                  quizdata.length.toString())),
+                    quizdata,
+                    total,
+                    unanswered,
+                    wronganswered,
+                    correctint,
+                    widget.quizdata,
+                    resultString,
+                    countUsedTime(),
+                    quizdata.length.toString(),
+                    widget.scholarshipQuiz
+                  )),
         );
-      }
+    
 
       // Navigator.push(
       //   context,

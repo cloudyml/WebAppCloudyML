@@ -168,7 +168,7 @@ Future<void> main() async {
     }
   } 
   else if (Uri.base.path.split('/')[1] == 'scholarship') {
-    final url = Uri.base.path.split('/')[2].toString().split('wads')[1];
+    final url = Uri.base.path.split('/')[2].toString().split('wadsf')[1];
     print(url);
     FirebaseFirestore.instance
         .collection("Notice")
