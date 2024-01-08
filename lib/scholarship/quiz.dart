@@ -34,7 +34,23 @@ class _ScholarshipQuizState extends State<ScholarshipQuiz> {
     super.initState();
     print('currentURL1: ${widget.fullpath}');
     getScholarshipQuiz();
+    checkIfQuizAlreadyGiven();
     print('wjefoiwjo:0');
+  }
+
+  checkIfQuizAlreadyGiven() async {
+    await FirebaseFirestore.instance
+        .collection("Users")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get()
+        .then((value) {
+      try {
+        list_of_attempted_scholarshipquiz =
+            value.data()!['list_of_attempted_scholarshipquiz'];
+      } catch (e) {
+        print('wijefowi: $e');
+      }
+    });
   }
 
   var docid;
@@ -64,7 +80,7 @@ class _ScholarshipQuizState extends State<ScholarshipQuiz> {
         });
       }).catchError((onError) {
         print('wjefoiwjo:9${onError}');
-      });//scholarship/wadsaEGX6kMfHzQrVgP3WCwU
+      }); //scholarship/wadsaEGX6kMfHzQrVgP3WCwU
     } catch (e) {
       print('wjefoiwjo:8$e');
     }
@@ -73,6 +89,8 @@ class _ScholarshipQuizState extends State<ScholarshipQuiz> {
     return ScholarshipQuizList;
   }
 
+  var list_of_attempted_scholarshipquiz = [];
+
   checkQuizStatusOrNavigate(quizdata, courseName, bollen) async {
     await FirebaseFirestore.instance
         .collection("Users")
@@ -80,6 +98,8 @@ class _ScholarshipQuizState extends State<ScholarshipQuiz> {
         .get()
         .then((value) {
       try {
+        list_of_attempted_scholarshipquiz =
+            value.data()!['list_of_attempted_scholarshipquiz'];
         globals.name = value.data()!['name'];
         globals.email = value.data()!['email'];
         var data = value.data()!['quiztrack'];
@@ -239,358 +259,359 @@ class _ScholarshipQuizState extends State<ScholarshipQuiz> {
     final width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          return Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage("assets/BG.png"), fit: BoxFit.fill),
-              color: HexColor("#fef0ff"),
-            ),
-            width: constraints.maxWidth,
-            height: constraints.maxHeight,
-            child: SingleChildScrollView(
-                child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                SizedBox(
-                  height: 10,
-                ),
-                InkWell(
-                  onTap: () {
-                    GoRouter.of(context).pushReplacementNamed('home');
-                  },
-                  child: Container(
-                      child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(50, 0, 0, 0),
-                          child: Icon(Icons.arrow_back_rounded),
-                        ),
-                        Text(
-                          'Back',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        )
-                      ],
-                    ),
-                  )),
-                ),
-                RichText(
-                  text: TextSpan(children: [
-                    TextSpan(
-                        text:
-                            "CloudyML Scholarship Quiz: Unleash Your Learning Potential and Secure Hefty Discounts on Course Purchases!",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w200,
-                            fontSize: width < 850
-                                ? width < 430
-                                    ? 25
-                                    : 30
-                                : 40,
-                            color: Colors.black)),
-                  ]),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                SizedBox(
-                  child: ListView.builder(
-                    itemCount: 1,
-                    shrinkWrap: true,
-                    scrollDirection: Axis.vertical,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: width > 700 ? width / 7 : width / 50,
-                    ),
-                    physics: NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      return Container(
-                        padding: EdgeInsets.all(8),
-                        margin: EdgeInsets.only(bottom: 15),
-                        width: width < 1700
-                            ? width < 1300
-                                ? width < 850
-                                    ? constraints.maxWidth - 20
-                                    : constraints.maxWidth - 200
-                                : constraints.maxWidth - 400
-                            : constraints.maxWidth - 700,
-                        height: width > 700
-                            ? 550
-                            : width < 300
-                                ? 550
-                                : 550,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.white,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            SizedBox(
-                              width: 50,
-                            ),
-                            Expanded(
-                              flex: width < 600 ? 6 : 4,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+      body: list_of_attempted_scholarshipquiz.contains(docid)
+          ? Container(
+              child:
+                  Center(child: Text("You have already attempted this quiz!")),
+            )
+          : LayoutBuilder(
+              builder: (context, constraints) {
+                return Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage("assets/BG.png"), fit: BoxFit.fill),
+                    color: HexColor("#fef0ff"),
+                  ),
+                  width: constraints.maxWidth,
+                  height: constraints.maxHeight,
+                  child: SingleChildScrollView(
+                      child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      SizedBox(
+                        height: 10,
+                      ),
+                      InkWell(
+                        onTap: () {
+                          GoRouter.of(context).pushReplacementNamed('home');
+                        },
+                        child: Container(
+                            child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(50, 0, 0, 0),
+                                child: Icon(Icons.arrow_back_rounded),
+                              ),
+                              Text(
+                                'Back',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              )
+                            ],
+                          ),
+                        )),
+                      ),
+                      RichText(
+                        text: TextSpan(children: [
+                          TextSpan(
+                              text:
+                                  "CloudyML Scholarship Quiz: Unleash Your Learning Potential and Secure Hefty Discounts on Course Purchases!",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w200,
+                                  fontSize: width < 850
+                                      ? width < 430
+                                          ? 25
+                                          : 30
+                                      : 40,
+                                  color: Colors.black)),
+                        ]),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      SizedBox(
+                        child: ListView.builder(
+                          itemCount: 1,
+                          shrinkWrap: true,
+                          scrollDirection: Axis.vertical,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: width > 700 ? width / 7 : width / 50,
+                          ),
+                          physics: NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            return Container(
+                              padding: EdgeInsets.all(8),
+                              margin: EdgeInsets.only(bottom: 15),
+                              width: width < 1700
+                                  ? width < 1300
+                                      ? width < 850
+                                          ? constraints.maxWidth - 20
+                                          : constraints.maxWidth - 200
+                                      : constraints.maxWidth - 400
+                                  : constraints.maxWidth - 700,
+                              height: width > 700
+                                  ? 550
+                                  : width < 300
+                                      ? 550
+                                      : 550,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: Colors.white,
+                              ),
+                              child: Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
+                                  SizedBox(
+                                    width: 50,
+                                  ),
                                   Expanded(
+                                    flex: width < 600 ? 6 : 4,
                                     child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
                                       children: [
-                                        Text(
-                                          "Quiz: ${ScholarshipQuizList[index]['name']}",
-                                          style: TextStyle(
-                                            height: 1,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: width > 700
-                                                ? 25
-                                                : width < 540
-                                                    ? 15
-                                                    : 16,
-                                          ),
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
-                                        ),
-                                        SizedBox(
-                                          height: 15,
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Expanded(
-                                              child: Column(
+                                        Expanded(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "Quiz: ${ScholarshipQuizList[index]['name']}",
+                                                style: TextStyle(
+                                                  height: 1,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: width > 700
+                                                      ? 25
+                                                      : width < 540
+                                                          ? 15
+                                                          : 16,
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 1,
+                                              ),
+                                              SizedBox(
+                                                height: 15,
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
                                                 children: [
-                                                  Text(
-                                                    "Estimates learning time : ${ScholarshipQuizList[index]['quiztiming']}",
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    style: TextStyle(
-                                                      fontSize: width < 540
-                                                          ? width < 420
-                                                              ? 11
-                                                              : 13
-                                                          : 14,
+                                                  Expanded(
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          "Estimates learning time : ${ScholarshipQuizList[index]['quiztiming']}",
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          style: TextStyle(
+                                                            fontSize: width <
+                                                                    540
+                                                                ? width < 420
+                                                                    ? 11
+                                                                    : 13
+                                                                : 14,
+                                                          ),
+                                                        ),
+                                                        Container(
+                                                          height: 400,
+                                                          child: InstructionspageWidget(
+                                                              ScholarshipQuizList[
+                                                                  index],
+                                                              ScholarshipQuizList[
+                                                                      index][
+                                                                  'courseName'],
+                                                              true,
+                                                              docid),
+                                                        ),
+                                                        SizedBox(
+                                                          height: 3,
+                                                        ),
+                                                        // Text(
+                                                        //   "Explore our ${ScholarshipQuizList[index]['courseName']} Scholarship Quiz, where scoring high in quizzes not only expands your knowledge but also unlocks exclusive discounts on course fees. Transform learning into savings and embark on a rewarding educational journey!",
+                                                        //   overflow:
+                                                        //       TextOverflow.visible,
+                                                        //   style: TextStyle(
+                                                        //     fontSize: width < 540
+                                                        //         ? width < 420
+                                                        //             ? 11
+                                                        //             : 13
+                                                        //         : 14,
+                                                        //   ),
+                                                        // ),
+                                                        SizedBox(
+                                                          height: 15,
+                                                        ),
+                                                        width < 450
+                                                            ? Column(
+                                                                children: [
+                                                                  SizedBox(
+                                                                    width: width <
+                                                                            400
+                                                                        ? 160
+                                                                        : 190,
+                                                                    child:
+                                                                        MaterialButton(
+                                                                      height: width >
+                                                                              700
+                                                                          ? 50
+                                                                          : 40,
+                                                                      shape:
+                                                                          RoundedRectangleBorder(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(20),
+                                                                      ),
+                                                                      padding:
+                                                                          EdgeInsets.all(
+                                                                              8),
+                                                                      minWidth: width >
+                                                                              700
+                                                                          ? 100
+                                                                          : 60,
+                                                                      onPressed:
+                                                                          () {
+                                                                        print(
+                                                                            "start quiz0");
+                                                                        checkQuizStatusOrNavigate(
+                                                                            ScholarshipQuizList[index],
+                                                                            ScholarshipQuizList[index]['courseName'],
+                                                                            true);
+                                                                      },
+                                                                      child:
+                                                                          Row(
+                                                                        children: [
+                                                                          SizedBox(
+                                                                            width:
+                                                                                5,
+                                                                          ),
+                                                                          Expanded(
+                                                                            flex:
+                                                                                1,
+                                                                            child:
+                                                                                Container(),
+                                                                          ),
+                                                                          Expanded(
+                                                                            flex:
+                                                                                3,
+                                                                            child:
+                                                                                Text(
+                                                                              "START QUIZ",
+                                                                              style: TextStyle(
+                                                                                color: Colors.white,
+                                                                                fontSize: width < 500 ? 10 : null,
+                                                                              ),
+                                                                              overflow: TextOverflow.ellipsis,
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                      color: Colors
+                                                                          .purple,
+                                                                    ),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    height: 10,
+                                                                  ),
+                                                                ],
+                                                              )
+                                                            : Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .end,
+                                                                children: [
+                                                                  SizedBox(
+                                                                    width: 190,
+                                                                    child:
+                                                                        MaterialButton(
+                                                                      height:
+                                                                          50,
+                                                                      shape:
+                                                                          RoundedRectangleBorder(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(20),
+                                                                      ),
+                                                                      padding:
+                                                                          EdgeInsets.all(
+                                                                              8),
+                                                                      minWidth:
+                                                                          100,
+                                                                      onPressed:
+                                                                          () {
+                                                                        print(
+                                                                            "start quiz");
+                                                                        checkQuizStatusOrNavigate(
+                                                                            ScholarshipQuizList[index],
+                                                                            ScholarshipQuizList[index]['courseName'],
+                                                                            true);
+                                                                      },
+                                                                      child:
+                                                                          Row(
+                                                                        children: [
+                                                                          SizedBox(
+                                                                            width:
+                                                                                5,
+                                                                          ),
+                                                                          Expanded(
+                                                                            flex:
+                                                                                1,
+                                                                            child:
+                                                                                Container(),
+                                                                          ),
+                                                                          Expanded(
+                                                                            flex:
+                                                                                3,
+                                                                            child:
+                                                                                Text(
+                                                                              "START QUIZ",
+                                                                              style: TextStyle(
+                                                                                color: Colors.white,
+                                                                                fontSize: width < 500 ? 10 : null,
+                                                                              ),
+                                                                              overflow: TextOverflow.ellipsis,
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                      color: Colors
+                                                                          .purple,
+                                                                    ),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: 15,
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                      ],
                                                     ),
                                                   ),
-                                                  Container(
-                                                    height: 400,
-                                                    child:
-                                                        InstructionspageWidget(
-                                                            ScholarshipQuizList[
-                                                                index],
-                                                            ScholarshipQuizList[
-                                                                    index]
-                                                                ['courseName'],
-                                                            true,
-                                                            docid),
-                                                  ),
                                                   SizedBox(
-                                                    height: 3,
+                                                    width: 5,
                                                   ),
-                                                  // Text(
-                                                  //   "Explore our ${ScholarshipQuizList[index]['courseName']} Scholarship Quiz, where scoring high in quizzes not only expands your knowledge but also unlocks exclusive discounts on course fees. Transform learning into savings and embark on a rewarding educational journey!",
-                                                  //   overflow:
-                                                  //       TextOverflow.visible,
-                                                  //   style: TextStyle(
-                                                  //     fontSize: width < 540
-                                                  //         ? width < 420
-                                                  //             ? 11
-                                                  //             : 13
-                                                  //         : 14,
-                                                  //   ),
-                                                  // ),
-                                                  SizedBox(
-                                                    height: 15,
-                                                  ),
-                                                  width < 450
-                                                      ? Column(
-                                                          children: [
-                                                            SizedBox(
-                                                              width: width < 400
-                                                                  ? 160
-                                                                  : 190,
-                                                              child:
-                                                                  MaterialButton(
-                                                                height:
-                                                                    width > 700
-                                                                        ? 50
-                                                                        : 40,
-                                                                shape:
-                                                                    RoundedRectangleBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              20),
-                                                                ),
-                                                                padding:
-                                                                    EdgeInsets
-                                                                        .all(8),
-                                                                minWidth:
-                                                                    width > 700
-                                                                        ? 100
-                                                                        : 60,
-                                                                onPressed: () {
-                                                                  print(
-                                                                      "start quiz0");
-                                                                  checkQuizStatusOrNavigate(
-                                                                      ScholarshipQuizList[
-                                                                          index],
-                                                                      ScholarshipQuizList[
-                                                                              index]
-                                                                          [
-                                                                          'courseName'],
-                                                                      true);
-                                                                },
-                                                                child: Row(
-                                                                  children: [
-                                                                    SizedBox(
-                                                                      width: 5,
-                                                                    ),
-                                                                    Expanded(
-                                                                      flex: 1,
-                                                                      child:
-                                                                          Container(),
-                                                                    ),
-                                                                    Expanded(
-                                                                      flex: 3,
-                                                                      child:
-                                                                          Text(
-                                                                        "START QUIZ",
-                                                                        style:
-                                                                            TextStyle(
-                                                                          color:
-                                                                              Colors.white,
-                                                                          fontSize: width < 500
-                                                                              ? 10
-                                                                              : null,
-                                                                        ),
-                                                                        overflow:
-                                                                            TextOverflow.ellipsis,
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                                color: Colors
-                                                                    .purple,
-                                                              ),
-                                                            ),
-                                                            SizedBox(
-                                                              height: 10,
-                                                            ),
-                                                          ],
-                                                        )
-                                                      : Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .end,
-                                                          children: [
-                                                            SizedBox(
-                                                              width: 190,
-                                                              child:
-                                                                  MaterialButton(
-                                                                height: 50,
-                                                                shape:
-                                                                    RoundedRectangleBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              20),
-                                                                ),
-                                                                padding:
-                                                                    EdgeInsets
-                                                                        .all(8),
-                                                                minWidth: 100,
-                                                                onPressed: () {
-                                                                  print(
-                                                                      "start quiz");
-                                                                  checkQuizStatusOrNavigate(
-                                                                      ScholarshipQuizList[
-                                                                          index],
-                                                                      ScholarshipQuizList[
-                                                                              index]
-                                                                          [
-                                                                          'courseName'],
-                                                                      true);
-                                                                },
-                                                                child: Row(
-                                                                  children: [
-                                                                    SizedBox(
-                                                                      width: 5,
-                                                                    ),
-                                                                    Expanded(
-                                                                      flex: 1,
-                                                                      child:
-                                                                          Container(),
-                                                                    ),
-                                                                    Expanded(
-                                                                      flex: 3,
-                                                                      child:
-                                                                          Text(
-                                                                        "START QUIZ",
-                                                                        style:
-                                                                            TextStyle(
-                                                                          color:
-                                                                              Colors.white,
-                                                                          fontSize: width < 500
-                                                                              ? 10
-                                                                              : null,
-                                                                        ),
-                                                                        overflow:
-                                                                            TextOverflow.ellipsis,
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                                color: Colors
-                                                                    .purple,
-                                                              ),
-                                                            ),
-                                                            SizedBox(
-                                                              width: 15,
-                                                            ),
-                                                          ],
-                                                        ),
                                                 ],
                                               ),
-                                            ),
-                                            SizedBox(
-                                              width: 5,
-                                            ),
-                                          ],
-                                        ),
+                                            ],
+                                          ),
+                                        )
                                       ],
                                     ),
-                                  )
+                                  ),
                                 ],
                               ),
-                            ),
-                          ],
+                            );
+                          },
                         ),
-                      );
-                    },
-                  ),
-                )
-              ],
-            )),
-          );
-        },
-      ),
+                      )
+                    ],
+                  )),
+                );
+              },
+            ),
     );
   }
 }
