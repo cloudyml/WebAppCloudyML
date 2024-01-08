@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:convert';
 import 'dart:math';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:vdocipher_flutter/vdocipher_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -3848,7 +3849,7 @@ class _VideoScreenState extends State<VideoScreen> {
                                                                                     mainAxisAlignment: MainAxisAlignment.center,
                                                                                     children: List.generate(_getVideoPercentageList![sectionIndex][listOfSectionData[widget.courseName][sectionIndex]["id"].toString()].length, (index) {
                                                                                       if (_getVideoPercentageList![sectionIndex][listOfSectionData[widget.courseName][sectionIndex]["id"].toString()][index][listOfSectionData[widget.courseName][sectionIndex]["videos"][subsectionIndex]["id"].toString()] != null) {
-                                                                                        return updateVideoName && updateVideoIndex == subsectionIndex
+                                                                                        return (updateVideoName || editQuizName) && updateVideoIndex == subsectionIndex
                                                                                             ? TextField(
                                                                                                 controller: updateVideoNameController,
                                                                                                 decoration: InputDecoration(
@@ -3875,7 +3876,7 @@ class _VideoScreenState extends State<VideoScreen> {
                                                                                                       icon: Icon(Icons.update_outlined),
                                                                                                     )),
                                                                                               )
-                                                                                            : Text(
+                                                                                            :  Text(
                                                                                                 listOfSectionData[widget.courseName][sectionIndex]["videos"][subsectionIndex]["type"] == "video"
                                                                                                     ? listOfSectionData[widget.courseName][sectionIndex]["videos"][subsectionIndex]["name"].toString()
                                                                                                     : listOfSectionData[widget.courseName][sectionIndex]["videos"][subsectionIndex]["type"] == "quiz"
@@ -3910,10 +3911,10 @@ class _VideoScreenState extends State<VideoScreen> {
                                                                                                     widget.courseName: listOfSectionData[widget.courseName],
                                                                                                   }
                                                                                                 });
+                                                                                                Get.snackbar("Success", "Name changed.");
                                                                                               } catch (e) {
                                                                                                 print(e.toString());
                                                                                               }
-
                                                                                               setState(() {
                                                                                                 streamVideoData();
                                                                                                 updateVideoNameController.clear();
@@ -4161,7 +4162,8 @@ class _VideoScreenState extends State<VideoScreen> {
                                                                                 }
                                                                                 if (item == 2) {
                                                                                   setState(() {
-                                                                                    updateVideoNameController.text = listOfSectionData[widget.courseName][sectionIndex]["videos"][subsectionIndex]["name"];
+                                                                                    updateVideoNameController.text
+                                                                                    = listOfSectionData[widget.courseName][sectionIndex]["videos"][subsectionIndex]["name"];
                                                                                     editAssignmentName = true;
                                                                                     editIndex = sectionIndex;
                                                                                     updateVideoIndex = subsectionIndex;
@@ -4454,9 +4456,19 @@ class _VideoScreenState extends State<VideoScreen> {
                                                                                     print(e.toString());
                                                                                   }
                                                                                 }
+                                                                                if (item == 2) {
+                                                                                  setState(() {
+                                                                                    updateVideoNameController.text
+                                                                                    = listOfSectionData[widget.courseName][sectionIndex]["videos"][subsectionIndex]["name"];
+                                                                                    editAssignmentName = true;
+                                                                                    editIndex = sectionIndex;
+                                                                                    updateVideoIndex = subsectionIndex;
+                                                                                  });
+                                                                                }
                                                                               },
                                                                               itemBuilder: (context) => [
                                                                                 PopupMenuItem<int>(value: 1, child: Text('Delete quiz')),
+                                                                                PopupMenuItem<int>(value: 2, child: Text('Update quiz name')),
                                                                               ],
                                                                             )
                                                                           : SizedBox(),
@@ -4687,10 +4699,12 @@ class _VideoScreenState extends State<VideoScreen> {
   TextEditingController addVideoUrl = TextEditingController();
   bool updateVideoName = false;
   bool editAssignmentName = false;
+  bool editQuizName = false;
   int? updateVideoIndex;
   int? deleteVideoIndex;
   String? initialVideoName;
   TextEditingController updateVideoNameController = TextEditingController();
+  TextEditingController updateQuizNameController = TextEditingController();
 }
 
 class Counter {
