@@ -253,13 +253,14 @@ class _LandingScreenState extends State<LandingScreen> {
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .get()
           .then((value) {
-        setState(() {
+        setState(() async {
           if (value.data()!['paidCourseNames'] == null ||
               value.data()!['paidCourseNames'] == []) {
             courses = [];
           } else {
             courses = value.data()!['paidCourseNames'];
-            getPercentageOfCourse();
+            await getPercentageOfCourse();
+            getReviewedStudentIds();
           }
           load = false;
         });
@@ -271,7 +272,7 @@ class _LandingScreenState extends State<LandingScreen> {
   }
 
   var coursePercent = {};
-
+  bool precentGreater = false;
   getPercentageOfCourse() async {
     if (courses.length != 0) {
       try {
@@ -349,6 +350,10 @@ class _LandingScreenState extends State<LandingScreen> {
         coursePercent;
       });
       print(coursePercent);
+      setState(() {
+        precentGreater = coursePercent.values.any((value) => value > 30);
+      });
+      print('precentGreater ${precentGreater}');
     }
   }
 
@@ -812,9 +817,7 @@ class _LandingScreenState extends State<LandingScreen> {
         String id = doc["email"] ?? "";
         reviewedStudentIds.add(id);
       }
-      print("review IDs: $reviewedStudentIds ${email.data()!["email"]}");
       isReviewed = reviewedStudentIds.contains(email.data()!["email"]);
-      print("IDs: $isReviewed ${email.data()!["paidCourseNames"].isNotEmpty}");
       if(isReviewed){
         isReviewedCourse = "true";
       } else {
@@ -828,8 +831,12 @@ class _LandingScreenState extends State<LandingScreen> {
   }
   showAlertDialog(isPurchased) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      print("Role  = ${globals.role}");
-      if(!isReviewed && globals.role != "mentor" && isPurchased){
+
+      // print("Role  = ${globals.role}");
+      print("IDs: $isReviewed ${globals.role != "mentor"} ${isPurchased}");
+      // coursePercent[course[index].courseId.toString()]
+      if(!isReviewed && globals.role != "mentor" && isPurchased && precentGreater){
+
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -852,7 +859,7 @@ class _LandingScreenState extends State<LandingScreen> {
   }
   @override
   void initState() {
-    getReviewedStudentIds();
+    // getReviewedStudentIds();
     getQuizDataAndUpdateScores();
     super.initState();
     // print('this is url ${html.window.location.href}');
