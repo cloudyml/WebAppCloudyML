@@ -60,7 +60,7 @@ class _OtpPageState extends State<OtpPage> {
   late String deurl;
   late String supurl;
   late String promEng;
-  var  schlrquiz;
+  late String  schlrquiz;
 
 
   late String interntnl;
@@ -861,7 +861,7 @@ class _OtpPageState extends State<OtpPage> {
                     //   }
                   );
                 }
-                else if (schlrquiz) {
+                else if (schlrquiz.isNotEmpty) {
                   print("i am in otp else");
                   final cID = schlrquiz;
                   GoRouter.of(context).go(

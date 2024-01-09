@@ -47,7 +47,13 @@ class _ScholarshipQuizState extends State<ScholarshipQuiz> {
       try {
         list_of_attempted_scholarshipquiz =
             value.data()!['list_of_attempted_scholarshipquiz'];
+            if(list_of_attempted_scholarshipquiz==null){
+              list_of_attempted_scholarshipquiz=[];
+            }
       } catch (e) {
+         if(list_of_attempted_scholarshipquiz==null){
+              list_of_attempted_scholarshipquiz=[];
+            }
         print('wijefowi: $e');
       }
     });
