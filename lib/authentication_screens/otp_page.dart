@@ -60,7 +60,7 @@ class _OtpPageState extends State<OtpPage> {
   late String deurl;
   late String supurl;
   late String promEng;
-  var  schlrquiz;
+  late String  schlrquiz;
 
 
   late String interntnl;
@@ -127,16 +127,20 @@ class _OtpPageState extends State<OtpPage> {
 
     print("url is=====$diurl");
 
-    schlrquiz= await FirebaseFirestore.instance
-        .collection("Notice")
-        .doc("2OePOtTIa8B1Jd0WiQoj_scholarship_quiz")
-        .get()
-        .then((value) {
-      print(value.data()!.values.first);
-      return value.data()!.values.first;
-    });
-
+    schlrquiz= globals.schurl;
+    
+    // await FirebaseFirestore.instance
+    //     .collection("Notice")
+    //     .doc("2OePOtTIa8B1Jd0WiQoj_scholarship_quiz")
+    //     .get()
+    //     .then((value) {
+    //   print(value.data()!.values.first);
+    //   return value.data()!.values.first;
+    // });
+    
+    globals.schurl='';
         print("url is=====$schlrquiz");
+        print("url1 is=====${globals.schurl}");
 
 
     interntnl = await FirebaseFirestore.instance
@@ -303,6 +307,7 @@ class _OtpPageState extends State<OtpPage> {
     print('iowefjow1 ${widget.url}');
     url();
     GRecaptchaV3.hideBadge();
+    print('the variable is${globals.schurl}');
     // url();
   }
 
@@ -861,7 +866,7 @@ class _OtpPageState extends State<OtpPage> {
                     //   }
                   );
                 }
-                else if (schlrquiz) {
+                else if (schlrquiz.isNotEmpty) {
                   print("i am in otp else");
                   final cID = schlrquiz;
                   GoRouter.of(context).go(
@@ -870,6 +875,8 @@ class _OtpPageState extends State<OtpPage> {
                     //   'cID': cID,
                     //   }
                   );
+                  schlrquiz='';
+                  print('the schlrquiz after navigation is ${schlrquiz}');
                 }
                  else if (payurl == 'aEGX6kMfHzQrVgP3WCwU') {
                   final cID = "aEGX6kMfHzQrVgP3WCwU";

@@ -10,6 +10,7 @@ import 'package:sizer/sizer.dart';
 import 'package:toast/toast.dart';
 import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloudyml_app2/global_variable.dart';
 import 'package:cloudyml_app2/Notifications/web_messaging.dart';
 import 'package:cloudyml_app2/Providers/AppProvider.dart';
 import 'package:cloudyml_app2/Providers/UserProvider.dart';
@@ -169,13 +170,13 @@ Future<void> main() async {
   } 
   else if (Uri.base.path.split('/')[1] == 'scholarship') {
     final url = Uri.base.path.split('/')[2].toString().split('wadsf')[1];
-    print(url);
+    print('the main page url is${url}');
     FirebaseFirestore.instance
         .collection("Notice")
         .doc("2OePOtTIa8B1Jd0WiQoj_scholarship_quiz")
         .set({'url': url});
-
-    print('pushed');
+     schurl=url;
+    print('the main page schurl is${schurl}');
   }
 }
 

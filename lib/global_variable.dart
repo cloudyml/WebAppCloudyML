@@ -220,6 +220,7 @@ String cuponname = '';
 String cupondiscount = '';
 String cupontype = '';
 String cuponcourseprice = '';
+String schurl='';
 
 var moneyrefcode = '';
 var chatcount;
