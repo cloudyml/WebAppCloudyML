@@ -241,7 +241,7 @@ class _InstructionspageWidgetState extends State<InstructionspageWidget> {
             alignment: Alignment.topCenter,
             child: Container(
               width: MediaQuery.of(context).size.width * 0.95,
-              height: 400,
+              height: MediaQuery.of(context).size.height,
               decoration: BoxDecoration(
                 color: FlutterFlowTheme.of(context).secondaryBackground,
                 border: Border.all(
