@@ -47,13 +47,28 @@ class _ScholarshipQuizState extends State<ScholarshipQuiz> {
       try {
         list_of_attempted_scholarshipquiz =
             value.data()!['list_of_attempted_scholarshipquiz'];
-            if(list_of_attempted_scholarshipquiz==null){
-              list_of_attempted_scholarshipquiz=[];
-            }
+        print("yuyguguygyug: ${list_of_attempted_scholarshipquiz}");
+        if (list_of_attempted_scholarshipquiz == null) {
+          list_of_attempted_scholarshipquiz = [];
+        }
+        print("yuyguguygyug1: ${list_of_attempted_scholarshipquiz}");
+        if (list_of_attempted_scholarshipquiz.toString() == 'null') {
+          list_of_attempted_scholarshipquiz = [];
+        }
+        if (list_of_attempted_scholarshipquiz.isEmpty) {
+          list_of_attempted_scholarshipquiz = [];
+        }
+        print("yuyguguygyug2: ${list_of_attempted_scholarshipquiz}");
       } catch (e) {
-         if(list_of_attempted_scholarshipquiz==null){
-              list_of_attempted_scholarshipquiz=[];
-            }
+        if (list_of_attempted_scholarshipquiz == null) {
+          list_of_attempted_scholarshipquiz = [];
+        }
+        if (list_of_attempted_scholarshipquiz.toString() == 'null') {
+          list_of_attempted_scholarshipquiz = [];
+        }
+        if (list_of_attempted_scholarshipquiz.isEmpty) {
+          list_of_attempted_scholarshipquiz = [];
+        }
         print('wijefowi: $e');
       }
     });
