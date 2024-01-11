@@ -1155,6 +1155,15 @@ class _QuizPageState extends State<QuizPage> {
     try {
       quizdata = widget.quizdata['questionbucket'];
       quizdata.shuffle();
+      var temquiz = quizdata;
+      try {
+        quizdata = quizdata
+            .take(widget.quizdata['numberofquestiontodisplay'])
+            .toList();
+      } catch (e) {
+        quizdata = temquiz;
+      }
+
       quiztiming = widget.quizdata['quiztiming'];
       setState(() {
         quizdata;

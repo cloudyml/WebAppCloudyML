@@ -23,6 +23,7 @@ class _AdminQuizPanelState extends State<AdminQuizPanel> {
   TextEditingController? numberofattempt;
   TextEditingController? coursenamecontroller;
   TextEditingController? timecontroller;
+  TextEditingController? numberofquestiontodisplay;
   TextEditingController? quizIdController;
   TextEditingController? moduleNameController;
   TextEditingController? NegativeMarkingController;
@@ -90,6 +91,7 @@ class _AdminQuizPanelState extends State<AdminQuizPanel> {
     quiznameController = TextEditingController();
     quizrankcontroller = TextEditingController();
     timecontroller = TextEditingController();
+    numberofquestiontodisplay = TextEditingController();
     quizIdController = TextEditingController();
     moduleNameController = TextEditingController();
     NegativeMarkingController = TextEditingController();
@@ -161,6 +163,7 @@ class _AdminQuizPanelState extends State<AdminQuizPanel> {
     _unfocusNode.dispose();
     quizrankcontroller?.dispose();
     timecontroller?.dispose();
+    numberofquestiontodisplay?.dispose();
     quizIdController?.dispose();
     moduleNameController?.dispose();
     NegativeMarkingController?.dispose();
@@ -2580,6 +2583,102 @@ class _AdminQuizPanelState extends State<AdminQuizPanel> {
                                               ),
                                             ),
                                           ),
+                                          Expanded(
+                                            child: Padding(
+                                              padding: EdgeInsetsDirectional
+                                                  .fromSTEB(15, 0, 0, 0),
+                                              child: TextFormField(
+                                                controller:
+                                                    numberofquestiontodisplay,
+                                                obscureText: false,
+                                                decoration: InputDecoration(
+                                                  labelStyle: FlutterFlowTheme
+                                                          .of(context)
+                                                      .bodyText1
+                                                      .override(
+                                                        fontFamily:
+                                                            'Lexend Deca',
+                                                        color:
+                                                            Color(0xFF57636C),
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.normal,
+                                                      ),
+                                                  hintText:
+                                                      'Number of question to display',
+                                                  hintStyle: FlutterFlowTheme
+                                                          .of(context)
+                                                      .bodyText1
+                                                      .override(
+                                                        fontFamily:
+                                                            'Lexend Deca',
+                                                        color:
+                                                            Color(0xFF57636C),
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.normal,
+                                                      ),
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                      color: Color(0xFFDBE2E7),
+                                                      width: 2,
+                                                    ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8),
+                                                  ),
+                                                  focusedBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                      color: Color(0xFFDBE2E7),
+                                                      width: 2,
+                                                    ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8),
+                                                  ),
+                                                  errorBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                      color: Color(0x00000000),
+                                                      width: 2,
+                                                    ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8),
+                                                  ),
+                                                  focusedErrorBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                      color: Color(0x00000000),
+                                                      width: 2,
+                                                    ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8),
+                                                  ),
+                                                  filled: true,
+                                                  fillColor: Colors.white,
+                                                  contentPadding:
+                                                      EdgeInsetsDirectional
+                                                          .fromSTEB(
+                                                              24, 24, 20, 24),
+                                                ),
+                                                style: FlutterFlowTheme.of(
+                                                        context)
+                                                    .bodyText1
+                                                    .override(
+                                                      fontFamily: 'Lexend Deca',
+                                                      color: Color(0xFF1D2429),
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.normal,
+                                                    ),
+                                                maxLines: null,
+                                              ),
+                                            ),
+                                          ),
                                         ],
                                       ),
                                     ),
@@ -2668,6 +2767,9 @@ class _AdminQuizPanelState extends State<AdminQuizPanel> {
                                                               "quiztiming":
                                                                   timecontroller
                                                                       ?.text,
+                                                              "numberofquestiontodisplay":
+                                                                  numberofquestiontodisplay
+                                                                      ?.text,
                                                               "type": enabledList
                                                                           .length ==
                                                                       1
@@ -2747,6 +2849,9 @@ class _AdminQuizPanelState extends State<AdminQuizPanel> {
                                                                       questionslist,
                                                                   "quiztiming":
                                                                       timecontroller
+                                                                          ?.text,
+                                                                  "numberofquestiontodisplay":
+                                                                      numberofquestiontodisplay
                                                                           ?.text,
                                                                   "type": enabledList
                                                                               .length ==

@@ -27,6 +27,7 @@ class _EditQuizState extends State<EditQuiz> {
   TextEditingController? numberofattempt;
   TextEditingController? coursenamecontroller;
   TextEditingController? timecontroller;
+  TextEditingController? numberofquestiontodisplay;
   TextEditingController? quizIdController;
   TextEditingController? moduleNameController;
   TextEditingController? NegativeMarkingController;
@@ -75,6 +76,7 @@ class _EditQuizState extends State<EditQuiz> {
     quiznameController = TextEditingController();
     quizrankcontroller = TextEditingController();
     timecontroller = TextEditingController();
+    numberofquestiontodisplay = TextEditingController();
     quizIdController = TextEditingController();
     moduleNameController = TextEditingController();
     NegativeMarkingController = TextEditingController();
@@ -83,6 +85,12 @@ class _EditQuizState extends State<EditQuiz> {
     courselist.add("Course Name");
 
     timecontroller!.text = widget.quizdata['quiztiming'];
+    try {
+      numberofquestiontodisplay!.text =
+          widget.quizdata['numberofquestiontodisplay'];
+    } catch (e) {
+      print('giwg$e');
+    }
 
     modulelist = globals.moduleList;
   }
@@ -94,6 +102,7 @@ class _EditQuizState extends State<EditQuiz> {
     _unfocusNode.dispose();
     quizrankcontroller?.dispose();
     timecontroller?.dispose();
+    numberofquestiontodisplay?.dispose();
     quizIdController?.dispose();
     moduleNameController?.dispose();
     NegativeMarkingController?.dispose();
@@ -454,7 +463,7 @@ class _EditQuizState extends State<EditQuiz> {
                                                         child: Padding(
                                                           padding:
                                                               const EdgeInsets
-                                                                      .fromLTRB(
+                                                                  .fromLTRB(
                                                                   20, 0, 20, 0),
                                                           child: Container(
                                                             height: 180,
@@ -2240,6 +2249,87 @@ class _EditQuizState extends State<EditQuiz> {
                                         ),
                                       ),
                                     ),
+                                    Expanded(
+                                      child: Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            15, 0, 0, 0),
+                                        child: TextFormField(
+                                          controller: numberofquestiontodisplay,
+                                          obscureText: false,
+                                          decoration: InputDecoration(
+                                            labelStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyText1
+                                                    .override(
+                                                      fontFamily: 'Lexend Deca',
+                                                      color: Color(0xFF57636C),
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.normal,
+                                                    ),
+                                            hintText:
+                                                'Number of question to display',
+                                            hintStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .bodyText1
+                                                    .override(
+                                                      fontFamily: 'Lexend Deca',
+                                                      color: Color(0xFF57636C),
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.normal,
+                                                    ),
+                                            enabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: Color(0xFFDBE2E7),
+                                                width: 2,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: Color(0xFFDBE2E7),
+                                                width: 2,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
+                                            errorBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: Color(0x00000000),
+                                                width: 2,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
+                                            focusedErrorBorder:
+                                                OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: Color(0x00000000),
+                                                width: 2,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
+                                            filled: true,
+                                            fillColor: Colors.white,
+                                            contentPadding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    24, 24, 20, 24),
+                                          ),
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyText1
+                                              .override(
+                                                fontFamily: 'Lexend Deca',
+                                                color: Color(0xFF1D2429),
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.normal,
+                                              ),
+                                          maxLines: null,
+                                        ),
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -2325,6 +2415,9 @@ class _EditQuizState extends State<EditQuiz> {
                                                         "quiztiming":
                                                             timecontroller!
                                                                 .text,
+                                                        "numberofquestiontodisplay":
+                                                            numberofquestiontodisplay!
+                                                                .text,
                                                         "name": widget
                                                             .quizdata['name'],
                                                         "courseName":
@@ -2344,6 +2437,13 @@ class _EditQuizState extends State<EditQuiz> {
                                                           k['quiztiming'] =
                                                               timecontroller!
                                                                   .text;
+                                                          try {
+                                                            k['numberofquestiontodisplay'] =
+                                                                numberofquestiontodisplay!
+                                                                    .text;
+                                                          } catch (e) {
+                                                            print('iwefwo$e');
+                                                          }
                                                           k['quizlevel'] =
                                                               widget.quizdata[
                                                                   'quizlevel'];
@@ -2399,6 +2499,9 @@ class _EditQuizState extends State<EditQuiz> {
                                                             "quiztiming":
                                                                 timecontroller!
                                                                     .text,
+                                                            "numberofquestiontodisplay":
+                                                                numberofquestiontodisplay!
+                                                                    .text,
                                                             "name":
                                                                 widget.quizdata[
                                                                     'name'],
@@ -2426,6 +2529,9 @@ class _EditQuizState extends State<EditQuiz> {
                                                                   questionslist;
                                                               j['quiztiming'] =
                                                                   timecontroller!
+                                                                      .text;
+                                                              j['numberofquestiontodisplay'] =
+                                                                  numberofquestiontodisplay!
                                                                       .text;
                                                               j['quizlevel'] =
                                                                   widget.quizdata[
