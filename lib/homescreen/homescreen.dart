@@ -2858,7 +2858,7 @@ class _LandingScreenState extends State<LandingScreen> {
                                             height: 5 * verticalScale,
                                           ),
                                           Text(
-                                            'Get Complete Hands-on Practical Learning Experience through Assignments & Projects for Proper Confidence Building',
+                                            'This course is a practical based learning where you will be learning by doing it. There are a lot of assignments and projects to sharpen your skills and make you confident.',
                                             style: TextStyle(
                                               fontSize: 12 * verticalScale,
                                             ),
@@ -2911,7 +2911,7 @@ class _LandingScreenState extends State<LandingScreen> {
                                             height: 5 * verticalScale,
                                           ),
                                           Text(
-                                            'Get Complete Hands-on Practical Learning Experience through Assignments & Projects for Proper Confidence Building',
+                                            'Get 1:1 chat support from 6pm to 9am and 1 hr zoom support from 8-9pm everyday. (Sunday - 6pm to midnight)',
                                             style: TextStyle(
                                               fontSize: 12 * verticalScale,
                                             ),
@@ -2959,7 +2959,7 @@ class _LandingScreenState extends State<LandingScreen> {
                                               height: 5 * verticalScale,
                                             ),
                                             Text(
-                                              'Get Complete Hands-on Practical Learning Experience through Assignments & Projects for Proper Confidence Building',
+                                              'You can access this course lifetime. Enjoy learning anytime at your own pace.',
                                               style: TextStyle(
                                                 fontSize: 12 * verticalScale,
                                               ),
@@ -3008,7 +3008,7 @@ class _LandingScreenState extends State<LandingScreen> {
                                               height: 5 * verticalScale,
                                             ),
                                             Text(
-                                              'Get Complete Hands-on Practical Learning Experience through Assignments & Projects for Proper Confidence Building',
+                                              'Once after learning necessary modules for a role, you will be able to do one month internship with us on industry projects.',
                                               style: TextStyle(
                                                 fontSize: 12 * verticalScale,
                                               ),
@@ -5617,7 +5617,7 @@ class _LandingScreenState extends State<LandingScreen> {
                                               height: 5 * verticalScale,
                                             ),
                                             Text(
-                                              'Get Complete Hands-on Practical Learning Experience through Assignments & Projects for Proper Confidence Building',
+                                              'This course is a practical based learning where you will be learning by doing it. There are a lot of assignments and projects to sharpen your skills and make you confident.',
                                               style: TextStyle(
                                                 fontSize: 6 * verticalScale,
                                               ),
@@ -5671,7 +5671,7 @@ class _LandingScreenState extends State<LandingScreen> {
                                               height: 5 * verticalScale,
                                             ),
                                             Text(
-                                              'Get Complete Hands-on Practical Learning Experience through Assignments & Projects for Proper Confidence Building',
+                                              'Get 1:1 chat support from 6pm to 9am and 1 hr zoom support from 8-9pm everyday. (Sunday - 6pm to midnight)',
                                               style: TextStyle(
                                                 fontSize: 6 * verticalScale,
                                               ),
@@ -5719,7 +5719,7 @@ class _LandingScreenState extends State<LandingScreen> {
                                                 height: 5 * verticalScale,
                                               ),
                                               Text(
-                                                'Get Complete Hands-on Practical Learning Experience through Assignments & Projects for Proper Confidence Building',
+                                                'You can access this course lifetime. Enjoy learning anytime at your own pace.',
                                                 style: TextStyle(
                                                   fontSize: 6 * verticalScale,
                                                 ),
@@ -5768,7 +5768,7 @@ class _LandingScreenState extends State<LandingScreen> {
                                                 height: 5 * verticalScale,
                                               ),
                                               Text(
-                                                'Get Complete Hands-on Practical Learning Experience through Assignments & Projects for Proper Confidence Building',
+                                                'Once after learning necessary modules for a role, you will be able to do one month internship with us on industry projects.',
                                                 style: TextStyle(
                                                   fontSize: 6 * verticalScale,
                                                 ),

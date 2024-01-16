@@ -1032,7 +1032,7 @@ class _VideoScreenState extends State<VideoScreen> {
   }
 
   getAndUpdateCPData() async {
-    if (CourseID == 'DACSO1' || CourseID == 'IPML1' || CourseID == 'GA1') {
+    // if (CourseID == 'DACSO1' || CourseID == 'IPML1' || CourseID == 'GA1') {
       try {
         Map<Object, Object?> userProgressData = {};
         var coursePData;
@@ -1104,7 +1104,7 @@ class _VideoScreenState extends State<VideoScreen> {
       } catch (e) {
         print('Errro in cp data : $e');
       }
-    }
+    // }
   }
 
   String? currentPlayingVideoName;
@@ -3076,6 +3076,18 @@ class _VideoScreenState extends State<VideoScreen> {
                                                                           addVideoUrl,
                                                                     ),
                                                                     SizedBox(
+                                                                    height: 10,
+                                                                  ),
+                                                                    TextField(
+                                                                    decoration: InputDecoration(
+                                                                        border:
+                                                                            OutlineInputBorder(),
+                                                                        hintText:
+                                                                            'Enter video id'),
+                                                                    controller:
+                                                                        addVideoChipherId,
+                                                                  ),
+                                                                    SizedBox(
                                                                       height:
                                                                           20,
                                                                     ),
@@ -3083,7 +3095,7 @@ class _VideoScreenState extends State<VideoScreen> {
                                                                       children: [
                                                                         ElevatedButton(
                                                                             onPressed:
-                                                                                () {
+                                                                                () async {
                                                                               Random number = Random();
                                                                               int min = 1;
                                                                               int max = 1000;
@@ -3109,7 +3121,23 @@ class _VideoScreenState extends State<VideoScreen> {
                                                                                     'curriculum1': {
                                                                                       widget.courseName: listOfSectionData[widget.courseName],
                                                                                     }
-                                                                                  }).whenComplete(() => Toast.show('New video added'));
+                                                                                  });
+                                                                                  Map<Object, Object?> vdeoData = {};
+                                                                                String vdocDocId = '';
+                                                                                        await FirebaseFirestore.instance.collection('vdocipher_ids').where('Courseid', isEqualTo: CourseID).get().then((value) {
+vdeoData = value.docs[0].get('vdocipher_id');
+vdocDocId = value.docs[0].id;
+
+
+                                                                                        });
+
+                                                                                        vdeoData['$id' +
+                                                                                    'V' +
+                                                                                    '${listOfSectionData[widget.courseName][editIndex].length}' +
+                                                                                    '$randomNumber'] = addVideoChipherId.value.text.trim();
+ print('VDO DATAAT : $vdeoData');
+  await FirebaseFirestore.instance.collection('vdocipher_ids').doc(vdocDocId).update({'vdocipher_id' : vdeoData}).whenComplete(() =>
+                                                                                        Toast.show('New video added'));
                                                                                 } catch (e) {
                                                                                   print(e.toString());
                                                                                 }
@@ -4697,6 +4725,8 @@ class _VideoScreenState extends State<VideoScreen> {
   TextEditingController newModuleName = TextEditingController();
   TextEditingController addVideoId = TextEditingController();
   TextEditingController addVideoUrl = TextEditingController();
+  TextEditingController addVideoChipherId = TextEditingController();
+
   bool updateVideoName = false;
   bool editAssignmentName = false;
   bool editQuizName = false;
