@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:badges/badges.dart';
 import 'package:cloudyml_app2/all_certificate_screen.dart';
 import 'package:cloudyml_app2/screens/review_screen/review_screen.dart';
@@ -813,6 +814,7 @@ var mentorItems = [
   'Resume Review',
   'Your Certificates',
   'Admin Quiz Panel',
+  'Add daily quiz',
   'Add Course',
   'My Quizzes',
   'Assignment Review',
@@ -911,26 +913,81 @@ Widget customMenuBar(BuildContext context, String? isReviewed) {
         ),
         TextButton(
             onPressed: () {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      backgroundColor: Colors.white,
-                      title: Center(
-                        child: Text('Contact Support'),
-                      ),
-                      content: Container(
-                        height: 30.sp,
-                        child: Column(
-                          children: [
-                            SelectableText(
-                                'Please email us at app.support@cloudyml.com'),
-                            SelectableText(' or call on +91 85879 11971.'),
-                          ],
+
+              AwesomeDialog(
+                context: context,
+                width: 75.w,
+                customHeader: Icon(Icons.info, color: Colors.purple, size: 30.sp,),
+                // dialogType: DialogType.info,
+                enableEnterKey: true,
+                dismissOnBackKeyPress: true,
+                dismissOnTouchOutside: true,
+                padding: EdgeInsets.symmetric(vertical: 20.sp, horizontal: 15.sp),
+                body: Column(
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text("For technical related(login, video etc) email us at - ", style: TextStyle(fontWeight: FontWeight.bold),),
+                        SizedBox(
+                          width: 30.w,
+                          child: SelectableText(
+                              'app.support@cloudyml.com'),
                         ),
-                      ),
-                    );
-                  });
+                      ],
+                    ),
+                    SizedBox(height: 10.sp,),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text("Course related query, placement, complaint email us at - ", style: TextStyle(fontWeight: FontWeight.bold)),
+                        SizedBox(
+                          width: 30.w,
+                          child: SelectableText(
+                              'rahul@cloudyml.com.'),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10.sp,),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text("Course upgrade  email us at - ",
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        SizedBox(
+                          width: 30.w,
+                          child: SelectableText(
+                              'team@cloudyml.com or call on +91 85879 11971.'),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              )..show();
+
+              // showDialog(
+              //     context: context,
+              //     builder: (BuildContext context) {
+              //       return AlertDialog(
+              //         backgroundColor: Colors.white,
+              //         title: Center(
+              //           child: Text('Contact Support'),
+              //         ),
+              //         content: Container(
+              //           height: 30.sp,
+              //           child: Column(
+              //             children: [
+              //               SelectableText(
+              //                   'Please email us at app.support@cloudyml.com'),
+              //               SelectableText(' or call on +91 85879 11971.'),
+              //             ],
+              //           ),
+              //         ),
+              //       );
+              //     });
             },
             child: Text(
               'Support',
@@ -1001,6 +1058,9 @@ Widget customMenuBar(BuildContext context, String? isReviewed) {
                       .pushReplacementNamed('allcertificatescreen');
                 } else if (value == 'Add Course') {
                   GoRouter.of(context).pushNamed('AddCourse');
+                } else if (value == 'Add daily quiz') {
+                  GoRouter.of(context)
+                      .pushNamed('AddquizQuestion');
                 } else if (value == 'My Quizzes') {
                   GoRouter.of(context).pushReplacementNamed('quizes');
                 } else if (value == 'Assignment Review') {
