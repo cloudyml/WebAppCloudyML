@@ -55,6 +55,15 @@ class _QuizPageState extends State<QuizPage> {
   void initState() {
     super.initState();
     print("uuuiiioookljlk");
+    quizdata = widget.quizdata['questionbucket'];
+    quizdata.shuffle();
+    var temquiz = quizdata;
+    try {
+      quizdata =
+          quizdata.take(widget.quizdata['numberofquestiontodisplay']).toList();
+    } catch (e) {
+      quizdata = temquiz;
+    }
     getQuiz();
   }
 
@@ -204,6 +213,10 @@ class _QuizPageState extends State<QuizPage> {
             quizMark: correctint.toString());
         returningString =
             "  You have not cleared the quiz${'\n'}You can attempt this quiz again${'\n'}                after ${coursequizwindowindaysmorethan50percent} days";
+        if (widget.scholarshipQuiz == true) {
+          returningString =
+              "It appears that your performance on this quiz did not meet the expected standards";
+        }
       }
     } catch (e) {
       print("errorid: r82u93r9fw3: ${e}");
@@ -232,6 +245,10 @@ class _QuizPageState extends State<QuizPage> {
             quizMark: correctint.toString());
         returningString =
             "  You have not cleared the quiz${'\n'}You can attempt this quiz again${'\n'}                after ${coursequizwindowindays} days";
+        if (widget.scholarshipQuiz == true) {
+          returningString =
+              "It appears that your performance on this quiz did not meet the expected standards";
+        }
       }
     } catch (e) {
       print("errorid: i23rjo23jio2: ${e}");
@@ -286,6 +303,10 @@ class _QuizPageState extends State<QuizPage> {
         );
         returningString =
             "  You have not cleared the quiz${'\n'}You can attempt this quiz again${'\n'}                after ${modulerquizwindowinhours} hours";
+        if (widget.scholarshipQuiz == true) {
+          returningString =
+              "It appears that your performance on this quiz did not meet the expected standards";
+        }
       }
     } catch (e) {
       print("errorid: fif3sdwf: ${e}");
@@ -520,7 +541,7 @@ class _QuizPageState extends State<QuizPage> {
         print(answeredvaluelist);
       }
       print("lll4");
-      var total = (correctint / widget.quizdata['questionbucket'].length) * 100;
+      var total = (correctint / quizdata.length) * 100;
       print("lll5");
       var courseid = "";
       await FirebaseFirestore.instance
@@ -545,6 +566,11 @@ class _QuizPageState extends State<QuizPage> {
       //     userName = value.data()!['name'];
       //   },
       // );
+
+      if (total > 0 && widget.scholarshipQuiz == true) {
+        resultString = "Congratulations!";
+        await createCoupon(total);
+      }
 
       if (widget.quizdata['quizlevel'] == "courselevel") {
         if (resultString == "Congratulations!") {
@@ -1153,17 +1179,6 @@ class _QuizPageState extends State<QuizPage> {
       print(e);
     }
     try {
-      quizdata = widget.quizdata['questionbucket'];
-      quizdata.shuffle();
-      var temquiz = quizdata;
-      try {
-        quizdata = quizdata
-            .take(widget.quizdata['numberofquestiontodisplay'])
-            .toList();
-      } catch (e) {
-        quizdata = temquiz;
-      }
-
       quiztiming = widget.quizdata['quiztiming'];
       setState(() {
         quizdata;

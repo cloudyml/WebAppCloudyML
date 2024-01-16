@@ -330,13 +330,13 @@ class _CongratulationsWidgetState extends State<CongratulationsWidget> {
                                     mainAxisSize: MainAxisSize.max,
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      widget.completedata['quizlevel'] !=
+                                      widget.scholarshipQuiz == true
+                                                  ? Container()
+                                                  :widget.completedata['quizlevel'] !=
                                               'modulelevel'
                                           ? widget.total >
                                                   coursequizpassingpercentage
-                                              ? widget.scholarshipQuiz == true
-                                                  ? Container()
-                                                  : GestureDetector(
+                                              ?  GestureDetector(
                                                       onTap: () {
                                                         _downloadImage();
                                                         // Navigator.pushReplacement(
