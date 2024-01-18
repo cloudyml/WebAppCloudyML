@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloudyml_app2/homescreen/homescreen.dart';
 import 'package:cloudyml_app2/screens/quiz/quizsolution.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -119,7 +120,8 @@ class _CongratulationsWidgetState extends State<CongratulationsWidget> {
         backgroundColor: Colors.white,
         leading: IconButton(
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => LandingScreen()));
             },
             icon: Icon(
               Icons.arrow_back_outlined,
@@ -331,12 +333,12 @@ class _CongratulationsWidgetState extends State<CongratulationsWidget> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       widget.scholarshipQuiz == true
-                                                  ? Container()
-                                                  :widget.completedata['quizlevel'] !=
-                                              'modulelevel'
-                                          ? widget.total >
-                                                  coursequizpassingpercentage
-                                              ?  GestureDetector(
+                                          ? Container()
+                                          : widget.completedata['quizlevel'] !=
+                                                  'modulelevel'
+                                              ? widget.total >
+                                                      coursequizpassingpercentage
+                                                  ? GestureDetector(
                                                       onTap: () {
                                                         _downloadImage();
                                                         // Navigator.pushReplacement(
@@ -388,8 +390,8 @@ class _CongratulationsWidgetState extends State<CongratulationsWidget> {
                                                         ),
                                                       ),
                                                     )
-                                              : Container()
-                                          : Container(),
+                                                  : Container()
+                                              : Container(),
                                       InkWell(
                                         onTap: () {
                                           print(
