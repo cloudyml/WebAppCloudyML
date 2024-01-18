@@ -56,7 +56,7 @@ class _ScholarshipCongratulationsWidgetState
     super.initState();
     getqualifiedscore();
     showCustomDialog(context);
-    createCoupon();
+    // createCoupon();
   }
 
   String generateRandomCode() {
@@ -99,45 +99,45 @@ class _ScholarshipCongratulationsWidgetState
       couponStatus: "not purchased",
     );
     await CreateCouponApi.createCoupon(createCouponInfo);
-    hitApiEndpoint(couponcode, couponExpiryDate);
+    // hitApiEndpoint(couponcode, couponExpiryDate);
     print('coupon done');
   }
 
-  Future<void> hitApiEndpoint(couponcode, couponExpiryDate) async {
-    final String apiUrl =
-        'https://us-central1-cloudyml-app.cloudfunctions.net/mailapi/discouponmail';
+  // Future<void> hitApiEndpoint(couponcode, couponExpiryDate) async {
+  //   final String apiUrl =
+  //       'https://us-central1-cloudyml-app.cloudfunctions.net/mailapi/discouponmail';
 
-    final Map<String, dynamic> requestBody = {
-      "couponcode": couponcode,
-      "cname": widget.quizdata['courseName'],
-      "sname": globals.name,
-      "semail": globals.email,
-      "validtilltime": couponExpiryDate
-    };
+  //   final Map<String, dynamic> requestBody = {
+  //     "couponcode": couponcode,
+  //     "cname": widget.quizdata['courseName'],
+  //     "sname": globals.name,
+  //     "semail": globals.email,
+  //     "validtilltime": couponExpiryDate
+  //   };
 
-    try {
-      final http.Response response = await http.post(
-        Uri.parse(apiUrl),
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode(requestBody),
-      );
+  //   try {
+  //     final http.Response response = await http.post(
+  //       Uri.parse(apiUrl),
+  //       headers: <String, String>{
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: jsonEncode(requestBody),
+  //     );
 
-      if (response.statusCode == 200) {
-        print('API Request Successful');
-        print('Response: ${response.body}');
-        // You can handle the response here
-      } else {
-        print('API Request Failed with status code: ${response.statusCode}');
-        print('Response: ${response.body}');
-        // You can handle the error response here
-      }
-    } catch (e) {
-      print('Error during API request: $e');
-      // Handle any exceptions that occurred during the request
-    }
-  }
+  //     if (response.statusCode == 200) {
+  //       print('API Request Successful');
+  //       print('Response: ${response.body}');
+  //       // You can handle the response here
+  //     } else {
+  //       print('API Request Failed with status code: ${response.statusCode}');
+  //       print('Response: ${response.body}');
+  //       // You can handle the error response here
+  //     }
+  //   } catch (e) {
+  //     print('Error during API request: $e');
+  //     // Handle any exceptions that occurred during the request
+  //   }
+  // }
 
   void showCustomDialog(BuildContext context) {
     try {

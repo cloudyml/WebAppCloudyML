@@ -146,11 +146,12 @@ class _ScholarshipQuizState extends State<ScholarshipQuiz> {
                       print("quiz cleared ppppppppppppp");
                       Toast.show('You have already aced this quiz!');
                       globals.quizCleared = true;
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  QuizPage(quizdata, bollen, docid)));
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                QuizPage(quizdata, bollen, docid)),
+                      );
                     } else {
                       // condition for quiz not cleared
                       print("quiz not cleared");
@@ -163,7 +164,7 @@ class _ScholarshipQuizState extends State<ScholarshipQuiz> {
                           print(i.quizAttemptGapForCourseQuiz);
                           print(DateTime.now());
                           // navigate to quiz page
-                          Navigator.push(
+                          Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
@@ -181,7 +182,7 @@ class _ScholarshipQuizState extends State<ScholarshipQuiz> {
                                 .compareTo(DateTime.now()) <
                             0) {
                           // navigate to quiz page
-                          Navigator.push(
+                          Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
@@ -203,7 +204,7 @@ class _ScholarshipQuizState extends State<ScholarshipQuiz> {
                       print("quiz cleared ppppppppppppp");
                       Toast.show('You have already aced this quiz!');
                       globals.quizCleared = true;
-                      Navigator.push(
+                      Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
@@ -220,7 +221,7 @@ class _ScholarshipQuizState extends State<ScholarshipQuiz> {
                           print(i.quizAttemptGapForCourseQuiz);
                           print(DateTime.now());
                           // navigate to quiz page
-                          Navigator.push(
+                          Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
@@ -238,7 +239,7 @@ class _ScholarshipQuizState extends State<ScholarshipQuiz> {
                                 .compareTo(DateTime.now()) <
                             0) {
                           // navigate to quiz page
-                          Navigator.push(
+                          Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
@@ -260,14 +261,14 @@ class _ScholarshipQuizState extends State<ScholarshipQuiz> {
         }
         if (attemptingquizforthefirsttime) {
           print("quiz is taken for the first time");
-          Navigator.push(
+          Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                   builder: (context) => QuizPage(quizdata, bollen, docid)));
         }
       } catch (e) {
-        print("error id: efwefwe3223232: ${e.toString()}");
-        Navigator.push(
+        print("error id: efwefwe32232321: ${e.toString()}");
+        Navigator.pushReplacement(
             context,
             MaterialPageRoute(
                 builder: (context) => QuizPage(quizdata, bollen, docid)));
