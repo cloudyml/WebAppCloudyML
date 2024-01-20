@@ -56,7 +56,7 @@ class _QuizPageState extends State<QuizPage> {
     super.initState();
     print("uuuiiioookljlk");
     quizdata = widget.quizdata['questionbucket'];
-    // quizdata.shuffle();
+    quizdata.shuffle();
     var temquiz = quizdata;
     try {
       quizdata =
