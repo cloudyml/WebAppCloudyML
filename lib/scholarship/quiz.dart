@@ -301,30 +301,6 @@ class _ScholarshipQuizState extends State<ScholarshipQuiz> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      SizedBox(
-                        height: 10,
-                      ),
-                      InkWell(
-                        onTap: () {
-                          GoRouter.of(context).pushReplacementNamed('home');
-                        },
-                        child: Container(
-                            child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(50, 0, 0, 0),
-                                child: Icon(Icons.arrow_back_rounded),
-                              ),
-                              Text(
-                                'Back',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              )
-                            ],
-                          ),
-                        )),
-                      ),
                       RichText(
                         text: TextSpan(children: [
                           TextSpan(
