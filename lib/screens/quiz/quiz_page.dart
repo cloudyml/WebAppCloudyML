@@ -575,7 +575,7 @@ class _QuizPageState extends State<QuizPage> {
       if (widget.quizdata['quizlevel'] == "courselevel") {
         if (resultString == "Congratulations!") {
           if (widget.scholarshipQuiz == true) {
-            await createCoupon(total);
+            // await createCoupon(total);
           } else {
             CertificateModel Model = CertificateModel(
                 uid: FirebaseAuth.instance.currentUser!.uid,
