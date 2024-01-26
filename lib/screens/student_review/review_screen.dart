@@ -554,7 +554,12 @@ class _StudentReviewScreenState extends State<StudentReviewScreen> {
                                                                           // mainAxisAlignment:
                                                                           //     MainAxisAlignment.spaceBetween,
                                                                           children: [
-                                                                            SizedBox(),
+                                                                            IconButton(
+                                                                                onPressed: () => updateReview(id: reviews[index].id!),
+                                                                                icon: Icon(
+                                                                                  Icons.edit,
+                                                                                  color: Colors.green,
+                                                                                )),
                                                                             IconButton(
                                                                                 onPressed: () => deleteReview(id: reviews[index].id!),
                                                                                 icon: Icon(
@@ -702,7 +707,12 @@ class _StudentReviewScreenState extends State<StudentReviewScreen> {
                                                                           MainAxisSize
                                                                               .min,
                                                                       children: [
-                                                                        SizedBox(),
+                                                                        IconButton(
+                                                                                onPressed: () => updateReview(id: reviews[index].id!),
+                                                                                icon: Icon(
+                                                                                  Icons.edit,
+                                                                                  color: Colors.green,
+                                                                                )),
                                                                         IconButton(
                                                                             onPressed: () =>
                                                                                 deleteReview(id: reviews[index].id!),
