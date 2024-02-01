@@ -19,8 +19,10 @@ import 'package:cloudyml_app2/payments_history.dart';
 import 'package:cloudyml_app2/router/error_page.dart';
 import 'package:cloudyml_app2/scholarship/course_screen.dart';
 import 'package:cloudyml_app2/scholarship/quiz.dart';
+import 'package:cloudyml_app2/screens/add_course_to_user/add_course_in_user.dart';
 import 'package:cloudyml_app2/screens/chat_screen.dart';
 import 'package:cloudyml_app2/screens/chatpage.dart';
+import 'package:cloudyml_app2/screens/daily_quiz/add_daily_quiz.dart';
 import 'package:cloudyml_app2/screens/groups_list.dart';
 import 'package:cloudyml_app2/screens/quiz/quizList.dart';
 import 'package:cloudyml_app2/screens/quiz/quiz_new_combo_course.dart';
@@ -161,6 +163,13 @@ class MyRouter {
             return MaterialPage(key: state.pageKey, child: QuizPanel());
           },
         ), //CongratulationsWidget
+        GoRoute(
+          name: 'AddquizQuestion',
+          path: '/AddquizQuestion',
+          pageBuilder: (context, state) {
+            return MaterialPage(key: state.pageKey, child: AddDailyQuizQuestionScreen());
+          },
+        ),
         GoRoute(
           name: 'reviews',
           path: '/reviews',
@@ -602,6 +611,13 @@ class MyRouter {
                 // chatScreen: chatScreen,
               ));
             }),
+            GoRoute(
+          name: 'AddCourseInUser',
+          path: '/addCourseInUser',
+          pageBuilder: (context, state) {
+            return MaterialPage(child: AddCourseInUser());
+          },
+        ),
         // GoRoute(
         //     name: 'videoNameClass',
         //     path: '/videoNameClass',

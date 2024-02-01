@@ -1,87 +1,27 @@
 import 'dart:developer';
-import 'dart:html';
 
-import 'package:bot_toast/bot_toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:path/path.dart';
-import 'package:responsive_builder/responsive_builder.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../global_variable.dart';
-import '../../widgets/review_dialog/take_review.dart';
-import '../new_combo_course.dart';
 
 class ComboCourseController extends GetxController {
   final String? courseId;
   ComboCourseController({required this.courseId});
 
-
-  reviewAlert() {
-    // showDialog(
-    //     context: context,
-    //     builder: (context){
-    //       double screenWidth = MediaQuery.of(context).size.width;
-    //       double screenHeight = MediaQuery.of(context).size.height;
-    //
-    //       // Define breakpoints for different screen sizes
-    //       final isPhone =
-    //           screenWidth < 600;
-    //       return Padding(
-    //         padding: EdgeInsets.only(
-    //             left: isPhone ? 20.sp : 50.sp,
-    //             right: isPhone ? 20.sp : 50.sp,
-    //             top: isPhone ? 50.sp : 20.sp,
-    //             bottom: isPhone ? 50.sp : 20.sp),
-    //         child: Material(
-    //             child: Center(
-    //               child: isPhone ? Container(
-    //                 child: MobileReviewDialog(),
-    //               ) : ShowReviewDialog(),
-    //             )),
-    //       );
-    //     });
-
-
-    BotToast.showWidget(toastBuilder: (value){
-      double screenWidth = WidgetsBinding.instance.window.physicalSize.width;
-      final isPhone = screenWidth < 600;
-      return Center(
-        child: Container(
-          height: isPhone ? 0.75.sh : 600,
-          width: isPhone ? 0.7.sw : 500,
-          child: Center(
-            child: Material(
-                child: Center(
-                  child: isPhone ? MobileReviewDialog() : ShowReviewDialog(),
-                )),
-          ),
-        ),
-      );
-    });
-  }
-
-
-  RxInt coursePerc = 0.obs;
   @override
   void onInit() {
-    super.onInit();
-    // reviewAlert();
     getCourseIds().whenComplete(() {
-      print('CCCC: : ${courses}');
+       print('User Role is: : ${role}');
       checkCourseExist();
       getCourses();
+
       getPercentageOfCourse();
     });
-  }
 
-  @override
-  void dispose(){
-    super.dispose();
+    super.onInit();
   }
-
 
   var courseList = [].obs;
   var courseData = {}.obs;
@@ -91,7 +31,6 @@ class ComboCourseController extends GetxController {
   var courses = [].obs;
 
   var paidCourse = [].obs;
-  
 
 //var isLoading = true.obs;
 
@@ -108,6 +47,7 @@ class ComboCourseController extends GetxController {
   getCourses() async {
     await {
       courses.forEach((element) {
+        print('ELEMENT :: $element');
         Future<QuerySnapshot<Map<String, dynamic>>> data = FirebaseFirestore
             .instance
             .collection("courses")
@@ -120,12 +60,10 @@ class ComboCourseController extends GetxController {
         });
       })
     };
+    // isLoading.value = false;
   }
 
-
-
-
-  checkCourseExist() async {
+ checkCourseExist() async {
     await FirebaseFirestore.instance
         .collection("Users")
         .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -153,27 +91,28 @@ class ComboCourseController extends GetxController {
     });
   }
 
-  Future getPercentageOfCourse() async {
+  getPercentageOfCourse() async {
     try {
       var data = await FirebaseFirestore.instance
           .collection("courseprogress")
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .get();
-      courseData.value = data.data() as Map;
-      for(var j in courseData.keys) {
-        for(var i in courseList){
-          if(j == i["id"]){
-            if(courseData[i["id"] + "percentage"] != null && courseData[i["id"] + "percentage"] > 10){
-              print("coursewise = ${courseData[i["id"] + "percentage"]}");
-              if(coursePerc.value < courseData[i["id"] + "percentage"]){
-                coursePerc.value = courseData[i["id"] + "percentage"];
-                print("object ${coursePerc.value}");
-              }
-            }
-          }
 
-        }
-      }
+      // tmp.clear();
+      // for (var i = 0; i < data.data()!.length; i++) {
+      //   try {
+      //     if (i != 0) {
+      //       tmp.add(data.data()![courses[i] + "percentage"]);
+      //     }
+      //   } catch (e) {}
+      // }
+      // for (int i = 1; i < tmp.length; i++) {
+      //   if (tmp[i] is int) {
+      //     oldModuleProgress.value = true;
+      //   }
+      // }
+
+      courseData.value = data.data() as Map;
 // isLoading.value = false;
     } catch (e) {
       // isLoading.value = false;
@@ -181,7 +120,34 @@ class ComboCourseController extends GetxController {
     }
   }
 
-  
+  Future updateModuleOrder({required List newList})async{
+    try {
+        CollectionReference ref = FirebaseFirestore.instance.collection('courses');
+      QuerySnapshot querySnapshot = await ref.where('id', isEqualTo: courseId).get();
+
+       List newDataList = querySnapshot.docs.first.get('courses');
+        String docId = querySnapshot.docs.first.get('docid');
+print('Doc Id : $docId');
+           print('Course Listt : $newDataList');
+
+        print('New  Course Listt : $newList');
+
+       await  FirebaseFirestore.instance.collection('courses').doc(docId).update({
+            'courses' : newList
+              
+          });
+       
+
+
+    
+      
+    } catch (e) {
+       print('Error in update course order :: $e');
+    }
+  }
+
+
+
 }
 
 class ComboModuleController extends GetxController {
@@ -271,8 +237,7 @@ class ComboModuleController extends GetxController {
     };
   }
 
- Future getPercentageOfCourse() async {
-    print('getPercentageOfCourse');
+  getPercentageOfCourse() async {
     try {
       var data = await FirebaseFirestore.instance
           .collection("courseprogress")
@@ -280,7 +245,6 @@ class ComboModuleController extends GetxController {
           .get();
 
       courseData.value = data.data() as Map;
-      print("courseData Value = ${courseData}");
     } catch (e) {
       print('the progress exception is$e');
     }

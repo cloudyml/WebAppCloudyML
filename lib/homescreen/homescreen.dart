@@ -10,6 +10,7 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 // import 'package:showcaseview/showcaseview.dart';
 import 'package:http/http.dart' as http;
+import 'package:in_app_notifier/in_app_notifier.dart';
 import 'package:toast/toast.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:package_info_plus/package_info_plus.dart';
@@ -857,9 +858,58 @@ class _LandingScreenState extends State<LandingScreen> {
       }
     });
   }
+
+  inAppNotification() async {
+    var message;
+    bool isShow = false;
+    InAppNotifier.displayTime = Duration(minutes: 5);
+    try {
+      await FirebaseFirestore.instance
+          .collection('Notifications')
+          .doc('alert')
+          .get()
+          .then((value) {
+        message = value.data()!['message'];
+        isShow = value.data()!['show'];
+      }).whenComplete(() {
+        if(isShow) {
+          InAppNotifier.show(
+              context: context,
+              child: Padding(
+                padding: EdgeInsets.all(10.sp),
+                child: Container(
+                    padding: EdgeInsets.all(10.sp),
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 43, 4, 50).withOpacity(0.80),
+                      borderRadius: BorderRadius.circular(10.sp),
+                    ),
+                    child: Column(
+                      children: [
+                        Text("${message}", style: TextStyle(color: Colors.white, fontSize: 14.sp)),
+                        InkWell(
+                          onTap: () {
+                            InAppNotifier.removeNotification();
+                          },
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: Text(
+                              "Dismiss",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        )
+                      ],
+                    )),
+              ));
+        }
+      });
+    } catch (e) {}
+  }
+
   @override
   void initState() {
     // getReviewedStudentIds();
+    inAppNotification();
     getQuizDataAndUpdateScores();
     super.initState();
     // print('this is url ${html.window.location.href}');

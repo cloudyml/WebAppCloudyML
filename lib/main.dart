@@ -89,8 +89,8 @@ Future<void> main() async {
     RendererSwitcher.switchWebRenderer(WebRenderer.html);
   }
 
-  print('this is url ${Uri.base.path.split('/')}');
-    print('this is url ${Uri.base.path.split('/')[2]}');
+  // print('this is url ${Uri.base.path.split('/')}');
+    // print('this is url ${Uri.base.path.split('/')[2]}');
 
 
   print(DateFormat('dd-MM-yyyy').format(DateTime.now()));
@@ -98,31 +98,36 @@ Future<void> main() async {
   if (Uri.base.path == '/comboPaymentPortal') {
     print('abc home');
 
-    if (Uri.base.queryParameters['cID'] == 'aEGX6kMfHzQrVgP3WCwU') {
-      final url = Uri.base.queryParameters['cID'];
-      FirebaseFirestore.instance
-          .collection("Notice")
-          .doc("NBrEm6KGry8gxOJJkegG_redirect_pay")
-          .set({'url': url});
-    } else if (Uri.base.queryParameters['cID'] == 'RIUjOvGBV6YSzMTpMWEG') {
-      final url = Uri.base.queryParameters['cID'];
-      FirebaseFirestore.instance
-          .collection("Notice")
-          .doc("HX4neryeAOB1dzUeIAg1_prompt")
-          .set({'url': url});
-    } else if (Uri.base.queryParameters['cID'] == 'F9gxnjW9nf5Lxg5A6758') {
-      final url = Uri.base.queryParameters['cID'];
-      FirebaseFirestore.instance
-          .collection("Notice")
-          .doc("M2jEwYyiWdzYWE9gJd8s_de_pay")
-          .set({'url': url});
-    } else if (Uri.base.queryParameters['cID'] == 'XSNqt0oNpuY7i2kb7zsW') {
-      final url = Uri.base.queryParameters['cID'];
-      FirebaseFirestore.instance
-          .collection("Notice")
-          .doc("o1Hw1CebDH9I4VfpKuiC_sup_pay")
-          .set({'url': url});
-    }
+    print(Uri.base.queryParameters['cID']);
+    Payurl=Uri.base.queryParameters['cID']!;
+      print('this is payurl ${Payurl}');
+
+
+    // if (Uri.base.queryParameters['cID'] == 'aEGX6kMfHzQrVgP3WCwU') {
+    //   final url = Uri.base.queryParameters['cID'];
+    //   FirebaseFirestore.instance
+    //       .collection("Notice")
+    //       .doc("NBrEm6KGry8gxOJJkegG_redirect_pay")
+    //       .set({'url': url});
+    // } else if (Uri.base.queryParameters['cID'] == 'RIUjOvGBV6YSzMTpMWEG') {
+    //   final url = Uri.base.queryParameters['cID'];
+    //   FirebaseFirestore.instance
+    //       .collection("Notice")
+    //       .doc("HX4neryeAOB1dzUeIAg1_prompt")
+    //       .set({'url': url});
+    // } else if (Uri.base.queryParameters['cID'] == 'F9gxnjW9nf5Lxg5A6758') {
+    //   final url = Uri.base.queryParameters['cID'];
+    //   FirebaseFirestore.instance
+    //       .collection("Notice")
+    //       .doc("M2jEwYyiWdzYWE9gJd8s_de_pay")
+    //       .set({'url': url});
+    // } else if (Uri.base.queryParameters['cID'] == 'XSNqt0oNpuY7i2kb7zsW') {
+    //   final url = Uri.base.queryParameters['cID'];
+    //   FirebaseFirestore.instance
+    //       .collection("Notice")
+    //       .doc("o1Hw1CebDH9I4VfpKuiC_sup_pay")
+    //       .set({'url': url});
+    // }
 
     final url = Uri.base.path;
 
@@ -138,25 +143,30 @@ Future<void> main() async {
     print('pushed');
   }
    else if (Uri.base.path == '/NewFeature') {
-    if (Uri.base.queryParameters['cID'] == 'aEGX6kMfHzQrVgP3WCwU') {
-      final url = Uri.base.queryParameters['cID'];
-      FirebaseFirestore.instance
-          .collection("Notice")
-          .doc("XdYtk2DJBIkRGx0ASthZ_newfeaturecourse")
-          .set({'url': url});
-    } else if (Uri.base.queryParameters['cID'] == 'F9gxnjW9nf5Lxg5A6758') {
-      final url = Uri.base.queryParameters['cID'];
-      FirebaseFirestore.instance
-          .collection("Notice")
-          .doc("fSU4MLz1E0858ft8m7F5_dataeng")
-          .set({'url': url});
-    } else if (Uri.base.queryParameters['cID'] == 'mPqg2Z2BdNHvwaqAEfA0') {
-      final url = Uri.base.queryParameters['cID'];
-      FirebaseFirestore.instance
-          .collection("Notice")
-          .doc("ZL5fDjF0pzsgpNu92BKc_intrntnl_course")
-          .set({'url': url});
-    }
+
+    print(Uri.base.queryParameters['cID']);
+
+    trial_link=Uri.base.queryParameters['cID']!;
+    
+    // if (Uri.base.queryParameters['cID'] == 'aEGX6kMfHzQrVgP3WCwU') {
+    //   final url = Uri.base.queryParameters['cID'];
+    //   FirebaseFirestore.instance
+    //       .collection("Notice")
+    //       .doc("XdYtk2DJBIkRGx0ASthZ_newfeaturecourse")
+    //       .set({'url': url});
+    // } else if (Uri.base.queryParameters['cID'] == 'F9gxnjW9nf5Lxg5A6758') {
+    //   final url = Uri.base.queryParameters['cID'];
+    //   FirebaseFirestore.instance
+    //       .collection("Notice")
+    //       .doc("fSU4MLz1E0858ft8m7F5_dataeng")
+    //       .set({'url': url});
+    // } else if (Uri.base.queryParameters['cID'] == 'mPqg2Z2BdNHvwaqAEfA0') {
+    //   final url = Uri.base.queryParameters['cID'];
+    //   FirebaseFirestore.instance
+    //       .collection("Notice")
+    //       .doc("ZL5fDjF0pzsgpNu92BKc_intrntnl_course")
+    //       .set({'url': url});
+    // }
     print('pushed');
   }
    else if (Uri.base.path == '/multiComboFeatureScreen') {

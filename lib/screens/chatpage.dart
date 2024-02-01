@@ -161,11 +161,11 @@ class _ChatPageState extends State<ChatPage> {
       _focusNode.unfocus();
       String data = await _textController.text.toString();
       _textController.clear();
-        final time = DateTime.now();
-     // DateTime time1 = await fetchTimeInIndia();
+      final time = DateTime.now();
+      // DateTime time1 = await fetchTimeInIndia();
 
       print(time);
-     // print(time1.toString());
+      // print(time1.toString());
       updatelast();
       updatetime(time, data);
       final post = await _firestore
@@ -216,10 +216,10 @@ class _ChatPageState extends State<ChatPage> {
               final TaskSnapshot snapshot = await uploadTask;
               final downloadUrl = await snapshot.ref.getDownloadURL();
               final time = DateTime.now();
-             
-              updatelast();  
+
+              updatelast();
               print(time);
-             // print(time.toString());
+              // print(time.toString());
               updatelast();
               updatetime(time, "image");
               _firestore
@@ -276,10 +276,10 @@ class _ChatPageState extends State<ChatPage> {
               final time = DateTime.now();
               // Add message to Firestore
               //  final time = DateTime.now();
-             // DateTime time1 = await fetchTimeInIndia();
+              // DateTime time1 = await fetchTimeInIndia();
 
               print(time);
-           //   print(time1.toString());
+              //   print(time1.toString());
               updatelast();
               updatetime(time, "video");
 
@@ -331,7 +331,7 @@ class _ChatPageState extends State<ChatPage> {
             final TaskSnapshot snapshot = await uploadTask;
             final downloadUrl = await snapshot.ref.getDownloadURL();
             final time = DateTime.now();
-          //  DateTime time1 = await fetchTimeInIndia();
+            //  DateTime time1 = await fetchTimeInIndia();
 
             print(time);
             print(time.toString());
@@ -434,10 +434,10 @@ class _ChatPageState extends State<ChatPage> {
         // final time = DateTime.now();
         // Add message to Firestore
         final time = DateTime.now();
-      //  DateTime time1 = await fetchTimeInIndia();
+        //  DateTime time1 = await fetchTimeInIndia();
         Duration tt = await _calculateDuration();
         //  print(time);
-     //   print(time1.toString());
+        //   print(time1.toString());
         updatelast();
         updatetime(time, "audio note");
         _firestore.collection("groups").doc(idcurr).collection("chats").add({
@@ -509,11 +509,28 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  Stream<QuerySnapshot> _collectionStream = FirebaseFirestore.instance
-      .collection('groups')
-      .orderBy('time', descending: true)
-      .limit(500)
-      .snapshots();
+StreamController<Stream<QuerySnapshot>> _streamController =
+    StreamController<Stream<QuerySnapshot>>();
+
+Stream<QuerySnapshot> _collectionStream = FirebaseFirestore.instance
+    .collection('groups')
+    .orderBy('time', descending: true)
+    .limit(500)
+    .snapshots();
+
+void updateStream(String? selectedCourse) {
+  if (selectedCourse != null) {
+    Stream<QuerySnapshot> filteredStream = FirebaseFirestore.instance
+        .collection('groups')
+        .where('name', isEqualTo: selectedCourse)
+        .orderBy('time', descending: true)
+        .limit(500)
+        .snapshots();
+    _streamController.add(filteredStream);
+  } else {
+    _streamController.add(_collectionStream);
+  }
+}
   Stream<QuerySnapshot> _collectionStream1 = FirebaseFirestore.instance
       .collection('groups')
       .where('student_id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
@@ -681,10 +698,24 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
+  List<String> coursesList = [];
+  Future<List<String>> getcourses() async {
+    await FirebaseFirestore.instance.collection("courses").get().then((value) {
+      for (var i in value.docs) {
+        coursesList.add(i['name']);
+      }
+      print("coursenamelist: ${coursesList}");
+    });
+    return coursesList;
+  }
+
+  String selectedCourse = "";
+
   List<String>? myList;
   @override
   void initState() {
     super.initState();
+
     checkDeviceTime();
     _keyboard = RawKeyboard.instance;
     _keyboard.addListener(_handleKeyPress);
@@ -791,6 +822,113 @@ class _ChatPageState extends State<ChatPage> {
                         ),
                       ],
                     ),
+                  ),
+                  Container(
+                     margin: EdgeInsets.only(top: 0),
+                  //  width: double.infinity,
+                   // height: 10.h,
+                    child: FutureBuilder<List<String>>(
+  future: getcourses(),
+  builder: (context, snapshot) {
+    if (snapshot.connectionState == ConnectionState.waiting) {
+      return CircularProgressIndicator(); // Or any loading indicator
+    } else if (snapshot.hasError) {
+      return Text(
+        'Error: ${snapshot.error}',
+        style: TextStyle(color: Colors.black),
+      );
+    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+      return Text(
+        'No courses available',
+        style: TextStyle(color: Colors.black),
+      ); // Handle the case when no courses are fetched
+    } else {
+  return Row(
+  children: [
+    SizedBox(
+      width: 300, // Set your desired width here
+      child: DropdownButtonHideUnderline(
+        child: ButtonTheme(
+          alignedDropdown: true,
+          child: DropdownButton<String>(
+            isExpanded: true, // Ensure the dropdown button takes full width
+            value: snapshot.data!.contains(selectedCourse) ? selectedCourse : null,
+            onChanged: (String? newValue) {
+              setState(() {
+                if (newValue == null || newValue.isEmpty) {
+                  // If "Clear Filters" is selected, reset the filters
+                   _collectionStream = FirebaseFirestore.instance
+                    .collection('groups')
+                  //  .where('name', isEqualTo: selectedCourse)
+                    .orderBy('time', descending: true)
+                    .limit(500)
+                    .snapshots();
+                  selectedCourse = "All Courses";
+                } else {
+                  selectedCourse = newValue!;
+                  _collectionStream = FirebaseFirestore.instance
+                      .collection('groups')
+                      .where('name', isEqualTo: selectedCourse)
+                      .orderBy('time', descending: true)
+                      .limit(500)
+                      .snapshots();
+                }
+              });
+            },
+            items: [
+              // Adding the "All Courses" option
+              DropdownMenuItem<String>(
+                value: null,
+                child: Text(
+                  'All Courses',
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(color: Colors.black),
+                ),
+              ),
+              // Mapping other items from snapshot data
+              ...snapshot.data!
+                  .toSet()
+                  .toList()
+                  .map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(
+                    value,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: Colors.black),
+                  ),
+                );
+              }).toList(),
+            ],
+          ),
+        ),
+      ),
+    ),
+    // Add the clear button
+    Container(
+      child: IconButton(
+        color:Colors.purple,
+        onPressed: () {
+          setState(() {
+     _collectionStream = FirebaseFirestore.instance
+                    .collection('groups')
+                  //  .where('name', isEqualTo: selectedCourse)
+                    .orderBy('time', descending: true)
+                    .limit(500)
+                    .snapshots();
+            selectedCourse = "All Courses";
+          });
+        },
+        icon: Icon(Icons.clear), // Use any icon you like
+      ),
+    ),
+  ],
+);
+
+    }
+  },
+),
+
                   ),
                   Expanded(
                       child: StreamBuilder<QuerySnapshot>(

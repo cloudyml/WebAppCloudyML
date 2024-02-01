@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
@@ -9,6 +10,7 @@ class AddController extends GetxController{
   final courseNames = [].obs;
   final courseIds = [].obs;
   final isItCombo = false.obs;
+  final chooseCourses = false.obs;
 
   checkIfCombo(bool combo) {
     isItCombo(combo);
@@ -49,4 +51,27 @@ getBools(courseNames) {
     selectedStates[index] = !selectedStates[index];
     update();
   }
+
+
+  coursesListForComboCourse(context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context){
+      return AlertDialog(
+        content: SingleChildScrollView(child: Column(
+          children: [Text("Select Courses"),
+            StreamBuilder(
+              stream: FirebaseFirestore.instance.collection("courses").snapshots(),
+              builder: (context, AsyncSnapshot snapshot) {
+                return Column(
+                  children: List.generate(10, (index) {
+                return Text("Course ${snapshot.data!["id"]}");
+          }),);
+              }
+            )],
+        )),
+      );
+    });
+  }
+
 }

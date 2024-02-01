@@ -14,6 +14,8 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:star_rating/star_rating.dart';
 import 'package:http/http.dart' as http;
+import 'package:cloudyml_app2/global_variable.dart' as globals;
+
 
 class PaymentScreen extends StatefulWidget {
   // final Map<String, dynamic>? map;
@@ -92,6 +94,14 @@ class _PaymentScreenState extends State<PaymentScreen> with CouponCodeMixin {
   Map<String, dynamic> courseMap = {};
 
   void url_del() {
+        globals.schurl='';
+    globals.Payurl='';
+
+            print('global scholarship url${globals.schurl}');
+                    print('global payurl url${globals.Payurl}');
+
+
+
     FirebaseFirestore.instance.collection('Notice')
       ..doc("7A85zuoLi4YQpbXlbOAh_redirect")
           .update({'url': ""}).whenComplete(() {

@@ -21,7 +21,16 @@ class GroupPage extends StatefulWidget {
   @override
   State<GroupPage> createState() => _GroupPageState();
 }
-
+  List<String> coursesList = [];
+  Future<List<String>> getcourses() async {
+    await FirebaseFirestore.instance.collection("courses").get().then((value) {
+      for (var i in value.docs) {
+        coursesList.add(i['name']);
+      }
+      print("coursenamelist: ${coursesList}");
+    });
+    return coursesList;
+  }
 final int _pageSize = 100;
 String? _lastVisibleIndex;
 DateTime now = DateTime.now();
@@ -58,6 +67,8 @@ class _GroupPageState extends State<GroupPage> {
       .orderBy('time', descending: true)
       .limit(500)
       .snapshots();
+      
+        String? selectedCourse;
   Future<List<String>> loadcoursedata() async {
     names1.clear();
 
@@ -416,6 +427,85 @@ class _GroupPageState extends State<GroupPage> {
                             ],
                           ),
                         ),
+                          Container(
+                     margin: EdgeInsets.only(top: 0),
+                   width: 60.w,
+                   // height: 10.h,
+                    child: FutureBuilder<List<String>>(
+  future: getcourses(),
+  builder: (context, snapshot) {
+    if (snapshot.connectionState == ConnectionState.waiting) {
+      return CircularProgressIndicator(); // Or any loading indicator
+    } else if (snapshot.hasError) {
+      return Text(
+        'Error: ${snapshot.error}',
+        style: TextStyle(color: Colors.black),
+      );
+    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+      return Text(
+        'No courses available',
+        style: TextStyle(color: Colors.black),
+      ); // Handle the case when no courses are fetched
+    } else {
+  return DropdownButton<String>(
+  value: snapshot.data!.contains(selectedCourse) ? selectedCourse : null,
+  onChanged: (String? newValue) {
+    setState(() {
+      if (newValue == null || newValue.isEmpty) {
+        // If "Clear Filters" is selected, reset the filters
+        selectedCourse="All Courses";
+         _collectionStream = FirebaseFirestore.instance
+            .collection('groups')
+            //.where('name', isEqualTo: selectedCourse)
+            .orderBy('time', descending: true)
+            .limit(500)
+            .snapshots();
+      } else {
+        selectedCourse = newValue!;
+        _collectionStream = FirebaseFirestore.instance
+            .collection('groups')
+            .where('name', isEqualTo: selectedCourse)
+            .orderBy('time', descending: true)
+            .limit(500)
+            .snapshots();
+      }
+    });
+  },
+  items: [
+    // Adding the "Clear Filters" option
+    DropdownMenuItem<String>(
+      value: "",
+      child: Text(
+        'Clear Filters',
+        style: TextStyle(color: Colors.black),
+      ),
+    ),
+    // Adding the "All Courses" option
+    DropdownMenuItem<String>(
+      value: null,
+      child: Text(
+        'All Courses',
+        style: TextStyle(color: Colors.black),
+      ),
+    ),
+    // Mapping other items from snapshot data
+    ...snapshot.data!
+        .toSet()
+        .toList()
+        .map<DropdownMenuItem<String>>((String value) {
+      return DropdownMenuItem<String>(
+        value: value,
+        child: Text(
+          value,
+          style: TextStyle(color: Colors.black),
+        ),
+      );
+    }).toList(),
+  ],
+);
+    }
+  },
+                          )),
                         Padding(
                           padding: EdgeInsets.only(
                               left: 4.w, right: 4.w, top: 4.h, bottom: 1.h),
@@ -440,9 +530,9 @@ class _GroupPageState extends State<GroupPage> {
                       ],
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: 27.h),
+                      padding: EdgeInsets.only(top: 37.h),
                       child: Container(
-                          height: 75.h,
+                          height: 65.h,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(40.sp),

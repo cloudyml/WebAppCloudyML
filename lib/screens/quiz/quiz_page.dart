@@ -3567,7 +3567,7 @@ class _QuizPageState extends State<QuizPage> {
                                                                                 Align(
                                                                               alignment: AlignmentDirectional(0, 0),
                                                                               child: Text(
-                                                                                'PREVIOUS2',
+                                                                                'PREVIOUS',
                                                                                 style: FlutterFlowTheme.of(context).bodyText1.override(
                                                                                       fontFamily: 'Poppins',
                                                                                       color: FlutterFlowTheme.of(context).primaryBtnText,
