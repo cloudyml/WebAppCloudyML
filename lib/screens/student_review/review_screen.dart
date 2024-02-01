@@ -18,7 +18,7 @@ import 'package:timeago/timeago.dart' as timeago;
 import 'package:toast/toast.dart';
 
 class StudentReviewScreen extends StatefulWidget {
-  const StudentReviewScreen( {Key? key}) : super(key: key);
+  const StudentReviewScreen({Key? key}) : super(key: key);
 
   @override
   State<StudentReviewScreen> createState() => _StudentReviewScreenState();
@@ -56,11 +56,15 @@ class _StudentReviewScreenState extends State<StudentReviewScreen> {
     } else {
       setState(() {
         isLoading = false;
-        print('weoifjwoejfo $data');
-        StudentReviewsModel studentReviewsModel =
-            StudentReviewsModel.fromJson(jsonDecode(data));
-        avgrating = studentReviewsModel.result!.avgrating;
-        reviews = studentReviewsModel.result!.reviews!;
+        try {
+          StudentReviewsModel studentReviewsModel =
+              StudentReviewsModel.fromJson(jsonDecode(data));
+          avgrating = studentReviewsModel.avgrating;
+          reviews = studentReviewsModel.reviews!;
+          print("thhgbn ${data!}");
+        } catch (e) {
+          print("error id yuugj: ${e.toString()}");
+        }
       });
     }
   }
@@ -243,333 +247,7 @@ class _StudentReviewScreenState extends State<StudentReviewScreen> {
                                                       .compareTo(a.date!);
                                                 });
                                                 return index == 0
-                                                    ? Column(
-                                                        children: [
-                                                          Center(
-                                                              child: Text(
-                                                            'Reviews And Rating',
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .black,
-                                                                fontSize: 20,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          )),
-                                                          Padding(
-                                                            padding: EdgeInsets
-                                                                .symmetric(
-                                                                    horizontal:
-                                                                        16.0,
-                                                                    vertical:
-                                                                        50),
-                                                            child: Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceBetween,
-                                                              children: [
-                                                                Column(
-                                                                  crossAxisAlignment:
-                                                                      CrossAxisAlignment
-                                                                          .center,
-                                                                  children: [
-                                                                    Text(
-                                                                      avgrating!
-                                                                          .total!
-                                                                          .toStringAsFixed(
-                                                                              1),
-                                                                      style:
-                                                                          TextStyle(
-                                                                        fontSize:
-                                                                            36,
-                                                                        fontWeight:
-                                                                            FontWeight.bold,
-                                                                      ),
-                                                                    ),
-                                                                    StarRating(
-                                                                      length: 5,
-                                                                      rating: double.parse(avgrating!
-                                                                          .total
-                                                                          .toString()),
-                                                                      color: Colors
-                                                                          .deepPurpleAccent,
-                                                                      starSize:
-                                                                          20,
-                                                                    ),
-                                                                    Text(
-                                                                      '${reviews.length}',
-                                                                      style: TextStyle(
-                                                                          fontSize:
-                                                                              12,
-                                                                          color:
-                                                                              Colors.black),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                                Column(
-                                                                  children: [
-                                                                    rateBar(
-                                                                        rate:
-                                                                            '5',
-                                                                        value: double.parse(avgrating!
-                                                                            .five
-                                                                            .toString()),
-                                                                        context:
-                                                                            context),
-                                                                    rateBar(
-                                                                        rate:
-                                                                            '4',
-                                                                        value: double.parse(avgrating!
-                                                                            .four
-                                                                            .toString()),
-                                                                        context:
-                                                                            context),
-                                                                    rateBar(
-                                                                        rate:
-                                                                            '3',
-                                                                        value: double.parse(avgrating!
-                                                                            .three
-                                                                            .toString()),
-                                                                        context:
-                                                                            context),
-                                                                    rateBar(
-                                                                        rate:
-                                                                            '2',
-                                                                        value: double.parse(avgrating!
-                                                                            .two
-                                                                            .toString()),
-                                                                        context:
-                                                                            context),
-                                                                    rateBar(
-                                                                        rate:
-                                                                            '1',
-                                                                        value: double.parse(avgrating!
-                                                                            .one
-                                                                            .toString()),
-                                                                        context:
-                                                                            context),
-                                                                  ],
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          SizedBox(height: 16),
-                                                          Align(
-                                                              alignment: Alignment
-                                                                  .centerRight,
-                                                              child: Row(
-                                                                mainAxisSize:
-                                                                    MainAxisSize
-                                                                        .min,
-                                                                children: [
-                                                                  GestureDetector(
-                                                                    onTap: () {
-                                                                      showRatingDialog(
-                                                                          context);
-                                                                    },
-                                                                    child: Icon(
-                                                                        Icons
-                                                                            .tune_sharp),
-                                                                  ),
-                                                                  InkWell(
-                                                                    onTap:
-                                                                        () async {
-                                                                      var result = Navigator.push(
-                                                                          context,
-                                                                          MaterialPageRoute(
-                                                                              builder: (context) => PostReviewScreen()));
-
-                                                                      print(
-                                                                          "uuuuuuuuuuuuuuunnmnmnmns: ${await result}");
-
-                                                                      setState(
-                                                                          () {
-                                                                        getreviewdata();
-                                                                      });
-                                                                    },
-                                                                    child:
-                                                                        Container(
-                                                                      padding: EdgeInsets.symmetric(
-                                                                          horizontal:
-                                                                              16.0,
-                                                                          vertical:
-                                                                              8.0),
-                                                                      child:
-                                                                          Row(
-                                                                        mainAxisSize:
-                                                                            MainAxisSize.min,
-                                                                        children: [
-                                                                          Padding(
-                                                                            padding:
-                                                                                const EdgeInsets.all(8.0),
-                                                                            child:
-                                                                                Text(
-                                                                              'Add Your Review',
-                                                                              style: TextStyle(fontSize: 13, color: Colors.deepPurpleAccent),
-                                                                            ),
-                                                                          ),
-                                                                          SizedBox(
-                                                                              width: 8),
-                                                                          Icon(
-                                                                              Icons.add,
-                                                                              size: 16,
-                                                                              color: Colors.deepPurpleAccent),
-                                                                        ],
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                ],
-                                                              )),
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .only(
-                                                                    bottom: 20),
-                                                            child: Container(
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .all(
-                                                                          16.0),
-                                                              decoration: BoxDecoration(
-                                                                  color: Colors
-                                                                          .grey[
-                                                                      200],
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              20)),
-                                                              child: Column(
-                                                                crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .start,
-                                                                children: [
-                                                                  Row(
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .spaceBetween,
-                                                                    children: [
-                                                                      Text(
-                                                                        '${reviews[index].name}',
-                                                                        style: TextStyle(
-                                                                            fontSize:
-                                                                                18,
-                                                                            fontWeight:
-                                                                                FontWeight.bold),
-                                                                      ),
-                                                                      InkWell(
-                                                                          onTap:
-                                                                              () async {
-                                                                            launchURL(reviews[index].linkdinlink.toString());
-                                                                          },
-                                                                          child:
-                                                                              FaIcon(
-                                                                            FontAwesomeIcons.linkedin,
-                                                                            color:
-                                                                                Colors.blue,
-                                                                            size:
-                                                                                20,
-                                                                          ))
-                                                                    ],
-                                                                  ),
-                                                                  SizedBox(
-                                                                      height:
-                                                                          5),
-                                                                  Text(
-                                                                    '${reviews[index].email}',
-                                                                    style: TextStyle(
-                                                                        fontSize:
-                                                                            12,
-                                                                        color: Colors
-                                                                            .blueGrey,
-                                                                        fontWeight:
-                                                                            FontWeight.w400),
-                                                                  ),
-                                                                  SizedBox(
-                                                                      height:
-                                                                          10),
-                                                                  Row(
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .spaceBetween,
-                                                                    children: [
-                                                                      StarRating(
-                                                                        rating:
-                                                                            double.parse(reviews[index].rating!),
-                                                                        starSize:
-                                                                            20,
-                                                                        color: Colors
-                                                                            .deepPurpleAccent,
-                                                                        length:
-                                                                            5,
-                                                                      ),
-                                                                      SizedBox(
-                                                                          width:
-                                                                              8),
-                                                                      Text(
-                                                                        formatTimeAgo(
-                                                                          '${reviews[index].date.toString()}',
-                                                                        ),
-                                                                        style: TextStyle(
-                                                                            fontSize:
-                                                                                16,
-                                                                            color:
-                                                                                Colors.grey),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                  SizedBox(
-                                                                      height:
-                                                                          10),
-                                                                  Text(
-                                                                    '${reviews[index].reviewdescription}',
-                                                                    maxLines: 5,
-                                                                    overflow:
-                                                                        TextOverflow
-                                                                            .ellipsis,
-                                                                    style: TextStyle(
-                                                                        fontSize:
-                                                                            16),
-                                                                  ),
-                                                                  !isMentor
-                                                                      ? Row(
-                                                                          mainAxisSize:
-                                                                              MainAxisSize.min,
-                                                                          // mainAxisAlignment:
-                                                                          //     MainAxisAlignment.spaceBetween,
-                                                                          //efie
-                                                                          children: [
-                                                                            email == reviews[index].email
-                                                                                ? IconButton(
-                                                                                    onPressed: () => showEditBoxDialog(context, reviews[index]),
-                                                                                    icon: Icon(
-                                                                                      Icons.edit,
-                                                                                      color: const Color.fromARGB(255, 54, 244, 168),
-                                                                                    ))
-                                                                                : Container()
-                                                                          ],
-                                                                        )
-                                                                      : Row(
-                                                                          mainAxisSize:
-                                                                              MainAxisSize.min,
-                                                                          // mainAxisAlignment:
-                                                                          //     MainAxisAlignment.spaceBetween,
-                                                                          children: [
-                                                                            SizedBox(),
-                                                                            IconButton(
-                                                                                onPressed: () => deleteReview(id: reviews[index].id!),
-                                                                                icon: Icon(
-                                                                                  Icons.delete,
-                                                                                  color: Colors.red,
-                                                                                )),
-                                                                          
-                                                                          ],
-                                                                        )
-                                                                ],
-                                                              ),
-                                                            ),
-                                                          )
-                                                        ],
-                                                      )
+                                                    ? atindexzero()
                                                     : Padding(
                                                         padding:
                                                             const EdgeInsets
@@ -702,7 +380,13 @@ class _StudentReviewScreenState extends State<StudentReviewScreen> {
                                                                           MainAxisSize
                                                                               .min,
                                                                       children: [
-                                                                        SizedBox(),
+                                                                        IconButton(
+                                                                            onPressed: () =>
+                                                                                updateReview(id: reviews[index].id!),
+                                                                            icon: Icon(
+                                                                              Icons.edit,
+                                                                              color: Colors.green,
+                                                                            )),
                                                                         IconButton(
                                                                             onPressed: () =>
                                                                                 deleteReview(id: reviews[index].id!),
@@ -710,7 +394,6 @@ class _StudentReviewScreenState extends State<StudentReviewScreen> {
                                                                               Icons.delete,
                                                                               color: Colors.red,
                                                                             )),
-                                                                    
                                                                       ],
                                                                     )
                                                             ],
@@ -727,6 +410,369 @@ class _StudentReviewScreenState extends State<StudentReviewScreen> {
                         );
                       }),
                     )),
+    );
+  }
+
+  Widget atindexzero() {
+    print('wiefowjifeo0');
+    var total;
+    var totalinstring;
+    try {
+      // total = avgrating!.total;
+      var totalvalue = 0;
+      for (var i in reviews) {
+        print(i.rating);
+        try {
+          totalvalue += int.parse(i.rating.toString());
+        } catch (e) {
+          print('$e');
+        }
+      }
+
+      total = (totalvalue / reviews.length).toDouble().toStringAsFixed(1);
+      totalinstring = total.toString();
+      print(total);
+    } catch (e) {
+      print("error 1: ${e}");
+    }
+
+    // try {
+    //   // totalinstring = avgrating!.total.toString();
+    //   var totalvalue = 0;
+    //   for (var i in reviews) {
+    //     try {
+    //       totalvalue += int.parse(i.rating.toString());
+    //     } catch (e) {
+    //       print("wef: $e");
+    //     }
+    //   }
+
+    //   totalinstring = (totalvalue / reviews.length).toString();
+    //   print(totalinstring);
+    // } catch (e) {
+    //   print("error 2: ${e}");
+    // }
+
+    var reviewslength;
+    try {
+      reviewslength = reviews.length;
+      print(reviewslength);
+    } catch (e) {
+      print("error 3: ${e}");
+    }
+
+    var five;
+    try {
+      five = avgrating!.five.toString();
+      print(five);
+    } catch (e) {
+      print("error 4: ${e}");
+    }
+
+    var four;
+    try {
+      four = avgrating!.four.toString();
+      print(four);
+    } catch (e) {
+      print("error 5: ${e}");
+    }
+
+    var three;
+    try {
+      three = avgrating!.three.toString();
+      print(three);
+    } catch (e) {
+      print("error 6: ${e}");
+    }
+
+    var two;
+    try {
+      two = avgrating!.two.toString();
+      print(two);
+    } catch (e) {
+      print("error 7: ${e}");
+    }
+
+    var one;
+    try {
+      one = avgrating!.one.toString();
+      print(one);
+    } catch (e) {
+      print("error 8: ${e}");
+    }
+
+    var name;
+    try {
+      name = reviews[0].name;
+      print(name);
+    } catch (e) {
+      print("error 9: ${e}");
+    }
+
+    var linkedinlink;
+    try {
+      linkedinlink = reviews[0].linkdinlink.toString();
+      print(linkedinlink);
+    } catch (e) {
+      print("error 10: ${e}");
+    }
+
+    var useremail;
+    try {
+      useremail = reviews[0].email;
+      print(useremail);
+    } catch (e) {
+      print("error 11: ${e}");
+    }
+
+    var date;
+    try {
+      date = reviews[0].date.toString();
+      print(date);
+    } catch (e) {
+      print("error 12: ${e}");
+    }
+
+    var description;
+    try {
+      description = reviews[0].reviewdescription;
+      print(description);
+    } catch (e) {
+      print("error 13: ${e}");
+    }
+
+    var id;
+    try {
+      id = reviews[0].id!;
+      print(id);
+    } catch (e) {
+      print("error 14: ${e}");
+    }
+
+    var rating;
+    try {
+      rating = reviews[0].rating!;
+      print(rating.runtimeType);
+      print(rating);
+    } catch (e) {
+      print("error 15: ${e}");
+    }
+
+    var firstreview;
+    try {
+      firstreview = reviews[0];
+      print(firstreview);
+    } catch (e) {
+      print("error 16: ${e}");
+    }
+
+    print('wiefowjifeo1');
+    return Column(
+      children: [
+        Center(
+            child: Text(
+          'Reviews And Rating',
+          style: TextStyle(
+              color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+        )),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 50),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    total,
+                    style: TextStyle(
+                      fontSize: 36,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  StarRating(
+                    length: 5,
+                    rating: double.parse(totalinstring),
+                    color: Colors.deepPurpleAccent,
+                    starSize: 20,
+                  ),
+                  Text(
+                    '${reviewslength}',
+                    style: TextStyle(fontSize: 12, color: Colors.black),
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  rateBar(
+                      rate: '5', value: double.parse(five), context: context),
+                  rateBar(
+                      rate: '4', value: double.parse(four), context: context),
+                  rateBar(
+                      rate: '3', value: double.parse(three), context: context),
+                  rateBar(
+                      rate: '2', value: double.parse(two), context: context),
+                  rateBar(
+                      rate: '1', value: double.parse(one), context: context),
+                ],
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: 16),
+        Align(
+            alignment: Alignment.centerRight,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    showRatingDialog(context);
+                  },
+                  child: Icon(Icons.tune_sharp),
+                ),
+                InkWell(
+                  onTap: () async {
+                    var result = Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PostReviewScreen()));
+
+                    // print("uuuuuuuuuuuuuuunnmnmnmns: ${await result}");
+
+                    setState(() {
+                      getreviewdata();
+                    });
+                  },
+                  child: Container(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'Add Your Review',
+                            style: TextStyle(
+                                fontSize: 13, color: Colors.deepPurpleAccent),
+                          ),
+                        ),
+                        SizedBox(width: 8),
+                        Icon(Icons.add,
+                            size: 16, color: Colors.deepPurpleAccent),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            )),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 20),
+          child: Container(
+            padding: EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(20)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '${name}',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    InkWell(
+                        onTap: () async {
+                          launchURL(linkedinlink);
+                        },
+                        child: FaIcon(
+                          FontAwesomeIcons.linkedin,
+                          color: Colors.blue,
+                          size: 20,
+                        ))
+                  ],
+                ),
+                SizedBox(height: 5),
+                Text(
+                  '${useremail}',
+                  style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.blueGrey,
+                      fontWeight: FontWeight.w400),
+                ),
+                SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    StarRating(
+                      rating: double.parse(rating.toString()),
+                      starSize: 20,
+                      color: Colors.deepPurpleAccent,
+                      length: 5,
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      formatTimeAgo(
+                        '${date}',
+                      ),
+                      style: TextStyle(fontSize: 16, color: Colors.grey),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10),
+                Text(
+                  '${description}',
+                  maxLines: 5,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontSize: 16),
+                ),
+                !isMentor
+                    ? Row(
+                        mainAxisSize: MainAxisSize.min,
+                        // mainAxisAlignment:
+                        //     MainAxisAlignment.spaceBetween,
+                        //efie
+                        children: [
+                          email == useremail
+                              ? IconButton(
+                                  onPressed: () =>
+                                      showEditBoxDialog(context, firstreview),
+                                  icon: Icon(
+                                    Icons.edit,
+                                    color:
+                                        const Color.fromARGB(255, 54, 244, 168),
+                                  ))
+                              : Container()
+                        ],
+                      )
+                    : Row(
+                        mainAxisSize: MainAxisSize.min,
+                        // mainAxisAlignment:
+                        //     MainAxisAlignment.spaceBetween,
+                        children: [
+                          IconButton(
+                              onPressed: () => updateReview(id: id),
+                              icon: Icon(
+                                Icons.edit,
+                                color: Colors.green,
+                              )),
+                          IconButton(
+                              onPressed: () => deleteReview(id: id),
+                              icon: Icon(
+                                Icons.delete,
+                                color: Colors.red,
+                              )),
+                        ],
+                      )
+              ],
+            ),
+          ),
+        )
+      ],
     );
   }
 
@@ -747,19 +793,30 @@ class _StudentReviewScreenState extends State<StudentReviewScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
-                    avgrating!.total!.toStringAsFixed(1),
-                    style: TextStyle(
-                      fontSize: 36,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  StarRating(
-                    length: 5,
-                    rating: double.parse(avgrating!.total.toString()),
-                    color: Colors.deepPurpleAccent,
-                    starSize: 20,
-                  ),
+                  //  avgrating!.total!=null? Text(
+                  //     avgrating!.total!.toStringAsFixed(1),
+                  //     style: TextStyle(
+                  //       fontSize: 36,
+                  //       fontWeight: FontWeight.bold,
+                  //     ),
+                  //   ):Text(
+                  //     "0",
+                  //     style: TextStyle(
+                  //       fontSize: 36,
+                  //       fontWeight: FontWeight.bold,
+                  //     ),
+                  //   ),
+                  // avgrating!.total != null?StarRating(
+                  //   length: 5,
+                  //   rating: double.parse(avgrating!.total.toString()),
+                  //   color: Colors.deepPurpleAccent,
+                  //   starSize: 20,
+                  // ):StarRating(
+                  //   length: 5,
+                  //   rating: 0.0,
+                  //   color: Colors.deepPurpleAccent,
+                  //   starSize: 20,
+                  // ),
                   Text(
                     '${filteredReviews.length}',
                     style: TextStyle(fontSize: 12, color: Colors.black),

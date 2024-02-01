@@ -38,16 +38,17 @@ Future<String> postReview(reviewData) async {
 }
 
 getReviewsApi() async {
+  print("weoifjwoejfo");
   var headers = {'Content-Type': 'application/json'};
 
-  final response = await http.post(
-    Uri.parse('https://us-central1-cloudyml-app.cloudfunctions.net/getReviews'),
+  final response = await http.get(
+    Uri.parse(
+        'https://us-central1-cloudyml-app.cloudfunctions.net/getReviews'), //https://us-central1-cloudyml-app.cloudfunctions.net/getReviews
     headers: headers,
-    body: '{"data": {}}',
   );
 
   if (response.statusCode == 200) {
-    print('efjwiefjwo$response');
+    print('efjwiefjwo');
     return response.body;
   } else {
     print(response.reasonPhrase);
