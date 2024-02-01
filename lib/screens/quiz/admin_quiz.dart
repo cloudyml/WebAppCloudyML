@@ -2399,7 +2399,7 @@ class _AdminQuizPanelState extends State<AdminQuizPanel> {
                                                         tempmodulename =
                                                             'Module Name';
                                                         print(
-                                                            '${globals.coursemoduelmap[newValue].runtimeType}');
+                                                            '${globals.coursemoduelmap[newValue]}');
                                                         try {
                                                           for (var i in globals
                                                                   .coursemoduelmap[

@@ -39,15 +39,56 @@ class _LoginEmailPageState extends State<LoginEmailPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   bool loading = false;
 
-  late String feaurl;
-  late String deurl;
-  late String supurl;
-  late String depayurl;
-  late String suppayurl;
-  late String interntnl;
+  // late String feaurl;
+  // late String deurl;
+  // late String supurl;
+  // late String depayurl;
+  // late String suppayurl;
+  // late String interntnl;
   late String promEng;
+  late String schlrquiz;
+  late String allpayurl;
+  late String diurl;
+  late String trialink;
+
+  var courseinfo;
 
   void url() async {
+    schlrquiz = globals.schurl;
+
+    allpayurl = globals.Payurl;
+    trialink = globals.trial_link;
+
+    print("url is at login1=====$schlrquiz");
+    print("allpayurl is at login1=====${globals.Payurl}");
+
+    // await FirebaseFirestore.instance
+    //     .collection("Notice")
+    //     .doc("2OePOtTIa8B1Jd0WiQoj_scholarship_quiz")
+    //     .get()
+    //     .then((value) {
+    //   print(value.data()!.values.first);
+    //   return value.data()!.values.first;
+    // });
+
+    globals.schurl = '';
+    globals.Payurl = '';
+    globals.trial_link = '';
+    ;
+    print("url1 is at login=====${globals.schurl}");
+    print("allpayurl1 is at login=====${globals.Payurl}");
+
+    courseinfo = await FirebaseFirestore.instance
+        .collection("courses")
+        .where('docid', isEqualTo: trialink)
+        .get()
+        .then((value) {
+      print(value.docs.first.data());
+      return value.docs.first.data();
+    });
+
+    print("courseinfo is ${courseinfo['Course Price']}");
+
     diurl = await FirebaseFirestore.instance
         .collection("Notice")
         .doc("7A85zuoLi4YQpbXlbOAh_redirect")
@@ -59,91 +100,91 @@ class _LoginEmailPageState extends State<LoginEmailPage> {
 
     print("url is=====$diurl");
 
-    interntnl = await FirebaseFirestore.instance
-        .collection("Notice")
-        .doc("7A85zuoLi4YQpbXlbOAh_redirect")
-        .get()
-        .then((value) {
-      print(value.data()!.values.first);
-      return value.data()!.values.first;
-    });
+    // interntnl = await FirebaseFirestore.instance
+    //     .collection("Notice")
+    //     .doc("7A85zuoLi4YQpbXlbOAh_redirect")
+    //     .get()
+    //     .then((value) {
+    //   print(value.data()!.values.first);
+    //   return value.data()!.values.first;
+    // });
 
-    print("url is=====$interntnl");
-     promEng= await FirebaseFirestore.instance
-        .collection("Notice")
-        .doc("HX4neryeAOB1dzUeIAg1_prompt")
-        .get()
-        .then((value) {
-      print(value.data()!.values.first);
-      return value.data()!.values.first;
-    });
+    // print("url is=====$interntnl");
+    // promEng = await FirebaseFirestore.instance
+    //     .collection("Notice")
+    //     .doc("HX4neryeAOB1dzUeIAg1_prompt")
+    //     .get()
+    //     .then((value) {
+    //   print(value.data()!.values.first);
+    //   return value.data()!.values.first;
+    // });
 
-    print("url is=====$promEng");
+    // print("url is=====$promEng");
 
-    payurl = await FirebaseFirestore.instance
-        .collection("Notice")
-        .doc("NBrEm6KGry8gxOJJkegG_redirect_pay")
-        .get()
-        .then((value) {
-      print(value.data()!.values.first);
-      return value.data()!.values.first;
-    });
+    // payurl = await FirebaseFirestore.instance
+    //     .collection("Notice")
+    //     .doc("NBrEm6KGry8gxOJJkegG_redirect_pay")
+    //     .get()
+    //     .then((value) {
+    //   print(value.data()!.values.first);
+    //   return value.data()!.values.first;
+    // });
 
-    print("url is=====$payurl");
-    feaurl = await FirebaseFirestore.instance
-        .collection("Notice")
-        .doc("XdYtk2DJBIkRGx0ASthZ_newfeaturecourse")
-        .get()
-        .then((value) {
-      print(value.data()!.values.first);
-      return value.data()!.values.first;
-    });
+    // print("url is=====$payurl");
+    // feaurl = await FirebaseFirestore.instance
+    //     .collection("Notice")
+    //     .doc("XdYtk2DJBIkRGx0ASthZ_newfeaturecourse")
+    //     .get()
+    //     .then((value) {
+    //   print(value.data()!.values.first);
+    //   return value.data()!.values.first;
+    // });
 
-    print("url is=====$feaurl");
+    // print("url is=====$feaurl");
 
-    deurl = await FirebaseFirestore.instance
-        .collection("Notice")
-        .doc("fSU4MLz1E0858ft8m7F5_dataeng")
-        .get()
-        .then((value) {
-      print(value.data()!.values.first);
-      return value.data()!.values.first;
-    });
+    // deurl = await FirebaseFirestore.instance
+    //     .collection("Notice")
+    //     .doc("fSU4MLz1E0858ft8m7F5_dataeng")
+    //     .get()
+    //     .then((value) {
+    //   print(value.data()!.values.first);
+    //   return value.data()!.values.first;
+    // });
 
-    print("url is=====$deurl");
+    // print("url is=====$deurl");
 
-    supurl = await FirebaseFirestore.instance
-        .collection("Notice")
-        .doc("JnCFQ1bT36xl0xKjDL3a_superstar")
-        .get()
-        .then((value) {
-      print(value.data()!.values.first);
-      return value.data()!.values.first;
-    });
+    // supurl = await FirebaseFirestore.instance
+    //     .collection("Notice")
+    //     .doc("JnCFQ1bT36xl0xKjDL3a_superstar")
+    //     .get()
+    //     .then((value) {
+    //   print(value.data()!.values.first);
+    //   return value.data()!.values.first;
+    // });
 
-    print("url is=====$supurl");
+    // print("url is=====$supurl");
 
-    depayurl = await FirebaseFirestore.instance
-        .collection("Notice")
-        .doc("M2jEwYyiWdzYWE9gJd8s_de_pay")
-        .get()
-        .then((value) {
-      print(value.data()!.values.first);
-      return value.data()!.values.first;
-    });
+    // depayurl = await FirebaseFirestore.instance
+    //     .collection("Notice")
+    //     .doc("M2jEwYyiWdzYWE9gJd8s_de_pay")
+    //     .get()
+    //     .then((value) {
+    //   print(value.data()!.values.first);
+    //   return value.data()!.values.first;
+    // });
 
-    print("url is=====$supurl");
+    // print("url is=====$supurl");
 
-    suppayurl = await FirebaseFirestore.instance
-        .collection("Notice")
-        .doc("o1Hw1CebDH9I4VfpKuiC_sup_pay")
-        .get()
-        .then((value) {
-      print(value.data()!.values.first);
-      return value.data()!.values.first;
-    });
+    // suppayurl = await FirebaseFirestore.instance
+    //     .collection("Notice")
+    //     .doc("o1Hw1CebDH9I4VfpKuiC_sup_pay")
+    //     .get()
+    //     .then((value) {
+    //   print(value.data()!.values.first);
+    //   return value.data()!.values.first;
+    // });
 
-    print("url is=====$supurl");
+    // print("url is=====$supurl");
   }
 
   @override
@@ -351,18 +392,18 @@ class _LoginEmailPageState extends State<LoginEmailPage> {
                                                       const BoxConstraints(
                                                           maxWidth: 500),
                                                   margin: const EdgeInsets
-                                                          .symmetric(
+                                                      .symmetric(
                                                       horizontal: 20,
                                                       vertical: 10),
                                                   child: CupertinoTextField(
                                                     padding: const EdgeInsets
-                                                            .symmetric(
+                                                        .symmetric(
                                                         horizontal: 16),
                                                     decoration: BoxDecoration(
                                                         color: Colors.white,
                                                         borderRadius:
                                                             const BorderRadius
-                                                                    .all(
+                                                                .all(
                                                                 Radius.circular(
                                                                     4))),
                                                     controller: nameController,
@@ -415,7 +456,7 @@ class _LoginEmailPageState extends State<LoginEmailPage> {
                                                         const BoxConstraints(
                                                             maxWidth: 500),
                                                     margin: const EdgeInsets
-                                                            .symmetric(
+                                                        .symmetric(
                                                         horizontal: 20,
                                                         vertical: 10),
                                                     child: CupertinoTextField(
@@ -440,14 +481,13 @@ class _LoginEmailPageState extends State<LoginEmailPage> {
                                                       obscureText:
                                                           !_passwordVisible,
                                                       padding: const EdgeInsets
-                                                              .symmetric(
+                                                          .symmetric(
                                                           horizontal: 16),
                                                       decoration: BoxDecoration(
                                                           color: Colors.white,
                                                           borderRadius:
                                                               const BorderRadius
-                                                                      .all(
-                                                                  Radius
+                                                                  .all(Radius
                                                                       .circular(
                                                                           4))),
                                                       clearButtonMode:
@@ -466,7 +506,7 @@ class _LoginEmailPageState extends State<LoginEmailPage> {
                                                   ),
                                                   Padding(
                                                     padding: const EdgeInsets
-                                                            .fromLTRB(
+                                                        .fromLTRB(
                                                         8.0, 2, 18, 8),
                                                     child: InkWell(
                                                       onTap: () {
@@ -696,131 +736,168 @@ class _LoginEmailPageState extends State<LoginEmailPage> {
                                                             const Duration(
                                                                 seconds: 2),
                                                             () {
-                                                          if (feaurl ==
-                                                              'aEGX6kMfHzQrVgP3WCwU') {
+                                                          if (trialink
+                                                              .isNotEmpty) {
                                                             final id = "0";
+                                                            final cID =
+                                                                trialink;
+                                                            final courseName =
+                                                                courseinfo[
+                                                                    'name'];
+                                                            final courseP =
+                                                                courseinfo[
+                                                                    'Course Price'];
+                                                            GoRouter.of(context)
+                                                                .goNamed(
+                                                                    'NewFeature',
+                                                                    queryParams: {
+                                                                  'cID': cID,
+                                                                  'courseName':
+                                                                      courseName,
+                                                                  'id': id,
+                                                                  'coursePrice':
+                                                                      courseP
+                                                                });
+                                                            trialink = '';
+                                                          } else if (schlrquiz
+                                                              .isNotEmpty) {
+                                                            print(
+                                                                "i am in otp else");
+                                                            final cID =
+                                                                schlrquiz;
+                                                            GoRouter.of(context)
+                                                                .go(
+                                                              '/scholarship/wadsf${cID}',
+                                                              // queryParams: {
+                                                              //   'cID': cID,
+                                                              //   }
+                                                            );
+                                                            schlrquiz = '';
+                                                            print(
+                                                                'the schlrquiz after navigation is ${schlrquiz}');
+                                                          } else if (allpayurl
+                                                              .isNotEmpty) {
                                                             final cID =
                                                                 "aEGX6kMfHzQrVgP3WCwU";
-                                                            final courseName =
-                                                                "Data Science & Analytics Placement Assurance Program";
-                                                            final courseP =
-                                                                "11999";
-                                                            GoRouter.of(context)
-                                                                .goNamed(
-                                                                    'NewFeature',
-                                                                    queryParams: {
-                                                                  'cID': cID,
-                                                                  'courseName':
-                                                                      courseName,
-                                                                  'id': id,
-                                                                  'coursePrice':
-                                                                      courseP
-                                                                });
-                                                          } else if (promEng ==
-                                                              'RIUjOvGBV6YSzMTpMWEG') {
-                                                            final cID =
-                                                                "RIUjOvGBV6YSzMTpMWEG";
                                                             GoRouter.of(context)
                                                                 .go(
-                                                              '/paymentPortal?cID=RIUjOvGBV6YSzMTpMWEG',
+                                                              '/comboPaymentPortal?cID=${allpayurl}',
                                                               // queryParams: {
                                                               //   'cID': cID,
                                                               //   }
                                                             );
-                                                          } else if (payurl ==
-                                                              'aEGX6kMfHzQrVgP3WCwU') {
-                                                            final cID =
-                                                                "aEGX6kMfHzQrVgP3WCwU";
-                                                            GoRouter.of(context)
-                                                                .go(
-                                                              '/paymentPortal?cID=aEGX6kMfHzQrVgP3WCwU',
-                                                              // queryParams: {
-                                                              //   'cID': cID,
-                                                              //   }
-                                                            );
-                                                          }else if (depayurl ==
-                                                              'F9gxnjW9nf5Lxg5A6758') {
-                                                            final cID =
-                                                                "F9gxnjW9nf5Lxg5A6758";
-                                                            GoRouter.of(context)
-                                                                .go(
-                                                              '/comboPaymentPortal?cID=F9gxnjW9nf5Lxg5A6758',
-                                                              // queryParams: {
-                                                              //   'cID': cID,
-                                                              //   }
-                                                            );
-                                                          } else if (suppayurl ==
-                                                              'XSNqt0oNpuY7i2kb7zsW') {
-                                                            final cID =
-                                                                "XSNqt0oNpuY7i2kb7zsW";
-                                                            GoRouter.of(context)
-                                                                .go(
-                                                              '/comboPaymentPortal?cID=XSNqt0oNpuY7i2kb7zsW',
-                                                              // queryParams: {
-                                                              //   'cID': cID,
-                                                              //   }
-                                                            );
-                                                          } else if (deurl ==
-                                                              'F9gxnjW9nf5Lxg5A6758') {
-                                                            final id = "0";
-                                                            final cID =
-                                                                "F9gxnjW9nf5Lxg5A6758";
-                                                            final courseName =
-                                                                "Data Engineering Placement Assurance Program";
-                                                            final courseP =
-                                                                "12000";
-                                                            GoRouter.of(context)
-                                                                .goNamed(
-                                                                    'NewFeature',
-                                                                    queryParams: {
-                                                                  'cID': cID,
-                                                                  'courseName':
-                                                                      courseName,
-                                                                  'id': id,
-                                                                  'coursePrice':
-                                                                      courseP
-                                                                });
-                                                          } else if (interntnl ==
-                                                              'mPqg2Z2BdNHvwaqAEfA0') {
-                                                            final id = "0";
-                                                            final cID =
-                                                                "mPqg2Z2BdNHvwaqAEfA0";
-                                                            final courseName =
-                                                                "Data Superstar(International)";
-                                                            final courseP =
-                                                                "399";
-                                                            GoRouter.of(context)
-                                                                .goNamed(
-                                                                    'NewFeature',
-                                                                    queryParams: {
-                                                                  'cID': cID,
-                                                                  'courseName':
-                                                                      courseName,
-                                                                  'id': id,
-                                                                  'coursePrice':
-                                                                      courseP
-                                                                });
-                                                          } else if (supurl ==
-                                                              'XSNqt0oNpuY7i2kb7zsW') {
-                                                            final id = "0";
-                                                            final cID =
-                                                                "XSNqt0oNpuY7i2kb7zsW";
-                                                            final courseName =
-                                                                "Data Superstar Placement Assurance Program";
-                                                            final courseP =
-                                                                "20000";
-                                                            GoRouter.of(context)
-                                                                .goNamed(
-                                                                    'NewFeature',
-                                                                    queryParams: {
-                                                                  'cID': cID,
-                                                                  'courseName':
-                                                                      courseName,
-                                                                  'id': id,
-                                                                  'coursePrice':
-                                                                      courseP
-                                                                });
-                                                          } else {
+
+                                                            allpayurl = '';
+                                                            print(
+                                                                'the allpayurl after navigation login is ${allpayurl}');
+                                                          }
+                                                          // else if (promEng ==
+                                                          //     'RIUjOvGBV6YSzMTpMWEG') {
+                                                          //   final cID =
+                                                          //       "RIUjOvGBV6YSzMTpMWEG";
+                                                          //   GoRouter.of(context)
+                                                          //       .go(
+                                                          //     '/paymentPortal?cID=RIUjOvGBV6YSzMTpMWEG',
+                                                          //     // queryParams: {
+                                                          //     //   'cID': cID,
+                                                          //     //   }
+                                                          //   );
+                                                          // } else if (payurl ==
+                                                          //     'aEGX6kMfHzQrVgP3WCwU') {
+                                                          //   final cID =
+                                                          //       "aEGX6kMfHzQrVgP3WCwU";
+                                                          //   GoRouter.of(context)
+                                                          //       .go(
+                                                          //     '/paymentPortal?cID=aEGX6kMfHzQrVgP3WCwU',
+                                                          //     // queryParams: {
+                                                          //     //   'cID': cID,
+                                                          //     //   }
+                                                          //   );
+                                                          // } else if (depayurl ==
+                                                          //     'F9gxnjW9nf5Lxg5A6758') {
+                                                          //   final cID =
+                                                          //       "F9gxnjW9nf5Lxg5A6758";
+                                                          //   GoRouter.of(context)
+                                                          //       .go(
+                                                          //     '/comboPaymentPortal?cID=F9gxnjW9nf5Lxg5A6758',
+                                                          //     // queryParams: {
+                                                          //     //   'cID': cID,
+                                                          //     //   }
+                                                          //   );
+                                                          // } else if (suppayurl ==
+                                                          //     'XSNqt0oNpuY7i2kb7zsW') {
+                                                          //   final cID =
+                                                          //       "XSNqt0oNpuY7i2kb7zsW";
+                                                          //   GoRouter.of(context)
+                                                          //       .go(
+                                                          //     '/comboPaymentPortal?cID=XSNqt0oNpuY7i2kb7zsW',
+                                                          //     // queryParams: {
+                                                          //     //   'cID': cID,
+                                                          //     //   }
+                                                          //   );
+                                                          // }
+                                                          // else if (deurl ==
+                                                          //     'F9gxnjW9nf5Lxg5A6758') {
+                                                          //   final id = "0";
+                                                          //   final cID =
+                                                          //       "F9gxnjW9nf5Lxg5A6758";
+                                                          //   final courseName =
+                                                          //       "Data Engineering Placement Assurance Program";
+                                                          //   final courseP =
+                                                          //       "12000";
+                                                          //   GoRouter.of(context)
+                                                          //       .goNamed(
+                                                          //           'NewFeature',
+                                                          //           queryParams: {
+                                                          //         'cID': cID,
+                                                          //         'courseName':
+                                                          //             courseName,
+                                                          //         'id': id,
+                                                          //         'coursePrice':
+                                                          //             courseP
+                                                          //       });
+                                                          // } else if (interntnl ==
+                                                          //     'mPqg2Z2BdNHvwaqAEfA0') {
+                                                          //   final id = "0";
+                                                          //   final cID =
+                                                          //       "mPqg2Z2BdNHvwaqAEfA0";
+                                                          //   final courseName =
+                                                          //       "Data Superstar(International)";
+                                                          //   final courseP =
+                                                          //       "399";
+                                                          //   GoRouter.of(context)
+                                                          //       .goNamed(
+                                                          //           'NewFeature',
+                                                          //           queryParams: {
+                                                          //         'cID': cID,
+                                                          //         'courseName':
+                                                          //             courseName,
+                                                          //         'id': id,
+                                                          //         'coursePrice':
+                                                          //             courseP
+                                                          //       });
+                                                          // } else if (supurl ==
+                                                          //     'XSNqt0oNpuY7i2kb7zsW') {
+                                                          //   final id = "0";
+                                                          //   final cID =
+                                                          //       "XSNqt0oNpuY7i2kb7zsW";
+                                                          //   final courseName =
+                                                          //       "Data Superstar Placement Assurance Program";
+                                                          //   final courseP =
+                                                          //       "20000";
+                                                          //   GoRouter.of(context)
+                                                          //       .goNamed(
+                                                          //           'NewFeature',
+                                                          //           queryParams: {
+                                                          //         'cID': cID,
+                                                          //         'courseName':
+                                                          //             courseName,
+                                                          //         'id': id,
+                                                          //         'coursePrice':
+                                                          //             courseP
+                                                          //       });
+                                                          // } 
+                                                          else {
                                                             Navigator.of(
                                                                     context)
                                                                 .push(MaterialPageRoute(
@@ -1096,7 +1173,58 @@ class _LoginEmailPageState extends State<LoginEmailPage> {
                                                     //         HomePage(),
                                                     //   ),
                                                     // );
-                                                    if (diurl ==
+
+                                                    if (schlrquiz.isNotEmpty) {
+                                                      print("i am in otp else");
+                                                      final cID = schlrquiz;
+                                                      GoRouter.of(context).go(
+                                                        '/scholarship/wadsf${cID}',
+                                                        // queryParams: {
+                                                        //   'cID': cID,
+                                                        //   }
+                                                      );
+                                                      schlrquiz = '';
+                                                      print(
+                                                          'the schlrquiz after navigation is ${schlrquiz}');
+                                                    } else if (allpayurl
+                                                        .isNotEmpty) {
+                                                      final cID =
+                                                          "aEGX6kMfHzQrVgP3WCwU";
+                                                      GoRouter.of(context).go(
+                                                        '/comboPaymentPortal?cID=${allpayurl}',
+                                                        // queryParams: {
+                                                        //   'cID': cID,
+                                                        //   }
+                                                      );
+
+                                                      allpayurl = '';
+                                                      print(
+                                                          'the allpayurl after navigation login is ${allpayurl}');
+                                                    }  else if (trialink
+                                                              .isNotEmpty) {
+                                                            final id = "0";
+                                                            final cID =
+                                                                trialink;
+                                                            final courseName =
+                                                                courseinfo[
+                                                                    'name'];
+                                                            final courseP =
+                                                                courseinfo[
+                                                                    'Course Price'];
+                                                            GoRouter.of(context)
+                                                                .goNamed(
+                                                                    'NewFeature',
+                                                                    queryParams: {
+                                                                  'cID': cID,
+                                                                  'courseName':
+                                                                      courseName,
+                                                                  'id': id,
+                                                                  'coursePrice':
+                                                                      courseP
+                                                                });
+                                                            trialink = '';
+                                                          }
+                                                    else if (diurl ==
                                                         '/InternationalPaymentScreen') {
                                                       final cID =
                                                           "aEGX6kMfHzQrVgP3WCwU";
@@ -1106,101 +1234,107 @@ class _LoginEmailPageState extends State<LoginEmailPage> {
                                                         //   'cID': cID,
                                                         //   }
                                                       );
-                                                    } else if (deurl ==
-                                                        'F9gxnjW9nf5Lxg5A6758') {
-                                                      final id = "0";
-                                                      final cID =
-                                                          "F9gxnjW9nf5Lxg5A6758";
-                                                      final courseName =
-                                                          "Data Engineering Placement Assurance Program";
-                                                      final courseP = "12000";
-                                                      GoRouter.of(context)
-                                                          .goNamed('NewFeature',
-                                                              queryParams: {
-                                                            'cID': cID,
-                                                            'courseName':
-                                                                courseName,
-                                                            'id': id,
-                                                            'coursePrice':
-                                                                courseP
-                                                          });
-                                                    } else if (interntnl ==
-                                                        'mPqg2Z2BdNHvwaqAEfA0') {
-                                                      final id = "0";
-                                                      final cID =
-                                                          "mPqg2Z2BdNHvwaqAEfA0";
-                                                      final courseName =
-                                                          "Data Superstar(International)";
-                                                      final courseP = "399";
-                                                      GoRouter.of(context)
-                                                          .goNamed('NewFeature',
-                                                              queryParams: {
-                                                            'cID': cID,
-                                                            'courseName':
-                                                                courseName,
-                                                            'id': id,
-                                                            'coursePrice':
-                                                                courseP
-                                                          });
-                                                    } else if (supurl ==
-                                                        'XSNqt0oNpuY7i2kb7zsW') {
-                                                      final id = "0";
-                                                      final cID =
-                                                          "XSNqt0oNpuY7i2kb7zsW";
-                                                      final courseName =
-                                                          "Data Superstar Placement Assurance Program";
-                                                      final courseP = "20000";
-                                                      GoRouter.of(context)
-                                                          .goNamed('NewFeature',
-                                                              queryParams: {
-                                                            'cID': cID,
-                                                            'courseName':
-                                                                courseName,
-                                                            'id': id,
-                                                            'coursePrice':
-                                                                courseP
-                                                          });
-                                                    } else if (payurl ==
-                                                        'aEGX6kMfHzQrVgP3WCwU') {
-                                                      final cID =
-                                                          "aEGX6kMfHzQrVgP3WCwU";
-                                                      GoRouter.of(context).go(
-                                                        '/paymentPortal?cID=aEGX6kMfHzQrVgP3WCwU',
-                                                        // queryParams: {
-                                                        //   'cID': cID,
-                                                        //   }
-                                                      );
-                                                    }  else if (promEng ==
-                                                        'RIUjOvGBV6YSzMTpMWEG') {
-                                                      final cID =
-                                                          "RIUjOvGBV6YSzMTpMWEG";
-                                                      GoRouter.of(context).go(
-                                                        '/paymentPortal?cID=RIUjOvGBV6YSzMTpMWEG',
-                                                        // queryParams: {
-                                                        //   'cID': cID,
-                                                        //   }
-                                                      );
-                                                    }else if (depayurl ==
-                                                        'F9gxnjW9nf5Lxg5A6758') {
-                                                      final cID =
-                                                          "F9gxnjW9nf5Lxg5A6758";
-                                                      GoRouter.of(context).go(
-                                                        '/comboPaymentPortal?cID=F9gxnjW9nf5Lxg5A6758',
-                                                        // queryParams: {
-                                                        //   'cID': cID,
-                                                        //   }
-                                                      );
-                                                    } else if (suppayurl ==
-                                                        'XSNqt0oNpuY7i2kb7zsW') {
-                                                      final cID =
-                                                          "XSNqt0oNpuY7i2kb7zsW";
-                                                      GoRouter.of(context).go(
-                                                        '/comboPaymentPortal?cID=XSNqt0oNpuY7i2kb7zsW',
-                                                        // queryParams: {
-                                                        //   'cID': cID,
-                                                        //   }
-                                                      );
-                                                    } else {
+                                                    } 
+                                                    // else if (deurl ==
+                                                    //     'F9gxnjW9nf5Lxg5A6758') {
+                                                    //   final id = "0";
+                                                    //   final cID =
+                                                    //       "F9gxnjW9nf5Lxg5A6758";
+                                                    //   final courseName =
+                                                    //       "Data Engineering Placement Assurance Program";
+                                                    //   final courseP = "12000";
+                                                    //   GoRouter.of(context)
+                                                    //       .goNamed('NewFeature',
+                                                    //           queryParams: {
+                                                    //         'cID': cID,
+                                                    //         'courseName':
+                                                    //             courseName,
+                                                    //         'id': id,
+                                                    //         'coursePrice':
+                                                    //             courseP
+                                                    //       });
+                                                    // } else if (interntnl ==
+                                                    //     'mPqg2Z2BdNHvwaqAEfA0') {
+                                                    //   final id = "0";
+                                                    //   final cID =
+                                                    //       "mPqg2Z2BdNHvwaqAEfA0";
+                                                    //   final courseName =
+                                                    //       "Data Superstar(International)";
+                                                    //   final courseP = "399";
+                                                    //   GoRouter.of(context)
+                                                    //       .goNamed('NewFeature',
+                                                    //           queryParams: {
+                                                    //         'cID': cID,
+                                                    //         'courseName':
+                                                    //             courseName,
+                                                    //         'id': id,
+                                                    //         'coursePrice':
+                                                    //             courseP
+                                                    //       });
+                                                    // } else if (supurl ==
+                                                    //     'XSNqt0oNpuY7i2kb7zsW') {
+                                                    //   final id = "0";
+                                                    //   final cID =
+                                                    //       "XSNqt0oNpuY7i2kb7zsW";
+                                                    //   final courseName =
+                                                    //       "Data Superstar Placement Assurance Program";
+                                                    //   final courseP = "20000";
+                                                    //   GoRouter.of(context)
+                                                    //       .goNamed('NewFeature',
+                                                    //           queryParams: {
+                                                    //         'cID': cID,
+                                                    //         'courseName':
+                                                    //             courseName,
+                                                    //         'id': id,
+                                                    //         'coursePrice':
+                                                    //             courseP
+                                                    //       });
+                                                    // }
+                                                    // else if (payurl ==
+                                                    //     'aEGX6kMfHzQrVgP3WCwU') {
+                                                    //   final cID =
+                                                    //       "aEGX6kMfHzQrVgP3WCwU";
+                                                    //   GoRouter.of(context).go(
+                                                    //     '/paymentPortal?cID=aEGX6kMfHzQrVgP3WCwU',
+                                                    //     // queryParams: {
+                                                    //     //   'cID': cID,
+                                                    //     //   }
+                                                    //   );
+                                                    // }
+                                                    // else if (promEng ==
+                                                    //     'RIUjOvGBV6YSzMTpMWEG') {
+                                                    //   final cID =
+                                                    //       "RIUjOvGBV6YSzMTpMWEG";
+                                                    //   GoRouter.of(context).go(
+                                                    //     '/paymentPortal?cID=RIUjOvGBV6YSzMTpMWEG',
+                                                    //     // queryParams: {
+                                                    //     //   'cID': cID,
+                                                    //     //   }
+                                                    //   );
+                                                    // }
+                                                    // else if (depayurl ==
+                                                    //     'F9gxnjW9nf5Lxg5A6758') {
+                                                    //   final cID =
+                                                    //       "F9gxnjW9nf5Lxg5A6758";
+                                                    //   GoRouter.of(context).go(
+                                                    //     '/comboPaymentPortal?cID=F9gxnjW9nf5Lxg5A6758',
+                                                    //     // queryParams: {
+                                                    //     //   'cID': cID,
+                                                    //     //   }
+                                                    //   );
+                                                    // }
+                                                    // else if (suppayurl ==
+                                                    //     'XSNqt0oNpuY7i2kb7zsW') {
+                                                    //   final cID =
+                                                    //       "XSNqt0oNpuY7i2kb7zsW";
+                                                    //   GoRouter.of(context).go(
+                                                    //     '/comboPaymentPortal?cID=XSNqt0oNpuY7i2kb7zsW',
+                                                    //     // queryParams: {
+                                                    //     //   'cID': cID,
+                                                    //     //   }
+                                                    //   );
+                                                    // }
+                                                    else {
                                                       Navigator.of(context).push(
                                                           MaterialPageRoute(
                                                               builder: (_) =>
@@ -1268,7 +1402,7 @@ class _LoginEmailPageState extends State<LoginEmailPage> {
                                                       Padding(
                                                         padding:
                                                             const EdgeInsets
-                                                                    .fromLTRB(
+                                                                .fromLTRB(
                                                                 12, 0, 0, 0),
                                                         child: Text(
                                                           'Next',
@@ -1292,8 +1426,7 @@ class _LoginEmailPageState extends State<LoginEmailPage> {
                                                             BoxDecoration(
                                                           borderRadius:
                                                               const BorderRadius
-                                                                      .all(
-                                                                  Radius
+                                                                  .all(Radius
                                                                       .circular(
                                                                           20)),
                                                           color: MyColors
@@ -1727,7 +1860,33 @@ class _LoginEmailPageState extends State<LoginEmailPage> {
                                                 Future.delayed(
                                                     const Duration(seconds: 2),
                                                     () {
-                                                  if (diurl ==
+                                                  if (schlrquiz.isNotEmpty) {
+                                                    print("i am in otp else");
+                                                    final cID = schlrquiz;
+                                                    GoRouter.of(context).go(
+                                                      '/scholarship/wadsf${cID}',
+                                                      // queryParams: {
+                                                      //   'cID': cID,
+                                                      //   }
+                                                    );
+                                                    schlrquiz = '';
+                                                    print(
+                                                        'the schlrquiz after navigation is ${schlrquiz}');
+                                                  } else if (allpayurl
+                                                      .isNotEmpty) {
+                                                    final cID =
+                                                        "aEGX6kMfHzQrVgP3WCwU";
+                                                    GoRouter.of(context).go(
+                                                      '/comboPaymentPortal?cID=${allpayurl}',
+                                                      // queryParams: {
+                                                      //   'cID': cID,
+                                                      //   }
+                                                    );
+
+                                                    allpayurl = '';
+                                                    print(
+                                                        'the allpayurl after navigation login is ${allpayurl}');
+                                                  } else if (diurl ==
                                                       '/InternationalPaymentScreen') {
                                                     final cID =
                                                         "aEGX6kMfHzQrVgP3WCwU";
@@ -1737,47 +1896,51 @@ class _LoginEmailPageState extends State<LoginEmailPage> {
                                                       //   'cID': cID,
                                                       //   }
                                                     );
-                                                  } else if (payurl ==
-                                                      'aEGX6kMfHzQrVgP3WCwU') {
-                                                    final cID =
-                                                        "aEGX6kMfHzQrVgP3WCwU";
-                                                    GoRouter.of(context).go(
-                                                      '/paymentPortal?cID=aEGX6kMfHzQrVgP3WCwU',
-                                                      // queryParams: {
-                                                      //   'cID': cID,
-                                                      //   }
-                                                    );
-                                                  } else if (promEng ==
-                                                      'RIUjOvGBV6YSzMTpMWEG') {
-                                                    final cID =
-                                                        "RIUjOvGBV6YSzMTpMWEG";
-                                                    GoRouter.of(context).go(
-                                                      '/paymentPortal?cID=RIUjOvGBV6YSzMTpMWEG',
-                                                      // queryParams: {
-                                                      //   'cID': cID,
-                                                      //   }
-                                                    );
-                                                  }else if (depayurl ==
-                                                      'F9gxnjW9nf5Lxg5A6758') {
-                                                    final cID =
-                                                        "F9gxnjW9nf5Lxg5A6758";
-                                                    GoRouter.of(context).go(
-                                                      '/comboPaymentPortal?cID=F9gxnjW9nf5Lxg5A6758',
-                                                      // queryParams: {
-                                                      //   'cID': cID,
-                                                      //   }
-                                                    );
-                                                  } else if (suppayurl ==
-                                                      'XSNqt0oNpuY7i2kb7zsW') {
-                                                    final cID =
-                                                        "XSNqt0oNpuY7i2kb7zsW";
-                                                    GoRouter.of(context).go(
-                                                      '/comboPaymentPortal?cID=XSNqt0oNpuY7i2kb7zsW',
-                                                      // queryParams: {
-                                                      //   'cID': cID,
-                                                      //   }
-                                                    );
-                                                  } else {
+                                                  }
+                                                  // else if (payurl ==
+                                                  //     'aEGX6kMfHzQrVgP3WCwU') {
+                                                  //   final cID =
+                                                  //       "aEGX6kMfHzQrVgP3WCwU";
+                                                  //   GoRouter.of(context).go(
+                                                  //     '/paymentPortal?cID=aEGX6kMfHzQrVgP3WCwU',
+                                                  //     // queryParams: {
+                                                  //     //   'cID': cID,
+                                                  //     //   }
+                                                  //   );
+                                                  // }
+                                                  // else if (promEng ==
+                                                  //     'RIUjOvGBV6YSzMTpMWEG') {
+                                                  //   final cID =
+                                                  //       "RIUjOvGBV6YSzMTpMWEG";
+                                                  //   GoRouter.of(context).go(
+                                                  //     '/paymentPortal?cID=RIUjOvGBV6YSzMTpMWEG',
+                                                  //     // queryParams: {
+                                                  //     //   'cID': cID,
+                                                  //     //   }
+                                                  //   );
+                                                  // }
+                                                  // else if (depayurl ==
+                                                  //     'F9gxnjW9nf5Lxg5A6758') {
+                                                  //   final cID =
+                                                  //       "F9gxnjW9nf5Lxg5A6758";
+                                                  //   GoRouter.of(context).go(
+                                                  //     '/comboPaymentPortal?cID=F9gxnjW9nf5Lxg5A6758',
+                                                  //     // queryParams: {
+                                                  //     //   'cID': cID,
+                                                  //     //   }
+                                                  //   );
+                                                  // } else if (suppayurl ==
+                                                  //     'XSNqt0oNpuY7i2kb7zsW') {
+                                                  //   final cID =
+                                                  //       "XSNqt0oNpuY7i2kb7zsW";
+                                                  //   GoRouter.of(context).go(
+                                                  //     '/comboPaymentPortal?cID=XSNqt0oNpuY7i2kb7zsW',
+                                                  //     // queryParams: {
+                                                  //     //   'cID': cID,
+                                                  //     //   }
+                                                  //   );
+                                                  // }
+                                                  else {
                                                     Navigator.of(context).push(
                                                         MaterialPageRoute(
                                                             builder: (_) =>
@@ -2040,7 +2203,56 @@ class _LoginEmailPageState extends State<LoginEmailPage> {
                                             //     builder: (_) => HomePage(),
                                             //   ),
                                             // );
-                                            if (diurl ==
+                                            if (schlrquiz.isNotEmpty) {
+                                              print("i am in otp else");
+                                              final cID = schlrquiz;
+                                              GoRouter.of(context).go(
+                                                '/scholarship/wadsf${cID}',
+                                                // queryParams: {
+                                                //   'cID': cID,
+                                                //   }
+                                              );
+                                              schlrquiz = '';
+                                              print(
+                                                  'the schlrquiz after navigation is ${schlrquiz}');
+                                            } else if (allpayurl.isNotEmpty) {
+                                              final cID =
+                                                  "aEGX6kMfHzQrVgP3WCwU";
+                                              GoRouter.of(context).go(
+                                                '/comboPaymentPortal?cID=${allpayurl}',
+                                                // queryParams: {
+                                                //   'cID': cID,
+                                                //   }
+                                              );
+
+                                              allpayurl = '';
+                                              print(
+                                                  'the allpayurl after navigation login is ${allpayurl}');
+                                            } else if (trialink
+                                                              .isNotEmpty) {
+                                                            final id = "0";
+                                                            final cID =
+                                                                trialink;
+                                                            final courseName =
+                                                                courseinfo[
+                                                                    'name'];
+                                                            final courseP =
+                                                                courseinfo[
+                                                                    'Course Price'];
+                                                            GoRouter.of(context)
+                                                                .goNamed(
+                                                                    'NewFeature',
+                                                                    queryParams: {
+                                                                  'cID': cID,
+                                                                  'courseName':
+                                                                      courseName,
+                                                                  'id': id,
+                                                                  'coursePrice':
+                                                                      courseP
+                                                                });
+                                                            trialink = '';
+                                                          }
+                                            else if (diurl ==
                                                 '/InternationalPaymentScreen') {
                                               final cID =
                                                   "aEGX6kMfHzQrVgP3WCwU";
@@ -2050,47 +2262,51 @@ class _LoginEmailPageState extends State<LoginEmailPage> {
                                                 //   'cID': cID,
                                                 //   }
                                               );
-                                            } else if (payurl ==
-                                                'aEGX6kMfHzQrVgP3WCwU') {
-                                              final cID =
-                                                  "aEGX6kMfHzQrVgP3WCwU";
-                                              GoRouter.of(context).go(
-                                                '/paymentPortal?cID=aEGX6kMfHzQrVgP3WCwU',
-                                                // queryParams: {
-                                                //   'cID': cID,
-                                                //   }
-                                              );
-                                            } else if (promEng ==
-                                                'RIUjOvGBV6YSzMTpMWEG') {
-                                              final cID =
-                                                  "RIUjOvGBV6YSzMTpMWEG";
-                                              GoRouter.of(context).go(
-                                                '/paymentPortal?cID=RIUjOvGBV6YSzMTpMWEG',
-                                                // queryParams: {
-                                                //   'cID': cID,
-                                                //   }
-                                              );
-                                            }else if (depayurl ==
-                                                'F9gxnjW9nf5Lxg5A6758') {
-                                              final cID =
-                                                  "F9gxnjW9nf5Lxg5A6758";
-                                              GoRouter.of(context).go(
-                                                '/comboPaymentPortal?cID=F9gxnjW9nf5Lxg5A6758',
-                                                // queryParams: {
-                                                //   'cID': cID,
-                                                //   }
-                                              );
-                                            } else if (suppayurl ==
-                                                'XSNqt0oNpuY7i2kb7zsW') {
-                                              final cID =
-                                                  "XSNqt0oNpuY7i2kb7zsW";
-                                              GoRouter.of(context).go(
-                                                '/comboPaymentPortal?cID=XSNqt0oNpuY7i2kb7zsW',
-                                                // queryParams: {
-                                                //   'cID': cID,
-                                                //   }
-                                              );
-                                            } else {
+                                            }
+                                            // else if (payurl ==
+                                            //     'aEGX6kMfHzQrVgP3WCwU') {
+                                            //   final cID =
+                                            //       "aEGX6kMfHzQrVgP3WCwU";
+                                            //   GoRouter.of(context).go(
+                                            //     '/paymentPortal?cID=aEGX6kMfHzQrVgP3WCwU',
+                                            //     // queryParams: {
+                                            //     //   'cID': cID,
+                                            //     //   }
+                                            //   );
+                                            // }
+                                            // else if (promEng ==
+                                            //     'RIUjOvGBV6YSzMTpMWEG') {
+                                            //   final cID =
+                                            //       "RIUjOvGBV6YSzMTpMWEG";
+                                            //   GoRouter.of(context).go(
+                                            //     '/paymentPortal?cID=RIUjOvGBV6YSzMTpMWEG',
+                                            //     // queryParams: {
+                                            //     //   'cID': cID,
+                                            //     //   }
+                                            //   );
+                                            // }
+                                            // else if (depayurl ==
+                                            //     'F9gxnjW9nf5Lxg5A6758') {
+                                            //   final cID =
+                                            //       "F9gxnjW9nf5Lxg5A6758";
+                                            //   GoRouter.of(context).go(
+                                            //     '/comboPaymentPortal?cID=F9gxnjW9nf5Lxg5A6758',
+                                            //     // queryParams: {
+                                            //     //   'cID': cID,
+                                            //     //   }
+                                            //   );
+                                            // } else if (suppayurl ==
+                                            //     'XSNqt0oNpuY7i2kb7zsW') {
+                                            //   final cID =
+                                            //       "XSNqt0oNpuY7i2kb7zsW";
+                                            //   GoRouter.of(context).go(
+                                            //     '/comboPaymentPortal?cID=XSNqt0oNpuY7i2kb7zsW',
+                                            //     // queryParams: {
+                                            //     //   'cID': cID,
+                                            //     //   }
+                                            //   );
+                                            // }
+                                            else {
                                               Navigator.of(context).push(
                                                   MaterialPageRoute(
                                                       builder: (_) =>

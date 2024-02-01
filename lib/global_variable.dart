@@ -14,6 +14,7 @@ String email = "";
 String name = "";
 String? action;
 String role = "";
+String trial_link="";
 String? signoutvalue;
 var actualCode;
 String phoneNumberexists = 'false';
@@ -76,7 +77,8 @@ Map coursemoduelmap = {
     "Scala",
     "Spark(Optimization,streaming)",
     "Big Data on Cloud Airflow",
-    "End to End Projects"
+    "End to End Projects",
+    
   ],
   "CloudyML Job Hunting Course": [
     "How To Build Resume & Linkedin ?",
@@ -212,7 +214,13 @@ Map coursemoduelmap = {
     " Dynamic Programming",
     " Graphs"
   ],
-  "Deep Learning Project": ["Projects"]
+  "Deep Learning Project": ["Projects"],
+  "Git & GitHub (Optional )": [
+    "Section 1 : Getting Started",
+    "Section 2 : Basic Git Commands",
+    "Section 3 : Advanced Git Commands",
+    "Section 4 : Introduction to GitHub"
+  ],
 };
 String cuponcode = '';
 String cuponcourse = '';
@@ -221,6 +229,8 @@ String cupondiscount = '';
 String cupontype = '';
 String cuponcourseprice = '';
 String schurl='';
+String Payurl='';
+
 
 var moneyrefcode = '';
 var chatcount;

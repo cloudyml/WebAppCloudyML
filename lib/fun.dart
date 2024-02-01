@@ -820,6 +820,7 @@ var mentorItems = [
   'Assignment Review',
   'My Profile',
   'Students Review',
+  'Add Course In User',
   'Logout'
 ];
 
@@ -929,11 +930,11 @@ Widget customMenuBar(BuildContext context, String? isReviewed) {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text("For technical related(login, video etc) email us at - ", style: TextStyle(fontWeight: FontWeight.bold),),
+                        Text("For technical related(login, video etc) - ", style: TextStyle(fontWeight: FontWeight.bold),),
                         SizedBox(
                           width: 30.w,
                           child: SelectableText(
-                              'app.support@cloudyml.com'),
+                              'email us at app.support@cloudyml.com or call on +91 85879 11971.'),
                         ),
                       ],
                     ),
@@ -942,11 +943,11 @@ Widget customMenuBar(BuildContext context, String? isReviewed) {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text("Course related query, placement, complaint email us at - ", style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text("Course related query, placement, complaint - ", style: TextStyle(fontWeight: FontWeight.bold)),
                         SizedBox(
                           width: 30.w,
                           child: SelectableText(
-                              'rahul@cloudyml.com.'),
+                              'email at rahul@cloudyml.com.'),
                         ),
                       ],
                     ),
@@ -955,12 +956,12 @@ Widget customMenuBar(BuildContext context, String? isReviewed) {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text("Course upgrade  email us at - ",
+                        Text("Course upgrade - ",
                             style: TextStyle(fontWeight: FontWeight.bold)),
                         SizedBox(
                           width: 30.w,
                           child: SelectableText(
-                              'team@cloudyml.com or call on +91 85879 11971.'),
+                              ' email at team@cloudyml.com.'),
                         ),
                       ],
                     ),
@@ -1074,7 +1075,11 @@ Widget customMenuBar(BuildContext context, String? isReviewed) {
                   logOut(context);
                   saveLoginOutState(context);
                   GoRouter.of(context).pushReplacement('/login');
-                } else {
+                } else if(value == 'Add Course In User'){
+                  GoRouter.of(context).pushNamed('AddCourseInUser');
+
+                }
+                else {
                   Fluttertoast.showToast(msg: 'Please refresh the screen.');
                 }
               }

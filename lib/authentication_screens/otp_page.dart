@@ -53,17 +53,19 @@ class _OtpPageState extends State<OtpPage> {
   late String actualCode;
 
   late String diurl;
-  late String payurl;
-  late String depayurl;
-  late String suppayurl;
-  late String feaurl;
-  late String deurl;
-  late String supurl;
-  late String promEng;
+  // late String payurl;
+  // late String depayurl;
+  // late String suppayurl;
+  // late String feaurl;
+  // late String deurl;
+  // late String supurl;
+  // late String promEng;
   late String  schlrquiz;
+var courseinfo;
+  late String allpayurl;
 
-
-  late String interntnl;
+late String trialink;
+  // late String interntnl;
   FocusNode _buttonFocusNode = FocusNode();
   void _onKeyboardTap(String value) {
     setState(() {
@@ -116,18 +118,35 @@ class _OtpPageState extends State<OtpPage> {
   }
 
   void url() async {
-    diurl = await FirebaseFirestore.instance
-        .collection("Notice")
-        .doc("7A85zuoLi4YQpbXlbOAh_redirect")
+    // diurl = await FirebaseFirestore.instance
+    //     .collection("Notice")
+    //     .doc("7A85zuoLi4YQpbXlbOAh_redirect")
+    //     .get()
+    //     .then((value) {
+    //   print(value.data()!.values.first);
+    //   return value.data()!.values.first;
+    // });
+
+    // print("url is=====$diurl");
+    
+    trialink=globals.trial_link;
+    schlrquiz= globals.schurl;
+
+    allpayurl=globals.Payurl;
+
+
+       courseinfo = await FirebaseFirestore.instance
+        .collection("courses")
+        .where('docid' ,isEqualTo: trialink)
         .get()
         .then((value) {
-      print(value.data()!.values.first);
-      return value.data()!.values.first;
+      print(value.docs.first.data());
+      return value.docs.first.data();
     });
 
-    print("url is=====$diurl");
+    print("courseinfo is ${courseinfo['Course Price']}");
 
-    schlrquiz= globals.schurl;
+
     
     // await FirebaseFirestore.instance
     //     .collection("Notice")
@@ -138,98 +157,99 @@ class _OtpPageState extends State<OtpPage> {
     //   return value.data()!.values.first;
     // });
     
-    globals.schurl='';
-        print("url is=====$schlrquiz");
-        print("url1 is=====${globals.schurl}");
 
+        // print("url is=====$schlrquiz");
+        // print("url1 is=====${globals.schurl}");
+ print("allpayurl is=====$allpayurl");
+        print("allpayurl1 is=====${globals.Payurl}");
 
-    interntnl = await FirebaseFirestore.instance
-        .collection("Notice")
-        .doc("7A85zuoLi4YQpbXlbOAh_redirect")
-        .get()
-        .then((value) {
-      print(value.data()!.values.first);
-      return value.data()!.values.first;
-    });
+    // interntnl = await FirebaseFirestore.instance
+    //     .collection("Notice")
+    //     .doc("7A85zuoLi4YQpbXlbOAh_redirect")
+    //     .get()
+    //     .then((value) {
+    //   print(value.data()!.values.first);
+    //   return value.data()!.values.first;
+    // });
 
-    print("url is=====$interntnl");
+    // print("url is=====$interntnl");
 
-    promEng = await FirebaseFirestore.instance
-        .collection("Notice")
-        .doc("HX4neryeAOB1dzUeIAg1_prompt")
-        .get()
-        .then((value) {
-      print(value.data()!.values.first);
-      return value.data()!.values.first;
-    });
+    // promEng = await FirebaseFirestore.instance
+    //     .collection("Notice")
+    //     .doc("HX4neryeAOB1dzUeIAg1_prompt")
+    //     .get()
+    //     .then((value) {
+    //   print(value.data()!.values.first);
+    //   return value.data()!.values.first;
+    // });
 
-    print("url is=====$promEng");
+    // print("url is=====$promEng");
 
-    payurl = await FirebaseFirestore.instance
-        .collection("Notice")
-        .doc("NBrEm6KGry8gxOJJkegG_redirect_pay")
-        .get()
-        .then((value) {
-      print(value.data()!.values.first);
-      return value.data()!.values.first;
-    });
+    // payurl = await FirebaseFirestore.instance
+    //     .collection("Notice")
+    //     .doc("NBrEm6KGry8gxOJJkegG_redirect_pay")
+    //     .get()
+    //     .then((value) {
+    //   print(value.data()!.values.first);
+    //   return value.data()!.values.first;
+    // });
 
-    print("url is=====$payurl");
+    // print("url is=====$payurl");
 
-    depayurl = await FirebaseFirestore.instance
-        .collection("Notice")
-        .doc("M2jEwYyiWdzYWE9gJd8s_de_pay")
-        .get()
-        .then((value) {
-      print(value.data()!.values.first);
-      return value.data()!.values.first;
-    });
+    // depayurl = await FirebaseFirestore.instance
+    //     .collection("Notice")
+    //     .doc("M2jEwYyiWdzYWE9gJd8s_de_pay")
+    //     .get()
+    //     .then((value) {
+    //   print(value.data()!.values.first);
+    //   return value.data()!.values.first;
+    // });
 
-    print("url is=====$depayurl");
+    // print("url is=====$depayurl");
 
-    suppayurl = await FirebaseFirestore.instance
-        .collection("Notice")
-        .doc("o1Hw1CebDH9I4VfpKuiC_sup_pay")
-        .get()
-        .then((value) {
-      print(value.data()!.values.first);
-      return value.data()!.values.first;
-    });
+    // suppayurl = await FirebaseFirestore.instance
+    //     .collection("Notice")
+    //     .doc("o1Hw1CebDH9I4VfpKuiC_sup_pay")
+    //     .get()
+    //     .then((value) {
+    //   print(value.data()!.values.first);
+    //   return value.data()!.values.first;
+    // });
 
-    print("url is=====$suppayurl");
+    // print("url is=====$suppayurl");
 
-    feaurl = await FirebaseFirestore.instance
-        .collection("Notice")
-        .doc("XdYtk2DJBIkRGx0ASthZ_newfeaturecourse")
-        .get()
-        .then((value) {
-      print(value.data()!.values.first);
-      return value.data()!.values.first;
-    });
+    // feaurl = await FirebaseFirestore.instance
+    //     .collection("Notice")
+    //     .doc("XdYtk2DJBIkRGx0ASthZ_newfeaturecourse")
+    //     .get()
+    //     .then((value) {
+    //   print(value.data()!.values.first);
+    //   return value.data()!.values.first;
+    // });
 
-    print("url is=====$feaurl");
+    // print("url is=====$feaurl");
 
-    deurl = await FirebaseFirestore.instance
-        .collection("Notice")
-        .doc("fSU4MLz1E0858ft8m7F5_dataeng")
-        .get()
-        .then((value) {
-      print(value.data()!.values.first);
-      return value.data()!.values.first;
-    });
+    // deurl = await FirebaseFirestore.instance
+    //     .collection("Notice")
+    //     .doc("fSU4MLz1E0858ft8m7F5_dataeng")
+    //     .get()
+    //     .then((value) {
+    //   print(value.data()!.values.first);
+    //   return value.data()!.values.first;
+    // });
 
-    print("url is=====$deurl");
+    // print("url is=====$deurl");
 
-    supurl = await FirebaseFirestore.instance
-        .collection("Notice")
-        .doc("JnCFQ1bT36xl0xKjDL3a_superstar")
-        .get()
-        .then((value) {
-      print(value.data()!.values.first);
-      return value.data()!.values.first;
-    });
+    // supurl = await FirebaseFirestore.instance
+    //     .collection("Notice")
+    //     .doc("JnCFQ1bT36xl0xKjDL3a_superstar")
+    //     .get()
+    //     .then((value) {
+    //   print(value.data()!.values.first);
+    //   return value.data()!.values.first;
+    // });
 
-    print("url is=====$supurl");
+    // print("url is=====$supurl");
   }
 
   Widget _otpTextField(BuildContext context, bool autoFocus, int position) {
@@ -808,55 +828,72 @@ class _OtpPageState extends State<OtpPage> {
                 } catch (e) {
                   print("jghbjkuj: ${e}");
                 }
-
-                if (feaurl == 'aEGX6kMfHzQrVgP3WCwU') {
-                  final id = "0";
+                  if (allpayurl.isNotEmpty) {
                   final cID = "aEGX6kMfHzQrVgP3WCwU";
-                  final courseName =
-                      "Data Science & Analytics Placement Assurance Program";
-                  final courseP = "11999";
-                  GoRouter.of(context).goNamed('NewFeature', queryParams: {
-                    'cID': cID,
-                    'courseName': courseName,
-                    'id': id,
-                    'coursePrice': courseP
-                  });
-                } else if (deurl == 'F9gxnjW9nf5Lxg5A6758') {
+                  GoRouter.of(context).go(
+                    '/comboPaymentPortal?cID=${allpayurl}',
+                    // queryParams: {
+                    //   'cID': cID,
+                    //   }
+                  );
+
+                    allpayurl='';
+                  print('the allpayurl after navigation is ${allpayurl}');
+                }
+                
+                else if (trialink.isNotEmpty) {
                   final id = "0";
-                  final cID = "F9gxnjW9nf5Lxg5A6758";
+                  final cID = trialink;
                   final courseName =
-                      "Data Engineering Placement Assurance Program";
-                  final courseP = "12000";
+                      courseinfo['name'];
+                  final courseP = courseinfo['Course Price'];
                   GoRouter.of(context).goNamed('NewFeature', queryParams: {
                     'cID': cID,
                     'courseName': courseName,
                     'id': id,
                     'coursePrice': courseP
                   });
-                } else if (supurl == 'XSNqt0oNpuY7i2kb7zsW') {
-                  final id = "0";
-                  final cID = "XSNqt0oNpuY7i2kb7zsW";
-                  final courseName =
-                      "Data Superstar Placement Assurance Program";
-                  final courseP = "20000";
-                  GoRouter.of(context).goNamed('NewFeature', queryParams: {
-                    'cID': cID,
-                    'courseName': courseName,
-                    'id': id,
-                    'coursePrice': courseP
-                  });
-                } else if (interntnl == 'mPqg2Z2BdNHvwaqAEfA0') {
-                  final id = "0";
-                  final cID = "mPqg2Z2BdNHvwaqAEfA0";
-                  final courseName = "Data Superstar(International)";
-                  final courseP = "399";
-                  GoRouter.of(context).goNamed('NewFeature', queryParams: {
-                    'cID': cID,
-                    'courseName': courseName,
-                    'id': id,
-                    'coursePrice': courseP
-                  });
-                } else if (diurl == '/InternationalPaymentScreen') {
+                  trialink='';
+                } 
+                // else if (deurl == 'F9gxnjW9nf5Lxg5A6758') {
+                //   final id = "0";
+                //   final cID = "F9gxnjW9nf5Lxg5A6758";
+                //   final courseName =
+                //       "Data Engineering Placement Assurance Program";
+                //   final courseP = "12000";
+                //   GoRouter.of(context).goNamed('NewFeature', queryParams: {
+                //     'cID': cID,
+                //     'courseName': courseName,
+                //     'id': id,
+                //     'coursePrice': courseP
+                //   });
+                // } 
+                // else if (supurl == 'XSNqt0oNpuY7i2kb7zsW') {
+                //   final id = "0";
+                //   final cID = "XSNqt0oNpuY7i2kb7zsW";
+                //   final courseName =
+                //       "Data Superstar Placement Assurance Program";
+                //   final courseP = "20000";
+                //   GoRouter.of(context).goNamed('NewFeature', queryParams: {
+                //     'cID': cID,
+                //     'courseName': courseName,
+                //     'id': id,
+                //     'coursePrice': courseP
+                //   });
+                // } 
+                // else if (interntnl == 'mPqg2Z2BdNHvwaqAEfA0') {
+                //   final id = "0";
+                //   final cID = "mPqg2Z2BdNHvwaqAEfA0";
+                //   final courseName = "Data Superstar(International)";
+                //   final courseP = "399";
+                //   GoRouter.of(context).goNamed('NewFeature', queryParams: {
+                //     'cID': cID,
+                //     'courseName': courseName,
+                //     'id': id,
+                //     'coursePrice': courseP
+                //   });
+                // } 
+                else if (diurl == '/InternationalPaymentScreen') {
                   print("i am in otp else");
                   final cID = "aEGX6kMfHzQrVgP3WCwU";
                   GoRouter.of(context).go(
@@ -878,39 +915,40 @@ class _OtpPageState extends State<OtpPage> {
                   schlrquiz='';
                   print('the schlrquiz after navigation is ${schlrquiz}');
                 }
-                 else if (payurl == 'aEGX6kMfHzQrVgP3WCwU') {
-                  final cID = "aEGX6kMfHzQrVgP3WCwU";
-                  GoRouter.of(context).go(
-                    '/comboPaymentPortal?cID=aEGX6kMfHzQrVgP3WCwU',
-                    // queryParams: {
-                    //   'cID': cID,
-                    //   }
-                  );
-                } else if (promEng == 'RIUjOvGBV6YSzMTpMWEG') {
-                  final cID = "RIUjOvGBV6YSzMTpMWEG";
-                  GoRouter.of(context).go(
-                    '/comboPaymentPortal?cID=RIUjOvGBV6YSzMTpMWEG',
-                    // queryParams: {
-                    //   'cID': cID,
-                    //   }
-                  );
-                } else if (depayurl == 'F9gxnjW9nf5Lxg5A6758') {
-                  final cID = "F9gxnjW9nf5Lxg5A6758";
-                  GoRouter.of(context).go(
-                    '/comboPaymentPortal?cID=F9gxnjW9nf5Lxg5A6758',
-                    // queryParams: {
-                    //   'cID': cID,
-                    //   }
-                  );
-                } else if (suppayurl == 'XSNqt0oNpuY7i2kb7zsW') {
-                  final cID = "XSNqt0oNpuY7i2kb7zsW";
-                  GoRouter.of(context).go(
-                    '/comboPaymentPortal?cID=XSNqt0oNpuY7i2kb7zsW',
-                    // queryParams: {
-                    //   'cID': cID,
-                    //   }
-                  );
-                } else {
+                //  else if (payurl == 'aEGX6kMfHzQrVgP3WCwU') {
+                //   final cID = "aEGX6kMfHzQrVgP3WCwU";
+                //   GoRouter.of(context).go(
+                //     '/comboPaymentPortal?cID=aEGX6kMfHzQrVgP3WCwU',
+                //     // queryParams: {
+                //     //   'cID': cID,
+                //     //   }
+                //   );
+                // } else if (promEng == 'RIUjOvGBV6YSzMTpMWEG') {
+                //   final cID = "RIUjOvGBV6YSzMTpMWEG";
+                //   GoRouter.of(context).go(
+                //     '/comboPaymentPortal?cID=RIUjOvGBV6YSzMTpMWEG',
+                //     // queryParams: {
+                //     //   'cID': cID,
+                //     //   }
+                //   );
+                // } else if (depayurl == 'F9gxnjW9nf5Lxg5A6758') {
+                //   final cID = "F9gxnjW9nf5Lxg5A6758";
+                //   GoRouter.of(context).go(
+                //     '/comboPaymentPortal?cID=F9gxnjW9nf5Lxg5A6758',
+                //     // queryParams: {
+                //     //   'cID': cID,
+                //     //   }
+                //   );
+                // } else if (suppayurl == 'XSNqt0oNpuY7i2kb7zsW') {
+                //   final cID = "XSNqt0oNpuY7i2kb7zsW";
+                //   GoRouter.of(context).go(
+                //     '/comboPaymentPortal?cID=XSNqt0oNpuY7i2kb7zsW',
+                //     // queryParams: {
+                //     //   'cID': cID,
+                //     //   }
+                //   );
+                // } 
+                else {
                   Navigator.of(context)
                       .push(MaterialPageRoute(builder: (_) => LandingScreen()));
                   GoRouter.of(context).pushNamed('home');

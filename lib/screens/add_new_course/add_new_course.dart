@@ -135,350 +135,374 @@ final selectedIndex = 0.obs;
               key: formKey,
               autovalidateMode: AutovalidateMode.disabled,
               child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    verticalBox,
-                    SizedBox(
-                        width: Adaptive.w(40),
-                        child: TextFormField(
-                          controller: courseName,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter name of course';
-                            }
-                          },
-                          decoration: decoratedField.copyWith(
-                              labelText: 'Enter Course Name'),
-                        )),
-                    verticalBox,
-                    SizedBox(
-                        width: Adaptive.w(40),
-                        child: TextFormField(
-                          controller: amountPayable,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          // validator: (value) {
-                          //   if (value == null || value.isEmpty) {
-                          //     return 'Please enter amount';
-                          //   }
-                          // },
-                          decoration: decoratedField.copyWith(
-                              labelText: 'Enter Amount Payable'),
-                        )),
-                    verticalBox,
-                    SizedBox(
-                        width: Adaptive.w(40),
-                        child: TextFormField(
-                          controller: coursePrice,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          // validator: (value) {
-                          //   if (value == null || value.isEmpty) {
-                          //     return 'Please enter course price';
-                          //   }
-                          // },
-                          decoration: decoratedField.copyWith(
-                              labelText: 'Enter Course Price'),
-                        )),
-                    verticalBox,
-                    SizedBox(
-                        width: Adaptive.w(40),
-                        child: TextFormField(
-                          controller: discountPrice,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          // validator: (value) {
-                          //   if (value == null || value.isEmpty) {
-                          //     return 'Please enter discount price';
-                          //   }
-                          // },
-                          decoration: decoratedField.copyWith(
-                              labelText: 'Enter Discount Price'),
-                        )),
-                    verticalBox,
-                    SizedBox(
-                        width: Adaptive.w(40),
-                        child: TextFormField(
-                          controller: courseIDE,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter Course ID';
-                            }
-                          },
-                          decoration: decoratedField.copyWith(
-                              labelText: 'Enter Course ID'),
-                        )),
-                    // verticalBox,
-                    // SizedBox(
-                    //     width: Adaptive.w(40),
-                    //     child: TextFormField(
-                    //       controller: firstModuleId,
-                    //       autovalidateMode: AutovalidateMode.onUserInteraction,
-                    //       validator: (value) {
-                    //         if (value == null || value.isEmpty) {
-                    //           return 'Please enter First Module ID';
-                    //         }
-                    //       },
-                    //       decoration: decoratedField.copyWith(
-                    //           labelText: 'Enter First Module ID of Course'),
-                    //     )),
-                    verticalBox,
-                    SizedBox(
-                        width: Adaptive.w(40),
-                        child: TextFormField(
-                          controller: firstModuleName,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter First Module Name';
-                            }
-                          },
-                          decoration: decoratedField.copyWith(
-                              labelText: 'Enter First Module Name'),
-                        )),
-                    verticalBox,
-                    SizedBox(
-                        width: Adaptive.w(40),
-                        child: TextFormField(
-                          controller: descriptionOfCourse,
-                          // validator: (value) {
-                          //   if (value == null || value.isEmpty) {
-                          //     return 'Please enter description of Course';
-                          //   }
-                          // },
-                          decoration: decoratedField.copyWith(
-                              labelText: 'Enter description of Course'),
-                        )),
-                    verticalBox,
-                    SizedBox(
-                        width: Adaptive.w(40),
-                        child: TextFormField(
-                          controller: duration,
-                          // validator: (value) {
-                          //   if (value == null || value.isEmpty) {
-                          //     return 'Please enter duration of Course';
-                          //   }
-                          // },
-                          decoration: decoratedField.copyWith(
-                              labelText: 'Enter duration of Course'),
-                        )),
-                    verticalBox,
-                    SizedBox(
-                        width: Adaptive.w(40),
-                        child: TextFormField(
-                          controller: videosCount,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly,
-                            IntegerInputFormatter()
-                          ],
-                          // validator: (value) {
-                          //   if (value == null || value.isEmpty) {
-                          //     return 'Please enter video count of Course (Only Number)';
-                          //   }
-                          // },
-                          decoration: decoratedField.copyWith(
-                              labelText:
-                                  'Enter videos count of Course (Only Number)'),
-                        )),
-                    verticalBox,
-                    SizedBox(
-                      width: Adaptive.w(40),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          ElevatedButton(
-                              onPressed: (){
-                                getFile();
-                          }, child: Text('Upload Image'),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: MyColors.primaryColor
-                          )),
-                          Text(uploadedFile != null ? 'Updated' : '', style: TextStyle(color: MyColors.primaryColor),)
-                        ],
-                      ),
-                    ),
-                    verticalBox,
-                    SizedBox(
-                      width: Adaptive.w(40),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Is it combo course?',
-                            style: textStyle,
-                          ),
-                          Spacer(),
-                          Obx(
-                                  () {
-                              return Switch(
-                                  value: addController.isItCombo.value,
-                                  onChanged: (value) {
-                                    addController.getCoursesIds();
-                                    addController.getBools(courseNames);
-                                    addController.checkIfCombo(!addController.isItCombo.value);
-                                    setState(() {
-
-                                    });
-                                  });
-                            }
-                          ),
-                        ],
-                      ),
-                    ),
-                    addController.isItCombo.isTrue ?  SizedBox(
-                      width: Adaptive.w(40),
-                      child: GetBuilder<AddController>(
-                        builder: (controller) {
-
-                          return Column(
-                            children: List.generate(controller.courseNames.length, (index) {
-                              final isSelected = selectedIndices.contains(index);
-                              return ListTile(
-                                tileColor: isSelected ? Colors.blue : Colors.white,
-                                title: Text(controller.courseNames[index]),
-                                subtitle: Text(controller.courseIds[index]),
-                                onTap: () {
-                                  setState(() {
-                                    if (isSelected) {
-                                      selectedIndices.remove(index);
-                                    } else {
-                                      selectedIndices.add(index);
-                                    }
-                                  });
-
-
-                                  List<int> newList = selectedIndices.toList();
-                                   newList.forEach((element) {listOfCourse.add(controller.courseIds[element]);});
-                                  Set<String> mySetWithoutDuplicates = Set.from(listOfCourse);
-                                  List<String> myListWithoutDuplicates = mySetWithoutDuplicates.toList();
-                                  listOfCourse = myListWithoutDuplicates;
-
-                                },
-                              );
-                            }),
-                          );
-                        }
-                      ),
-                    ) : Container(),
-                    verticalBox,
-                    SizedBox(
-                      width: Adaptive.w(40),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Is it demo course?',
-                            style: textStyle,
-                          ),
-                          Spacer(),
-                          Switch(
-                              value: isItDemo,
-                              onChanged: (value) {
-                                isItDemo = value;
-                                setState(() {});
-                              }),
-                        ],
-                      ),
-                    ),
-                    verticalBox,
-                    SizedBox(
-                      width: Adaptive.w(40),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Is it paid course?',
-                            style: textStyle,
-                          ),
-                          Spacer(),
-                          Switch(
-                              value: isItPaid,
-                              onChanged: (value) {
-                                isItPaid = value;
-                                setState(() {});
-                              }),
-                        ],
-                      ),
-                    ),
-                    verticalBox,
-                    SizedBox(
-                      width: Adaptive.w(40),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Show course?',
-                            style: textStyle,
-                          ),
-                          Spacer(),
-                          Switch(
-                              value: show,
-                              onChanged: (value) {
-                                show = value;
-                                setState(() {});
-                              }),
-                        ],
-                      ),
-                    ),
-                    verticalBox,
-                    SizedBox(
-                      width: Adaptive.w(40),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Is it trial course?',
-                            style: textStyle,
-                          ),
-                          Spacer(),
-                          Switch(
-                              value: isItTrialCourse,
-                              onChanged: (value) {
-                                isItTrialCourse = value;
-                                setState(() {});
-                              }),
-                        ],
-                      ),
-                    ),
-                    verticalBox,
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                child: Obx(
+                  () {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        MaterialButton(
-                          minWidth: 45.sp,
-                          onPressed: () async {
-
-                            if(uploadedFile == null || uploadedFile!.isEmpty) {
-                              Fluttertoast.showToast(msg: 'Please upload an image.');
-                            }
-
-                            if (formKey.currentState!.validate() && uploadedFile != null) {
-                              print('Working on validation ${formKey.currentState!.validate()}');
-                              await addCourse();
-                              clearFields();
-                              Fluttertoast.showToast(msg: 'Course updated');
-                            } else {
-                              print('Validation failed ${formKey.currentState!.validate()}');
-                            }
-                          },
-                          height: 22.sp,
-                          color: Colors.purpleAccent,
-                          child: Text('Submit'),
+                        verticalBox,
+                        SizedBox(
+                            width: Adaptive.w(40),
+                            child: TextFormField(
+                              controller: courseName,
+                              autovalidateMode: AutovalidateMode.onUserInteraction,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter name of course';
+                                }
+                              },
+                              decoration: decoratedField.copyWith(
+                                  labelText: 'Enter Course Name'),
+                            )),
+                        verticalBox,
+                        SizedBox(
+                            width: Adaptive.w(40),
+                            child: TextFormField(
+                              controller: amountPayable,
+                              autovalidateMode: AutovalidateMode.onUserInteraction,
+                              // validator: (value) {
+                              //   if (value == null || value.isEmpty) {
+                              //     return 'Please enter amount';
+                              //   }
+                              // },
+                              decoration: decoratedField.copyWith(
+                                  labelText: 'Enter Amount Payable'),
+                            )),
+                        verticalBox,
+                        SizedBox(
+                            width: Adaptive.w(40),
+                            child: TextFormField(
+                              controller: coursePrice,
+                              autovalidateMode: AutovalidateMode.onUserInteraction,
+                              // validator: (value) {
+                              //   if (value == null || value.isEmpty) {
+                              //     return 'Please enter course price';
+                              //   }
+                              // },
+                              decoration: decoratedField.copyWith(
+                                  labelText: 'Enter Course Price'),
+                            )),
+                        verticalBox,
+                        SizedBox(
+                            width: Adaptive.w(40),
+                            child: TextFormField(
+                              controller: discountPrice,
+                              autovalidateMode: AutovalidateMode.onUserInteraction,
+                              // validator: (value) {
+                              //   if (value == null || value.isEmpty) {
+                              //     return 'Please enter discount price';
+                              //   }
+                              // },
+                              decoration: decoratedField.copyWith(
+                                  labelText: 'Enter Discount Price'),
+                            )),
+                        verticalBox,
+                        SizedBox(
+                            width: Adaptive.w(40),
+                            child: TextFormField(
+                              controller: courseIDE,
+                              autovalidateMode: AutovalidateMode.onUserInteraction,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter Course ID';
+                                }
+                              },
+                              decoration: decoratedField.copyWith(
+                                  labelText: 'Enter Course ID'),
+                            )),
+                        // verticalBox,
+                        // SizedBox(
+                        //     width: Adaptive.w(40),
+                        //     child: TextFormField(
+                        //       controller: firstModuleId,
+                        //       autovalidateMode: AutovalidateMode.onUserInteraction,
+                        //       validator: (value) {
+                        //         if (value == null || value.isEmpty) {
+                        //           return 'Please enter First Module ID';
+                        //         }
+                        //       },
+                        //       decoration: decoratedField.copyWith(
+                        //           labelText: 'Enter First Module ID of Course'),
+                        //     )),
+                        verticalBox,
+                        SizedBox(
+                            width: Adaptive.w(40),
+                            child: TextFormField(
+                              controller: firstModuleName,
+                              autovalidateMode: AutovalidateMode.onUserInteraction,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter First Module Name';
+                                }
+                              },
+                              decoration: decoratedField.copyWith(
+                                  labelText: 'Enter First Module Name'),
+                            )),
+                        verticalBox,
+                        SizedBox(
+                            width: Adaptive.w(40),
+                            child: TextFormField(
+                              controller: descriptionOfCourse,
+                              // validator: (value) {
+                              //   if (value == null || value.isEmpty) {
+                              //     return 'Please enter description of Course';
+                              //   }
+                              // },
+                              decoration: decoratedField.copyWith(
+                                  labelText: 'Enter description of Course'),
+                            )),
+                        verticalBox,
+                        SizedBox(
+                            width: Adaptive.w(40),
+                            child: TextFormField(
+                              controller: duration,
+                              // validator: (value) {
+                              //   if (value == null || value.isEmpty) {
+                              //     return 'Please enter duration of Course';
+                              //   }
+                              // },
+                              decoration: decoratedField.copyWith(
+                                  labelText: 'Enter duration of Course'),
+                            )),
+                        verticalBox,
+                        SizedBox(
+                            width: Adaptive.w(40),
+                            child: TextFormField(
+                              controller: videosCount,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                                IntegerInputFormatter()
+                              ],
+                              // validator: (value) {
+                              //   if (value == null || value.isEmpty) {
+                              //     return 'Please enter video count of Course (Only Number)';
+                              //   }
+                              // },
+                              decoration: decoratedField.copyWith(
+                                  labelText:
+                                      'Enter videos count of Course (Only Number)'),
+                            )),
+                        verticalBox,
+                        SizedBox(
+                          width: Adaptive.w(40),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              ElevatedButton(
+                                  onPressed: (){
+                                    getFile();
+                              }, child: Text('Upload Image'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: MyColors.primaryColor
+                              )),
+                              Text(uploadedFile != null ? 'Updated' : '', style: TextStyle(color: MyColors.primaryColor),)
+                            ],
+                          ),
                         ),
-                        horizontalBox,
-                        MaterialButton(
-                          minWidth: 45.sp,
-                          onPressed: () {
-                            clearFields();
-                          },
-                          height: 22.sp,
-                          color: Colors.grey,
-                          child: Text('Clear'),
+                        verticalBox,
+                        SizedBox(
+                          width: Adaptive.w(40),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Is it combo course?',
+                                style: textStyle,
+                              ),
+                              Spacer(),
+                              Obx(
+                                      () {
+                                  return Switch(
+                                      value: addController.isItCombo.value,
+                                      onChanged: (value) {
+                                        addController.checkIfCombo(!addController.isItCombo.value);
+                                      });
+                                }
+                              ),
+                            ],
+                          ),
                         ),
+                        verticalBox,
+                        SizedBox(
+                          width: Adaptive.w(40),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Choose Courses?',
+                                style: textStyle,
+                              ),
+                              Spacer(),
+                              Obx(
+                                      () {
+                                    return Switch(
+                                        value: addController.chooseCourses.value,
+                                        onChanged: (value) {
+                                          addController.getCoursesIds();
+                                          addController.getBools(courseNames);
+                                          addController.chooseCourses.value = !addController.chooseCourses.value;
+                                        });
+                                  }
+                              ),
+                            ],
+                          ),
+                        ),
+                        addController.chooseCourses.isTrue ?  SizedBox(
+                          width: Adaptive.w(40),
+                          child: GetBuilder<AddController>(
+                            builder: (controller) {
+
+                              return Column(
+                                children: List.generate(controller.courseNames.length, (index) {
+                                  final isSelected = selectedIndices.contains(index);
+                                  return ListTile(
+                                    tileColor: isSelected ? Colors.blue : Colors.white,
+                                    title: Text(controller.courseNames[index]),
+                                    subtitle: Text(controller.courseIds[index]),
+                                    onTap: () {
+                                      setState(() {
+                                        if (isSelected) {
+                                          selectedIndices.remove(index);
+                                        } else {
+                                          selectedIndices.add(index);
+                                        }
+                                      });
+
+
+                                      List<int> newList = selectedIndices.toList();
+                                       newList.forEach((element) {listOfCourse.add(controller.courseIds[element]);});
+                                      Set<String> mySetWithoutDuplicates = Set.from(listOfCourse);
+                                      List<String> myListWithoutDuplicates = mySetWithoutDuplicates.toList();
+                                      listOfCourse = myListWithoutDuplicates;
+
+                                    },
+                                  );
+                                }),
+                              );
+                            }
+                          ),
+                        ) : Container(),
+                        verticalBox,
+                        SizedBox(
+                          width: Adaptive.w(40),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Is it demo course?',
+                                style: textStyle,
+                              ),
+                              Spacer(),
+                              Switch(
+                                  value: isItDemo,
+                                  onChanged: (value) {
+                                    isItDemo = value;
+                                    setState(() {});
+                                  }),
+                            ],
+                          ),
+                        ),
+                        verticalBox,
+                        SizedBox(
+                          width: Adaptive.w(40),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Is it paid course?',
+                                style: textStyle,
+                              ),
+                              Spacer(),
+                              Switch(
+                                  value: isItPaid,
+                                  onChanged: (value) {
+                                    isItPaid = value;
+                                    setState(() {});
+                                  }),
+                            ],
+                          ),
+                        ),
+                        verticalBox,
+                        SizedBox(
+                          width: Adaptive.w(40),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Show course?',
+                                style: textStyle,
+                              ),
+                              Spacer(),
+                              Switch(
+                                  value: show,
+                                  onChanged: (value) {
+                                    show = value;
+                                    setState(() {});
+                                  }),
+                            ],
+                          ),
+                        ),
+                        verticalBox,
+                        SizedBox(
+                          width: Adaptive.w(40),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Is it trial course?',
+                                style: textStyle,
+                              ),
+                              Spacer(),
+                              Switch(
+                                  value: isItTrialCourse,
+                                  onChanged: (value) {
+                                    isItTrialCourse = value;
+                                    setState(() {});
+                                  }),
+                            ],
+                          ),
+                        ),
+                        verticalBox,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            MaterialButton(
+                              minWidth: 45.sp,
+                              onPressed: () async {
+
+                                if(uploadedFile == null || uploadedFile!.isEmpty) {
+                                  Fluttertoast.showToast(msg: 'Please upload an image.');
+                                }
+
+                                if (formKey.currentState!.validate() && uploadedFile != null) {
+                                  print('Working on validation ${formKey.currentState!.validate()}');
+                                  await addCourse();
+                                  clearFields();
+                                  Fluttertoast.showToast(msg: 'Course updated');
+                                } else {
+                                  print('Validation failed ${formKey.currentState!.validate()}');
+                                }
+                              },
+                              height: 22.sp,
+                              color: Colors.purpleAccent,
+                              child: Text('Submit'),
+                            ),
+                            horizontalBox,
+                            MaterialButton(
+                              minWidth: 45.sp,
+                              onPressed: () {
+                                clearFields();
+                              },
+                              height: 22.sp,
+                              color: Colors.grey,
+                              child: Text('Clear'),
+                            ),
+                          ],
+                        ),
+                        verticalBox
                       ],
-                    ),
-                    verticalBox
-                  ],
+                    );
+                  }
                 ),
               )),
         ));

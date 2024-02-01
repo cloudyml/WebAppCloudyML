@@ -912,8 +912,8 @@ class _VideoScreenState extends State<VideoScreen> {
           embedInfo = EmbedInfo.streaming(
               otp: videoInfoData.body!.otp!,
               playbackInfo: videoInfoData.body!.playbackInfo!);
-          print('VID OTP : ${embedInfo!.otp}');
-          print('VID PLAYINFO : ${embedInfo!.playbackInfo}');
+          print('VID OTP : ${embedInfo.otp}');
+          print('VID PLAYINFO : ${embedInfo.playbackInfo}');
         });
       } else {
         print(response.reasonPhrase);
@@ -1631,131 +1631,129 @@ class _VideoScreenState extends State<VideoScreen> {
           child: OrientationBuilder(
             builder: (BuildContext context, Orientation orientation) {
               final isPortrait = orientation == Orientation.portrait;
-              return SingleChildScrollView(
-                child: Column(
-                  children: [
-                    !htmlbool
-                        ? showAssignment
-                            ? Container(
-                                height: Adaptive.h(35),
-                                width: Adaptive.w(100),
-                                child: AssignmentScreen(
-                                  userEmail: userEmail,
-                                  userName: studentName,
-                                  selectedSection: selectedSection,
-                                  courseData: courseData,
-                                  courseName: widget.courseName,
-                                  assignmentUrl: assignmentUrl,
-                                  dataSetUrl: dataSetUrl,
-                                  solutionUrl: solutionUrl,
-                                  assignmentName: assignmentName,
-                                  assignmentDescription: assignmentDescription,
-                                  assignmentSolutionVideo:
-                                      assignmentSolutionVideo,
-                                  assignmentTrackBoolMap:
-                                      assignmentTrackBoolMap,
-                                  showDescription: assignmentDescriptionShow,
-                                ),
-                              )
-                            : submitResume
-                                ? SubmitResume(
-                                    studentId: studentId ?? '',
-                                    studentEmail: userEmail ?? '',
-                                    studentName: studentName ?? '',
-                                  )
-                                : Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      // UI
-
-                                      embedInfo.otp!.isNotEmpty &&
-                                              embedInfo.playbackInfo!.isNotEmpty
-                                          ? AspectRatio(
-                                              aspectRatio: 16 / 9,
-                                              child: VdoPlaybackView(
-                                                controls: true,
-                                                vidInfo: embedInfo,
-                                              ),
-                                            )
-                                          : AspectRatio(
-                                              aspectRatio: 16 / 9,
-                                              child: Shimmer.fromColors(
-                                                baseColor: Colors.grey.shade300,
-                                                highlightColor:
-                                                    Colors.grey.shade100,
-                                                child: Container(
-                                                  height: double.infinity,
-                                                  width: double.infinity,
-                                                  color: Colors.white,
-                                                ),
+              return Column(
+                children: [
+                  !htmlbool
+                      ? showAssignment
+                          ? Container(
+                              height: Adaptive.h(35),
+                              width: Adaptive.w(100),
+                              child: AssignmentScreen(
+                                userEmail: userEmail,
+                                userName: studentName,
+                                selectedSection: selectedSection,
+                                courseData: courseData,
+                                courseName: widget.courseName,
+                                assignmentUrl: assignmentUrl,
+                                dataSetUrl: dataSetUrl,
+                                solutionUrl: solutionUrl,
+                                assignmentName: assignmentName,
+                                assignmentDescription: assignmentDescription,
+                                assignmentSolutionVideo:
+                                    assignmentSolutionVideo,
+                                assignmentTrackBoolMap:
+                                    assignmentTrackBoolMap,
+                                showDescription: assignmentDescriptionShow,
+                              ),
+                            )
+                          : submitResume
+                              ? SubmitResume(
+                                  studentId: studentId ?? '',
+                                  studentEmail: userEmail ?? '',
+                                  studentName: studentName ?? '',
+                                )
+                              : Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    // UI
+              
+                                    embedInfo.otp!.isNotEmpty &&
+                                            embedInfo.playbackInfo!.isNotEmpty
+                                        ? AspectRatio(
+                                            aspectRatio: 16 / 9,
+                                            child: VdoPlaybackView(
+                                              controls: true,
+                                              vidInfo: embedInfo,
+                                            ),
+                                          )
+                                        : AspectRatio(
+                                            aspectRatio: 16 / 9,
+                                            child: Shimmer.fromColors(
+                                              baseColor: Colors.grey.shade300,
+                                              highlightColor:
+                                                  Colors.grey.shade100,
+                                              child: Container(
+                                                height: double.infinity,
+                                                width: double.infinity,
+                                                color: Colors.white,
                                               ),
                                             ),
-
-                                      // videoUrl != null
-                                      //     ? AspectRatio(
-                                      //         aspectRatio: 16 / 9,
-                                      //         child: HtmlElementView(
-                                      //           viewType: elemtntId,
-                                      //           key: iFrameKey,
-                                      //         ),
-                                      //       )
-                                      //     : SizedBox(),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(top: 15.0),
-                                        child: Text(
-                                          videoTitle.toString() != 'null'
-                                              ? videoTitle.toString()
-                                              : '',
-                                          style: TextStyle(
-                                              fontSize: 18,
-                                              fontFamily: 'SemiBold'),
-                                        ),
+                                          ),
+              
+                                    // videoUrl != null
+                                    //     ? AspectRatio(
+                                    //         aspectRatio: 16 / 9,
+                                    //         child: HtmlElementView(
+                                    //           viewType: elemtntId,
+                                    //           key: iFrameKey,
+                                    //         ),
+                                    //       )
+                                    //     : SizedBox(),
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(top: 15.0),
+                                      child: Text(
+                                        videoTitle.toString() != 'null'
+                                            ? videoTitle.toString()
+                                            : '',
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontFamily: 'SemiBold'),
                                       ),
-                                      isPortrait
-                                          ? SizedBox()
-                                          // Expanded(
-                                          //   flex: 2,
-                                          //   child: _buildVideoDetailsListTile(
-                                          //     horizontalScale,
-                                          //     verticalScale,
-                                          //   ),
-                                          // )
-                                          : SizedBox(),
-                                    ],
-                                  )
-                        : quizbool
-                            ? QuizentrypageWidget(
-                                quizdata,
-                                quizScore: quizScore,
-                                quizNameExistsInList: quizNameExistsInList,
-                                ontap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            InstructionspageWidget(quizdata,
-                                                widget.courseName, false, '')),
-                                  ).then((value) {
-                                    getScoreOfAllQuiz();
-                                  });
-                                },
-                              )
-                            : Align(
-                                alignment: Alignment.topCenter,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(50.0),
-                                  child: SingleChildScrollView(
-                                    child: HtmlWidget('''
-                                                  $htmltext
-                                                  '''),
-                                  ),
+                                    ),
+                                    isPortrait
+                                        ? SizedBox()
+                                        // Expanded(
+                                        //   flex: 2,
+                                        //   child: _buildVideoDetailsListTile(
+                                        //     horizontalScale,
+                                        //     verticalScale,
+                                        //   ),
+                                        // )
+                                        : SizedBox(),
+                                  ],
+                                )
+                      : quizbool
+                          ? QuizentrypageWidget(
+                              quizdata,
+                              quizScore: quizScore,
+                              quizNameExistsInList: quizNameExistsInList,
+                              ontap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          InstructionspageWidget(quizdata,
+                                              widget.courseName, false, '')),
+                                ).then((value) {
+                                  getScoreOfAllQuiz();
+                                });
+                              },
+                            )
+                          : Align(
+                              alignment: Alignment.topCenter,
+                              child: Padding(
+                                padding: const EdgeInsets.all(50.0),
+                                child: SingleChildScrollView(
+                                  child: HtmlWidget('''
+                                                $htmltext
+                                                '''),
                                 ),
                               ),
-                    _buildVideoDetails(),
-                  ],
-                ),
+                            ),
+                  Expanded(child: _buildVideoDetails()),
+                ],
               );
             },
           ),
@@ -3124,9 +3122,24 @@ class _VideoScreenState extends State<VideoScreen> {
                                                                                   });
                                                                                   Map<Object, Object?> vdeoData = {};
                                                                                 String vdocDocId = '';
-                                                                                        await FirebaseFirestore.instance.collection('vdocipher_ids').where('Courseid', isEqualTo: CourseID).get().then((value) {
-vdeoData = value.docs[0].get('vdocipher_id');
-vdocDocId = value.docs[0].id;
+                                                                                        await FirebaseFirestore.instance.collection('vdocipher_ids').where('Courseid', isEqualTo: CourseID).get().then((value) async {
+
+                                                                                          if(value.docs.isEmpty){
+                                                           await FirebaseFirestore.instance.collection('vdocipher_ids').add({
+                                                                                              'Courseid' : CourseID,
+                                                                                              'vdocipher_id' : {}
+                                                                                            }).then((value) {
+                                                                                              vdocDocId = value.id;
+                                                                                                  
+                                                                                              
+
+                                                                                            });
+                                                                                          }else{
+                                                                                            vdeoData = value.docs[0].get('vdocipher_id');
+                                                                                              vdocDocId = value.docs[0].id;
+
+                                                                                          }
+
 
 
                                                                                         });

@@ -449,6 +449,24 @@ class _QuizPageState extends State<QuizPage> {
     }
   }
 
+  void showQuizConfirmationDialog(BuildContext context) {
+    showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return QuizConfirmationDialog();
+      },
+    ).then((value) {
+      // Handle the result (true for submit, false for cancel)
+      if (value == true) {
+        submit();
+        print('Quiz submitted!');
+      } else {
+        // User canceled submission
+        print('Quiz submission canceled.');
+      }
+    });
+  }
+
   submit() async {
     print("lll1");
     try {
@@ -685,7 +703,7 @@ class _QuizPageState extends State<QuizPage> {
   int MFR_M = 0;
   int AMFR_M = 0;
 
-  saveNext() {
+  saveNext(fromRightcircles) {
     setState(() {
       if (true) {
         // logic for visited
@@ -757,13 +775,20 @@ class _QuizPageState extends State<QuizPage> {
           });
         }
         if (quizdata.length != questionindex + 1) {
-          questionindex += 1;
+          if (!fromRightcircles) {
+            questionindex += 1;
+          }
         }
         try {
           quizdata[questionindex]["OptionsImage"]['A'];
-          setState(() {
-            showimagea = true;
-          });
+          print(
+              'ijfoiweofjw1: ${quizdata[questionindex]["OptionsImage"]['A']}');
+          if (quizdata[questionindex]["OptionsImage"]['A'] != "") {
+            setState(() {
+              showimagea = true;
+            });
+          }
+          print('ijfoiweofjw2: $showimagea');
           if (quizdata[questionindex]["OptionsImage"]['A'] == '' ||
               quizdata[questionindex]["OptionsImage"]['A'] == null) {
             setState(() {
@@ -779,9 +804,12 @@ class _QuizPageState extends State<QuizPage> {
 
         try {
           quizdata[questionindex]["OptionsImage"]['B'];
-          setState(() {
-            showimageb = true;
-          });
+          if (quizdata[questionindex]["OptionsImage"]['B'] != "") {
+            setState(() {
+              showimageb = true;
+            });
+          }
+
           if (quizdata[questionindex]["OptionsImage"]['B'] == '' ||
               quizdata[questionindex]["OptionsImage"]['B'] == null) {
             setState(() {
@@ -797,9 +825,12 @@ class _QuizPageState extends State<QuizPage> {
 
         try {
           quizdata[questionindex]["OptionsImage"]['C'];
-          setState(() {
-            showimagec = true;
-          });
+          if (quizdata[questionindex]["OptionsImage"]['C'] != "") {
+            setState(() {
+              showimagec = true;
+            });
+          }
+
           if (quizdata[questionindex]["OptionsImage"]['C'] == '' ||
               quizdata[questionindex]["OptionsImage"]['C'] == null) {
             setState(() {
@@ -815,6 +846,11 @@ class _QuizPageState extends State<QuizPage> {
 
         try {
           quizdata[questionindex]["OptionsImage"]['D'];
+          if (quizdata[questionindex]["OptionsImage"]['D'] != "") {
+            setState(() {
+              showimaged = true;
+            });
+          }
           try {
             print(
                 "tghrthrt  ${quizdata[questionindex]["question"].toString().split("(--image--)")[1]}");
@@ -825,11 +861,13 @@ class _QuizPageState extends State<QuizPage> {
             setState(() {
               showquestion = false;
             });
-            print("eifjwgvygvu $e");
+            print("eifjwgvygvu1 $e");
           }
           print("eifjweoj ${quizdata[questionindex]["OptionsImage"]['D']}");
           setState(() {
-            showimaged = true;
+            if (quizdata[questionindex]["OptionsImage"]['D'] != "") {
+              showimaged = true;
+            }
           });
 
           if (quizdata[questionindex]["OptionsImage"]['D'] == '' ||
@@ -882,9 +920,9 @@ class _QuizPageState extends State<QuizPage> {
           quizdata[questionindex]["answeredValue"] = "A";
           quizdata[questionindex]["Answered"] = true;
           quizdata[questionindex]["notAnswered"] = false;
-          // setState(() {
-          //   A = false;
-          // });
+          setState(() {
+            A = false;
+          });
         }
         if (B == true) {
           answeredValueList.add("B");
@@ -892,9 +930,9 @@ class _QuizPageState extends State<QuizPage> {
           quizdata[questionindex]["answeredValue"] = "B";
           quizdata[questionindex]["Answered"] = true;
           quizdata[questionindex]["notAnswered"] = false;
-          // setState(() {
-          //   B = false;
-          // });
+          setState(() {
+            B = false;
+          });
         }
         if (C == true) {
           answeredValueList.add("C");
@@ -902,9 +940,9 @@ class _QuizPageState extends State<QuizPage> {
           quizdata[questionindex]["answeredValue"] = "C";
           quizdata[questionindex]["Answered"] = true;
           quizdata[questionindex]["notAnswered"] = false;
-          // setState(() {
-          //   C = false;
-          // });
+          setState(() {
+            C = false;
+          });
         }
         if (D == true) {
           answeredValueList.add("D");
@@ -912,17 +950,20 @@ class _QuizPageState extends State<QuizPage> {
           quizdata[questionindex]["answeredValue"] = "D";
           quizdata[questionindex]["Answered"] = true;
           quizdata[questionindex]["notAnswered"] = false;
-          // setState(() {
-          //   D = false;
-          // });
+          setState(() {
+            D = false;
+          });
         }
       }
     });
     try {
       quizdata[questionindex]["OptionsImage"]['A'];
-      setState(() {
-        showimagea = true;
-      });
+      if (quizdata[questionindex]["OptionsImage"]['A'] != "") {
+        setState(() {
+          showimagea = true;
+        });
+      }
+
       if (quizdata[questionindex]["OptionsImage"]['A'] == '' ||
           quizdata[questionindex]["OptionsImage"]['A'] == null) {
         setState(() {
@@ -938,9 +979,12 @@ class _QuizPageState extends State<QuizPage> {
 
     try {
       quizdata[questionindex]["OptionsImage"]['B'];
-      setState(() {
-        showimageb = true;
-      });
+      if (quizdata[questionindex]["OptionsImage"]['B'] != "") {
+        setState(() {
+          showimageb = true;
+        });
+      }
+
       if (quizdata[questionindex]["OptionsImage"]['B'] == '' ||
           quizdata[questionindex]["OptionsImage"]['B'] == null) {
         setState(() {
@@ -956,9 +1000,12 @@ class _QuizPageState extends State<QuizPage> {
 
     try {
       quizdata[questionindex]["OptionsImage"]['C'];
-      setState(() {
-        showimagec = true;
-      });
+      if (quizdata[questionindex]["OptionsImage"]['C'] != "") {
+        setState(() {
+          showimagec = true;
+        });
+      }
+
       if (quizdata[questionindex]["OptionsImage"]['C'] == '' ||
           quizdata[questionindex]["OptionsImage"]['C'] == null) {
         setState(() {
@@ -974,6 +1021,11 @@ class _QuizPageState extends State<QuizPage> {
 
     try {
       quizdata[questionindex]["OptionsImage"]['D'];
+      if (quizdata[questionindex]["OptionsImage"]['D'] != "") {
+        setState(() {
+          showimaged = true;
+        });
+      }
       try {
         print(
             "tghrthrt  ${quizdata[questionindex]["question"].toString().split("(--image--)")[1]}");
@@ -984,12 +1036,9 @@ class _QuizPageState extends State<QuizPage> {
         setState(() {
           showquestion = false;
         });
-        print("eifjwgvygvu $e");
+        print("eifjwgvygvu2 $e");
       }
       print("eifjweoj ${quizdata[questionindex]["OptionsImage"]['D']}");
-      setState(() {
-        showimaged = true;
-      });
 
       if (quizdata[questionindex]["OptionsImage"]['D'] == '' ||
           quizdata[questionindex]["OptionsImage"]['D'] == null) {
@@ -1176,25 +1225,23 @@ class _QuizPageState extends State<QuizPage> {
         },
       );
     } catch (e) {
-      print(e);
+      print("kkkmijojo: ${e}");
     }
+
     try {
       quiztiming = widget.quizdata['quiztiming'];
       setState(() {
         quizdata;
       });
-
       quizdata[0]["visited"] = true;
       for (var i in quizdata) {
         i['answeredValueList'] = [];
       }
-
       print("quizdata:  ${quizdata}");
       notVisitedM = quizdata.length;
       lengthofquizquestion = quizdata.length;
       countParameter("saveNext");
       countDownTimer(widget.quizdata['quiztiming']);
-
       try {
         quizdata[questionindex]["OptionsImage"]['A'];
         setState(() {
@@ -1212,7 +1259,6 @@ class _QuizPageState extends State<QuizPage> {
         });
         print("error: $e");
       }
-
       try {
         quizdata[questionindex]["OptionsImage"]['B'];
         setState(() {
@@ -1230,7 +1276,6 @@ class _QuizPageState extends State<QuizPage> {
         });
         print("error: $e");
       }
-
       try {
         quizdata[questionindex]["OptionsImage"]['C'];
         setState(() {
@@ -1248,7 +1293,6 @@ class _QuizPageState extends State<QuizPage> {
         });
         print("error: $e");
       }
-
       try {
         quizdata[questionindex]["OptionsImage"]['D'];
         setState(() {
@@ -1269,7 +1313,6 @@ class _QuizPageState extends State<QuizPage> {
     } catch (e) {
       print("jjoijoijo: ${e}");
     }
-
     try {
       print(
           "tghrthrt  ${quizdata[questionindex]["question"].toString().split("(--image--)")[1]}");
@@ -1280,7 +1323,7 @@ class _QuizPageState extends State<QuizPage> {
       setState(() {
         showquestion = false;
       });
-      print("eifjwgvygvu $e");
+      print("eifjwgvygvu3 $e");
     }
   }
 
@@ -1567,7 +1610,7 @@ class _QuizPageState extends State<QuizPage> {
                                                 padding: EdgeInsetsDirectional
                                                     .fromSTEB(10, 0, 0, 0),
                                                 child: Text(
-                                                  'Answered and Marked for review\n(will be considered for evaluation)',
+                                                  'Answered and Marked for review\n(will be considered for evaluation )',
                                                   style: FlutterFlowTheme.of(
                                                           context)
                                                       .bodyText1,
@@ -2154,7 +2197,8 @@ class _QuizPageState extends State<QuizPage> {
                                                       .fromSTEB(0, 0, 10, 0),
                                                   child: GestureDetector(
                                                     onTap: () {
-                                                      submit();
+                                                      showQuizConfirmationDialog(
+                                                          context);
                                                     },
                                                     child: Container(
                                                       width: 140,
@@ -2868,461 +2912,10 @@ class _QuizPageState extends State<QuizPage> {
                                                                         context)
                                                                     .secondaryBackground,
                                                               ),
-                                                              child:
-                                                                  SingleChildScrollView(
-                                                                child: Column(
-                                                                  mainAxisSize:
-                                                                      MainAxisSize
-                                                                          .max,
-                                                                  children: [
-                                                                    Align(
-                                                                      alignment:
-                                                                          AlignmentDirectional(
-                                                                              -1,
-                                                                              0),
-                                                                      child:
-                                                                          Padding(
-                                                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                                                            0,
-                                                                            70,
-                                                                            0,
-                                                                            0),
-                                                                        child:
-                                                                            Wrap(
-                                                                          spacing:
-                                                                              0,
-                                                                          runSpacing:
-                                                                              0,
-                                                                          alignment:
-                                                                              WrapAlignment.start,
-                                                                          crossAxisAlignment:
-                                                                              WrapCrossAlignment.start,
-                                                                          direction:
-                                                                              Axis.horizontal,
-                                                                          runAlignment:
-                                                                              WrapAlignment.start,
-                                                                          verticalDirection:
-                                                                              VerticalDirection.down,
-                                                                          clipBehavior:
-                                                                              Clip.none,
-                                                                          children: [
-                                                                            Align(
-                                                                              alignment: AlignmentDirectional(-1, 0),
-                                                                              child: Padding(
-                                                                                padding: EdgeInsetsDirectional.fromSTEB(20, 0, 0, 30),
-                                                                                child: Text(
-                                                                                  '${quizdata[questionindex]["question"].toString().split("(--image--)")[0]}',
-                                                                                  textAlign: TextAlign.start,
-                                                                                  style: FlutterFlowTheme.of(context).bodyText1.override(
-                                                                                        fontFamily: 'Poppins',
-                                                                                        fontSize: 17,
-                                                                                        fontWeight: FontWeight.normal,
-                                                                                      ),
-                                                                                ),
-                                                                              ),
-                                                                            ),
-                                                                            quizdata[questionindex]["questionImage"] == null || quizdata[questionindex]["questionImage"] == ''
-                                                                                ? Container()
-                                                                                : Padding(
-                                                                                    padding: EdgeInsetsDirectional.fromSTEB(20, 0, 0, 30),
-                                                                                    // child: Image.network("${quizdata[questionindex]["questionImage"]}"),
-                                                                                    child: SizedBox(
-                                                                                      child: Image.network('${quizdata[questionindex]["questionImage"]}', fit: BoxFit.cover),
-                                                                                    ),
-                                                                                  ),
-                                                                            showquestion
-                                                                                ? Align(
-                                                                                    alignment: AlignmentDirectional(-1, 0),
-                                                                                    child: Padding(
-                                                                                      padding: EdgeInsetsDirectional.fromSTEB(20, 0, 0, 30),
-                                                                                      child: quizdata[questionindex]["question"].toString().split("(--image--)")[1] == null
-                                                                                          ? Container()
-                                                                                          : Text(
-                                                                                              '${quizdata[questionindex]["question"].toString().split("(--image--)")[1]}',
-                                                                                              textAlign: TextAlign.start,
-                                                                                              style: FlutterFlowTheme.of(context).bodyText1.override(
-                                                                                                    fontFamily: 'Poppins',
-                                                                                                    fontSize: 17,
-                                                                                                    fontWeight: FontWeight.normal,
-                                                                                                  ),
-                                                                                            ),
-                                                                                    ),
-                                                                                  )
-                                                                                : Container(),
-                                                                          ],
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                    quizdata[questionindex]["options"]['A'] ==
-                                                                            ""
-                                                                        ? Container()
-                                                                        : Align(
-                                                                            alignment:
-                                                                                AlignmentDirectional(-1, 0),
-                                                                            child:
-                                                                                GestureDetector(
-                                                                              onTap: () {
-                                                                                setState(() {
-                                                                                  A = !A;
-                                                                                  B = false;
-                                                                                  C = false;
-                                                                                  D = false;
-                                                                                });
-                                                                                save();
-                                                                              },
-                                                                              child: quizdata[questionindex]["options"]['A'] == ""
-                                                                                  ? Container()
-                                                                                  : Row(
-                                                                                      mainAxisSize: MainAxisSize.min,
-                                                                                      children: [
-                                                                                        quizdata[questionindex]["options"]['A'] == ""
-                                                                                            ? Container()
-                                                                                            : Padding(
-                                                                                                padding: EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
-                                                                                                child: Container(
-                                                                                                  width: 50,
-                                                                                                  height: 50,
-                                                                                                  decoration: BoxDecoration(
-                                                                                                    color: quizdata[questionindex]["answeredValue"] == "A" || A == true ? Color.fromARGB(255, 117, 255, 121) : Color(0xFFC9C1C1),
-                                                                                                  ),
-                                                                                                  child: Align(
-                                                                                                    alignment: AlignmentDirectional(0.05, 0),
-                                                                                                    child: Text(
-                                                                                                      'A',
-                                                                                                      style: FlutterFlowTheme.of(context).bodyText1.override(
-                                                                                                            fontFamily: 'Poppins',
-                                                                                                            fontSize: 22,
-                                                                                                            fontWeight: FontWeight.normal,
-                                                                                                          ),
-                                                                                                    ),
-                                                                                                  ),
-                                                                                                ),
-                                                                                              ),
-                                                                                        quizdata[questionindex]["options"]['A'] == ""
-                                                                                            ? Container()
-                                                                                            : Expanded(
-                                                                                                child: Align(
-                                                                                                  alignment: AlignmentDirectional(-1, 0),
-                                                                                                  child: Padding(
-                                                                                                    padding: EdgeInsetsDirectional.fromSTEB(30, 0, 0, 0),
-                                                                                                    child: Column(
-                                                                                                      mainAxisSize: MainAxisSize.max,
-                                                                                                      mainAxisAlignment: MainAxisAlignment.center,
-                                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                                      children: [
-                                                                                                        Text(
-                                                                                                          // "TEXT | English meaning - Cambridge Dictionaryhttps://dictionary.cambridge.org › dictionary › text08-Feb-2023 — text definition: 1. the written words in a book, magazine, etc., not the pictures: 2. a text message: 3. the exact…. Learn more.Text definition and meaning | Collins English Dictionaryhttps://www.collinsdictionary.com › dictionary › textA text is a written TEXT | English meaning - Cambridge Dictionaryhttps://dictionary.cambridge.org › dictionary › text08-Feb-2023 — text definition: 1. the written words in a book, magazine, etc., not the pictures: 2. a text message: 3. the exact…. Learn more.Text definition and meaning | Collins English Dictionaryhttps://www.collinsdictionary.com › dictionary › textA text is a written or spoken passage, especially one that is used in a school or university for discussion or in an examination. I'll read the text aloud ...or spoken passage, especially one that is used in a school or university for discussion or in an examination. I'll read the text aloud ...TEXT | English meaning - Cambridge Dictionaryhttps://dictionary.cambridge.org › dictionary › text08-Feb-2023 — text definition: 1. the written words in a book, magazine, etc., not the pictures: 2. a text message: 3. the exact…. Learn more.Text definition and meaning | Collins English \nDictionaryhttps://www.collinsdictionary.com › dictionary › textA text is a written or spoken passage, especially one that is \nused in a school or university for discussion or in an examination. I'll read the text aloud ...",
-                                                                                                          '${quizdata[questionindex]["options"]['A']}',
-                                                                                                          textAlign: TextAlign.start,
-                                                                                                          style: FlutterFlowTheme.of(context).bodyText1.override(
-                                                                                                                fontFamily: 'Poppins',
-                                                                                                                fontSize: 17,
-                                                                                                                fontWeight: FontWeight.normal,
-                                                                                                              ),
-                                                                                                        ),
-                                                                                                        showimagea
-                                                                                                            ? SizedBox(
-                                                                                                                height: 200,
-                                                                                                                width: 300,
-                                                                                                                child: Image.network(quizdata[questionindex]["OptionsImage"]['A']),
-                                                                                                              )
-                                                                                                            : Container(),
-                                                                                                      ],
-                                                                                                    ),
-                                                                                                  ),
-                                                                                                ),
-                                                                                              ),
-                                                                                      ],
-                                                                                    ),
-                                                                            ),
-                                                                          ),
-                                                                    quizdata[questionindex]["options"]['B'] ==
-                                                                            ""
-                                                                        ? Container()
-                                                                        : Padding(
-                                                                            padding: EdgeInsetsDirectional.fromSTEB(
-                                                                                0,
-                                                                                5,
-                                                                                0,
-                                                                                0),
-                                                                            child:
-                                                                                Wrap(
-                                                                              spacing: 0,
-                                                                              runSpacing: 0,
-                                                                              alignment: WrapAlignment.start,
-                                                                              crossAxisAlignment: WrapCrossAlignment.start,
-                                                                              direction: Axis.horizontal,
-                                                                              runAlignment: WrapAlignment.start,
-                                                                              verticalDirection: VerticalDirection.down,
-                                                                              clipBehavior: Clip.none,
-                                                                              children: [
-                                                                                Align(
-                                                                                  alignment: AlignmentDirectional(-1, 0),
-                                                                                  child: GestureDetector(
-                                                                                    onTap: () {
-                                                                                      setState(() {
-                                                                                        B = !B;
-                                                                                        A = false;
-                                                                                        C = false;
-                                                                                        D = false;
-                                                                                      });
-                                                                                      save();
-                                                                                    },
-                                                                                    child: quizdata[questionindex]["options"]['B'] == ""
-                                                                                        ? Container()
-                                                                                        : Row(
-                                                                                            mainAxisSize: MainAxisSize.min,
-                                                                                            children: [
-                                                                                              Padding(
-                                                                                                padding: EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
-                                                                                                child: Container(
-                                                                                                  width: 50,
-                                                                                                  height: 50,
-                                                                                                  decoration: BoxDecoration(
-                                                                                                    color: quizdata[questionindex]["answeredValue"] == "B" || B == true ? Color.fromARGB(255, 117, 255, 121) : Color(0xFFC9C1C1),
-                                                                                                  ),
-                                                                                                  child: Align(
-                                                                                                    alignment: AlignmentDirectional(0.05, 0),
-                                                                                                    child: Text(
-                                                                                                      'B',
-                                                                                                      style: FlutterFlowTheme.of(context).bodyText1.override(
-                                                                                                            fontFamily: 'Poppins',
-                                                                                                            fontSize: 22,
-                                                                                                            fontWeight: FontWeight.normal,
-                                                                                                          ),
-                                                                                                    ),
-                                                                                                  ),
-                                                                                                ),
-                                                                                              ),
-                                                                                              Expanded(
-                                                                                                child: Align(
-                                                                                                  alignment: AlignmentDirectional(-1, 0),
-                                                                                                  child: Padding(
-                                                                                                    padding: EdgeInsetsDirectional.fromSTEB(30, 0, 0, 0),
-                                                                                                    child: Column(
-                                                                                                      mainAxisSize: MainAxisSize.max,
-                                                                                                      mainAxisAlignment: MainAxisAlignment.center,
-                                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                                      children: [
-                                                                                                        Text(
-                                                                                                          '${quizdata[questionindex]["options"]['B']}',
-                                                                                                          textAlign: TextAlign.start,
-                                                                                                          style: FlutterFlowTheme.of(context).bodyText1.override(
-                                                                                                                fontFamily: 'Poppins',
-                                                                                                                fontSize: 17,
-                                                                                                                fontWeight: FontWeight.normal,
-                                                                                                              ),
-                                                                                                        ),
-                                                                                                        showimageb
-                                                                                                            ? SizedBox(
-                                                                                                                height: 200,
-                                                                                                                width: 300,
-                                                                                                                child: Image.network(quizdata[questionindex]["OptionsImage"]['B']),
-                                                                                                              )
-                                                                                                            : Container(),
-                                                                                                      ],
-                                                                                                    ),
-                                                                                                  ),
-                                                                                                ),
-                                                                                              ),
-                                                                                            ],
-                                                                                          ),
-                                                                                  ),
-                                                                                ),
-                                                                              ],
-                                                                            ),
-                                                                          ),
-                                                                    quizdata[questionindex]["options"]['C'] ==
-                                                                            ""
-                                                                        ? Container()
-                                                                        : Align(
-                                                                            alignment:
-                                                                                AlignmentDirectional(-1, -1),
-                                                                            child:
-                                                                                Padding(
-                                                                              padding: EdgeInsetsDirectional.fromSTEB(0, 5, 0, 0),
-                                                                              child: Wrap(
-                                                                                spacing: 0,
-                                                                                runSpacing: 0,
-                                                                                alignment: WrapAlignment.start,
-                                                                                crossAxisAlignment: WrapCrossAlignment.start,
-                                                                                direction: Axis.horizontal,
-                                                                                runAlignment: WrapAlignment.start,
-                                                                                verticalDirection: VerticalDirection.down,
-                                                                                clipBehavior: Clip.none,
-                                                                                children: [
-                                                                                  Align(
-                                                                                    alignment: AlignmentDirectional(-1, 0),
-                                                                                    child: GestureDetector(
-                                                                                      onTap: () {
-                                                                                        setState(() {
-                                                                                          C = !C;
-                                                                                          B = false;
-                                                                                          A = false;
-                                                                                          D = false;
-                                                                                        });
-                                                                                        save();
-                                                                                      },
-                                                                                      child: Row(
-                                                                                        mainAxisSize: MainAxisSize.min,
-                                                                                        children: [
-                                                                                          Padding(
-                                                                                            padding: EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
-                                                                                            child: Container(
-                                                                                              width: 50,
-                                                                                              height: 50,
-                                                                                              decoration: BoxDecoration(
-                                                                                                color: quizdata[questionindex]["answeredValue"] == "C" || C == true ? Color.fromARGB(255, 117, 255, 121) : Color(0xFFC9C1C1),
-                                                                                              ),
-                                                                                              child: Align(
-                                                                                                alignment: AlignmentDirectional(0.05, 0),
-                                                                                                child: Text(
-                                                                                                  'C',
-                                                                                                  style: FlutterFlowTheme.of(context).bodyText1.override(
-                                                                                                        fontFamily: 'Poppins',
-                                                                                                        fontSize: 22,
-                                                                                                        fontWeight: FontWeight.normal,
-                                                                                                      ),
-                                                                                                ),
-                                                                                              ),
-                                                                                            ),
-                                                                                          ),
-                                                                                          Expanded(
-                                                                                            child: Align(
-                                                                                              alignment: AlignmentDirectional(-1, 0),
-                                                                                              child: Padding(
-                                                                                                padding: EdgeInsetsDirectional.fromSTEB(30, 0, 0, 0),
-                                                                                                child: Column(
-                                                                                                  mainAxisSize: MainAxisSize.max,
-                                                                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                                  children: [
-                                                                                                    Text(
-                                                                                                      '${quizdata[questionindex]["options"]['C']}',
-                                                                                                      textAlign: TextAlign.start,
-                                                                                                      style: FlutterFlowTheme.of(context).bodyText1.override(
-                                                                                                            fontFamily: 'Poppins',
-                                                                                                            fontSize: 17,
-                                                                                                            fontWeight: FontWeight.normal,
-                                                                                                          ),
-                                                                                                    ),
-                                                                                                    showimagec
-                                                                                                        ? SizedBox(
-                                                                                                            height: 200,
-                                                                                                            width: 300,
-                                                                                                            child: Image.network(quizdata[questionindex]["OptionsImage"]['C']),
-                                                                                                          )
-                                                                                                        : Container(),
-                                                                                                  ],
-                                                                                                ),
-                                                                                              ),
-                                                                                            ),
-                                                                                          ),
-                                                                                        ],
-                                                                                      ),
-                                                                                    ),
-                                                                                  ),
-                                                                                ],
-                                                                              ),
-                                                                            ),
-                                                                          ),
-                                                                    quizdata[questionindex]["options"]['D'] ==
-                                                                            ""
-                                                                        ? Container()
-                                                                        : Padding(
-                                                                            padding: EdgeInsetsDirectional.fromSTEB(
-                                                                                0,
-                                                                                5,
-                                                                                0,
-                                                                                110),
-                                                                            child:
-                                                                                Wrap(
-                                                                              spacing: 0,
-                                                                              runSpacing: 0,
-                                                                              alignment: WrapAlignment.start,
-                                                                              crossAxisAlignment: WrapCrossAlignment.start,
-                                                                              direction: Axis.horizontal,
-                                                                              runAlignment: WrapAlignment.start,
-                                                                              verticalDirection: VerticalDirection.down,
-                                                                              clipBehavior: Clip.none,
-                                                                              children: [
-                                                                                Align(
-                                                                                  alignment: AlignmentDirectional(-1, 0),
-                                                                                  child: GestureDetector(
-                                                                                    onTap: () {
-                                                                                      setState(() {
-                                                                                        D = !D;
-                                                                                        B = false;
-                                                                                        C = false;
-                                                                                        A = false;
-                                                                                      });
-                                                                                      save();
-                                                                                    },
-                                                                                    child: Row(
-                                                                                      mainAxisSize: MainAxisSize.min,
-                                                                                      children: [
-                                                                                        Padding(
-                                                                                          padding: EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
-                                                                                          child: Container(
-                                                                                            width: 50,
-                                                                                            height: 50,
-                                                                                            decoration: BoxDecoration(
-                                                                                              color: quizdata[questionindex]["answeredValue"] == "D" || D == true ? Color.fromARGB(255, 117, 255, 121) : Color(0xFFC9C1C1),
-                                                                                            ),
-                                                                                            child: Align(
-                                                                                              alignment: AlignmentDirectional(0.05, 0),
-                                                                                              child: Text(
-                                                                                                'D',
-                                                                                                style: FlutterFlowTheme.of(context).bodyText1.override(
-                                                                                                      fontFamily: 'Poppins',
-                                                                                                      fontSize: 22,
-                                                                                                      fontWeight: FontWeight.normal,
-                                                                                                    ),
-                                                                                              ),
-                                                                                            ),
-                                                                                          ),
-                                                                                        ),
-                                                                                        Expanded(
-                                                                                          child: Align(
-                                                                                            alignment: AlignmentDirectional(-1, 0),
-                                                                                            child: Padding(
-                                                                                              padding: EdgeInsetsDirectional.fromSTEB(30, 0, 0, 0),
-                                                                                              child: Column(
-                                                                                                mainAxisSize: MainAxisSize.max,
-                                                                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                                children: [
-                                                                                                  Text(
-                                                                                                    '${quizdata[questionindex]["options"]['D']}',
-                                                                                                    textAlign: TextAlign.start,
-                                                                                                    style: FlutterFlowTheme.of(context).bodyText1.override(
-                                                                                                          fontFamily: 'Poppins',
-                                                                                                          fontSize: 17,
-                                                                                                          fontWeight: FontWeight.normal,
-                                                                                                        ),
-                                                                                                  ),
-                                                                                                  showimaged
-                                                                                                      ? SizedBox(
-                                                                                                          height: 200,
-                                                                                                          width: 300,
-                                                                                                          child: Image.network(quizdata[questionindex]["OptionsImage"]['D']),
-                                                                                                        )
-                                                                                                      : Container(),
-                                                                                                ],
-                                                                                              ),
-                                                                                            ),
-                                                                                          ),
-                                                                                        ),
-                                                                                      ],
-                                                                                    ),
-                                                                                  ),
-                                                                                ),
-                                                                              ],
-                                                                            ),
-                                                                          ),
-                                                                  ],
-                                                                ),
-                                                              ),
+                                                              child: SingleChildScrollView(
+                                                                  child:
+                                                                      OptionsChoices()),
+                                                              // Container()),
                                                             ),
                                                       Divider(
                                                         thickness: 1,
@@ -3385,7 +2978,7 @@ class _QuizPageState extends State<QuizPage> {
                                                                             GestureDetector(
                                                                           onTap:
                                                                               () {
-                                                                            saveNext();
+                                                                            saveNext(false);
                                                                           },
                                                                           child:
                                                                               FFButtonWidget(
@@ -3394,7 +2987,7 @@ class _QuizPageState extends State<QuizPage> {
                                                                               print('Button pressed ...');
                                                                             },
                                                                             text:
-                                                                                'SAVE & NEXT',
+                                                                                'SAVE & NEXT1',
                                                                             options:
                                                                                 FFButtonOptions(
                                                                               width: 100,
@@ -3417,7 +3010,8 @@ class _QuizPageState extends State<QuizPage> {
                                                                       GestureDetector(
                                                                         onTap:
                                                                             () {
-                                                                          saveNext();
+                                                                          saveNext(
+                                                                              false);
                                                                         },
                                                                         child:
                                                                             FFButtonWidget(
@@ -3578,7 +3172,7 @@ class _QuizPageState extends State<QuizPage> {
                                                                               onPressed: () {
                                                                                 print('Button pressed ...');
                                                                               },
-                                                                              text: 'PREVIOUS..',
+                                                                              text: 'PREVIOUS1..',
                                                                               options: FFButtonOptions(
                                                                                 width: 90,
                                                                                 height: 30,
@@ -3653,13 +3247,13 @@ class _QuizPageState extends State<QuizPage> {
                                                                             GestureDetector(
                                                                           onTap:
                                                                               () {
-                                                                            submit();
+                                                                            showQuizConfirmationDialog(context);
                                                                           },
                                                                           child:
                                                                               FFButtonWidget(
                                                                             onPressed:
                                                                                 () {
-                                                                              submit();
+                                                                              showQuizConfirmationDialog(context);
                                                                             },
                                                                             text:
                                                                                 'SUBMIT',
@@ -3725,7 +3319,12 @@ class _QuizPageState extends State<QuizPage> {
                                                                           GestureDetector(
                                                                         onTap:
                                                                             () {
-                                                                          saveNext();
+                                                                          if (questionindex + 1 ==
+                                                                              quizdata.length) {
+                                                                            showQuizConfirmationDialog(context);
+                                                                          } else {
+                                                                            saveNext(false);
+                                                                          }
                                                                         },
                                                                         child:
                                                                             Container(
@@ -3742,15 +3341,23 @@ class _QuizPageState extends State<QuizPage> {
                                                                               Align(
                                                                             alignment:
                                                                                 AlignmentDirectional(0, 0),
-                                                                            child:
-                                                                                Text(
-                                                                              'SAVE & NEXT',
-                                                                              style: FlutterFlowTheme.of(context).bodyText1.override(
-                                                                                    fontFamily: 'Poppins',
-                                                                                    color: FlutterFlowTheme.of(context).primaryBtnText,
-                                                                                    fontSize: 10,
+                                                                            child: questionindex + 1 == quizdata.length
+                                                                                ? Text(
+                                                                                    'SUBMIT',
+                                                                                    style: FlutterFlowTheme.of(context).bodyText1.override(
+                                                                                          fontFamily: 'Poppins',
+                                                                                          color: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                                          fontSize: 10,
+                                                                                        ),
+                                                                                  )
+                                                                                : Text(
+                                                                                    'SAVE & NEXT',
+                                                                                    style: FlutterFlowTheme.of(context).bodyText1.override(
+                                                                                          fontFamily: 'Poppins',
+                                                                                          color: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                                          fontSize: 10,
+                                                                                        ),
                                                                                   ),
-                                                                            ),
                                                                           ),
                                                                         ),
                                                                       ),
@@ -3764,7 +3371,8 @@ class _QuizPageState extends State<QuizPage> {
                                                                           () {
                                                                         markreview =
                                                                             true;
-                                                                        saveNext();
+                                                                        saveNext(
+                                                                            false);
                                                                       },
                                                                       child:
                                                                           Container(
@@ -3889,9 +3497,11 @@ class _QuizPageState extends State<QuizPage> {
                                                                                 questionindex -= 1;
                                                                                 try {
                                                                                   quizdata[questionindex]["OptionsImage"]['A'];
-                                                                                  setState(() {
-                                                                                    showimagea = true;
-                                                                                  });
+                                                                                  if (quizdata[questionindex]["OptionsImage"]['A'] != "") {
+                                                                                    setState(() {
+                                                                                      showimagea = true;
+                                                                                    });
+                                                                                  }
                                                                                 } catch (e) {
                                                                                   setState(() {
                                                                                     showimagea = false;
@@ -3901,9 +3511,11 @@ class _QuizPageState extends State<QuizPage> {
 
                                                                                 try {
                                                                                   quizdata[questionindex]["OptionsImage"]['B'];
-                                                                                  setState(() {
-                                                                                    showimageb = true;
-                                                                                  });
+                                                                                  if (quizdata[questionindex]["OptionsImage"]['B'] != "") {
+                                                                                    setState(() {
+                                                                                      showimageb = true;
+                                                                                    });
+                                                                                  }
                                                                                 } catch (e) {
                                                                                   setState(() {
                                                                                     showimageb = false;
@@ -3913,9 +3525,11 @@ class _QuizPageState extends State<QuizPage> {
 
                                                                                 try {
                                                                                   quizdata[questionindex]["OptionsImage"]['C'];
-                                                                                  setState(() {
-                                                                                    showimagec = true;
-                                                                                  });
+                                                                                  if (quizdata[questionindex]["OptionsImage"]['C'] != "") {
+                                                                                    setState(() {
+                                                                                      showimagec = true;
+                                                                                    });
+                                                                                  }
                                                                                 } catch (e) {
                                                                                   setState(() {
                                                                                     showimagec = false;
@@ -3925,9 +3539,11 @@ class _QuizPageState extends State<QuizPage> {
 
                                                                                 try {
                                                                                   quizdata[questionindex]["OptionsImage"]['D'];
-                                                                                  setState(() {
-                                                                                    showimaged = true;
-                                                                                  });
+                                                                                  if (quizdata[questionindex]["OptionsImage"]['D'] != "") {
+                                                                                    setState(() {
+                                                                                      showimaged = true;
+                                                                                    });
+                                                                                  }
                                                                                 } catch (e) {
                                                                                   setState(() {
                                                                                     showimaged = false;
@@ -3987,7 +3603,7 @@ class _QuizPageState extends State<QuizPage> {
                                                                             onTap:
                                                                                 () {
                                                                               setState(() {
-                                                                                saveNext();
+                                                                                saveNext(false);
                                                                               });
                                                                             },
                                                                             child:
@@ -4416,7 +4032,7 @@ class _QuizPageState extends State<QuizPage> {
                                                                           0,
                                                                           0),
                                                                   child: Text(
-                                                                    'Answered & Marked For Review\n( will be considered for evaluation)',
+                                                                    'Answered & Marked For Review\n( will be considered for evaluation )',
                                                                     style: FlutterFlowTheme.of(
                                                                             context)
                                                                         .bodyText1,
@@ -4476,56 +4092,63 @@ class _QuizPageState extends State<QuizPage> {
                                                             print(
                                                                 quizdata[index]
                                                                     ['AMRF']);
-                                                            return Container(
-                                                              width: 50,
-                                                              height: 50,
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                color: (quizdata[index]['AMFR'] !=
-                                                                            null &&
-                                                                        quizdata[index]['AMFR'] !=
-                                                                            false
-                                                                    ? Color
-                                                                        .fromARGB(
-                                                                            255,
-                                                                            80,
-                                                                            142,
-                                                                            218)
-                                                                    : quizdata[index]['MFR'] !=
-                                                                                null &&
-                                                                            quizdata[index]['MFR'] !=
-                                                                                false
-                                                                        ? Color.fromARGB(
-                                                                            255,
-                                                                            50,
-                                                                            41,
-                                                                            219)
-                                                                        : quizdata[index]['Answered'] != null &&
-                                                                                quizdata[index]['Answered'] != false
-                                                                            ? Color.fromARGB(255, 5, 217, 76)
-                                                                            : quizdata[index]['notAnswered'] != null && quizdata[index]['notAnswered'] != false
-                                                                                ? Color.fromARGB(255, 233, 26, 26)
-                                                                                : quizdata[index]['visited'] == null
-                                                                                    ? Color.fromARGB(255, 207, 196, 196)
-                                                                                    : Color.fromARGB(255, 207, 196, 196)),
-                                                                shape: BoxShape
-                                                                    .circle,
-                                                              ),
-                                                              child: Align(
-                                                                alignment:
-                                                                    AlignmentDirectional(
-                                                                        0, 0),
-                                                                child: Text(
-                                                                  '${index + 1}',
-                                                                  style: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .bodyText1
-                                                                      .override(
-                                                                        fontFamily:
-                                                                            'Poppins',
-                                                                        color: FlutterFlowTheme.of(context)
-                                                                            .primaryBtnText,
-                                                                      ),
+                                                            return GestureDetector(
+                                                              onTap: () {
+                                                                setState(() {
+                                                                  questionindex =
+                                                                      index;
+                                                                  saveNext(
+                                                                      true);
+                                                                });
+                                                              },
+                                                              child: Container(
+                                                                width: 50,
+                                                                height: 50,
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  color: (quizdata[index]['AMFR'] !=
+                                                                              null &&
+                                                                          quizdata[index]['AMFR'] !=
+                                                                              false
+                                                                      ? Color.fromARGB(
+                                                                          255,
+                                                                          80,
+                                                                          142,
+                                                                          218)
+                                                                      : quizdata[index]['MFR'] != null &&
+                                                                              quizdata[index]['MFR'] !=
+                                                                                  false
+                                                                          ? Color.fromARGB(
+                                                                              255,
+                                                                              50,
+                                                                              41,
+                                                                              219)
+                                                                          : quizdata[index]['Answered'] != null && quizdata[index]['Answered'] != false
+                                                                              ? Color.fromARGB(255, 5, 217, 76)
+                                                                              : quizdata[index]['notAnswered'] != null && quizdata[index]['notAnswered'] != false
+                                                                                  ? Color.fromARGB(255, 233, 26, 26)
+                                                                                  : quizdata[index]['visited'] == null
+                                                                                      ? Color.fromARGB(255, 207, 196, 196)
+                                                                                      : Color.fromARGB(255, 207, 196, 196)),
+                                                                  shape: BoxShape
+                                                                      .circle,
+                                                                ),
+                                                                child: Align(
+                                                                  alignment:
+                                                                      AlignmentDirectional(
+                                                                          0, 0),
+                                                                  child: Text(
+                                                                    '${index + 1}',
+                                                                    style: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodyText1
+                                                                        .override(
+                                                                          fontFamily:
+                                                                              'Poppins',
+                                                                          color:
+                                                                              FlutterFlowTheme.of(context).primaryBtnText,
+                                                                        ),
+                                                                  ),
                                                                 ),
                                                               ),
                                                             );
@@ -5027,6 +4650,526 @@ class _QuizPageState extends State<QuizPage> {
       ]),
     );
   }
+
+  Widget OptionsChoices() {
+    print('iefjow1');
+
+    var answervalue = quizdata[questionindex]["answeredValue"];
+    if (answervalue == null) {
+      answervalue = "";
+    }
+    print('iefjow2 $answervalue');
+
+    var question =
+        quizdata[questionindex]["question"].toString().split("(--image--)")[0];
+    print('iefjow3 $question');
+
+    var optiona = quizdata[questionindex]["options"]['A'].toString().trim();
+    print('iefjow4 $optiona');
+    var optionb = quizdata[questionindex]["options"]['B'].toString().trim();
+    print('iefjow5 $optionb');
+    var optionc = quizdata[questionindex]["options"]['C'].toString().trim();
+    print('iefjow6 $optionc');
+    var optiond = quizdata[questionindex]["options"]['D'].toString().trim();
+    print('iefjow7 $optiond');
+    var questionimage;
+    var optionaimage;
+    var optionbimage;
+    var optioncimage;
+    var optiondimage;
+
+    try {
+      questionimage = quizdata[questionindex]["questionImage"];
+      print('iefjow08 $questionimage');
+    } catch (e) {
+      questionimage = "";
+      print('iefjow081 $questionimage');
+    }
+    try {
+      optionaimage = quizdata[questionindex]["OptionsImage"]['A'];
+      print('iefjow9 $optionaimage');
+    } catch (e) {
+      optionaimage = "";
+      print('iefjow91 $optionaimage');
+    }
+
+    try {
+      optionbimage = quizdata[questionindex]["OptionsImage"]['B'];
+      print('iefjow10 $optionbimage');
+    } catch (e) {
+      optionbimage = "";
+      print('iefjow101 $optionbimage');
+    }
+
+    try {
+      optioncimage = quizdata[questionindex]["OptionsImage"]['C'];
+      print('iefjow11 $optioncimage');
+    } catch (e) {
+      optioncimage = "";
+      print('iefjow111 $optioncimage');
+    }
+
+    try {
+      optiondimage = quizdata[questionindex]["OptionsImage"]['D'];
+      print('iefjow12 $optiondimage');
+    } catch (e) {
+      optiondimage = "";
+      print('iefjow121 $optiondimage');
+    }
+
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Align(
+          alignment: AlignmentDirectional(-1, 0),
+          child: Padding(
+            padding: EdgeInsetsDirectional.fromSTEB(0, 70, 0, 0),
+            child: Wrap(
+              spacing: 0,
+              runSpacing: 0,
+              alignment: WrapAlignment.start,
+              crossAxisAlignment: WrapCrossAlignment.start,
+              direction: Axis.horizontal,
+              runAlignment: WrapAlignment.start,
+              verticalDirection: VerticalDirection.down,
+              clipBehavior: Clip.none,
+              children: [
+                Align(
+                  alignment: AlignmentDirectional(-1, 0),
+                  child: Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(20, 0, 0, 30),
+                    child: Text(
+                      '${question}',
+                      textAlign: TextAlign.start,
+                      style: FlutterFlowTheme.of(context).bodyText1.override(
+                            fontFamily: 'Poppins',
+                            fontSize: 17,
+                            fontWeight: FontWeight.normal,
+                          ),
+                    ),
+                  ),
+                ),
+                questionimage == null || questionimage == ''
+                    ? Container()
+                    : Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(20, 0, 0, 30),
+                        // child: Image.network("${quizdata[questionindex]["questionImage"]}"),
+                        child: SizedBox(
+                          child: Image.network('${questionimage}',
+                              fit: BoxFit.cover),
+                        ),
+                      ),
+              ],
+            ),
+          ),
+        ),
+        optiona == ""
+            ? Container()
+            : Align(
+                alignment: AlignmentDirectional(-1, -1),
+                child: Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(0, 5, 0, 0),
+                  child: Wrap(
+                    spacing: 0,
+                    runSpacing: 0,
+                    alignment: WrapAlignment.start,
+                    crossAxisAlignment: WrapCrossAlignment.start,
+                    direction: Axis.horizontal,
+                    runAlignment: WrapAlignment.start,
+                    verticalDirection: VerticalDirection.down,
+                    clipBehavior: Clip.none,
+                    children: [
+                      Align(
+                        alignment: AlignmentDirectional(-1, 0),
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              C = false;
+                              B = false;
+                              A = !A;
+                              D = false;
+                            });
+                            save();
+                          },
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Padding(
+                                padding:
+                                    EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
+                                child: Container(
+                                  width: 50,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    color: answervalue == "A" || A == true
+                                        ? Color.fromARGB(255, 117, 255, 121)
+                                        : Color(0xFFC9C1C1),
+                                  ),
+                                  child: Align(
+                                    alignment: AlignmentDirectional(0.05, 0),
+                                    child: Text(
+                                      'A',
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyText1
+                                          .override(
+                                            fontFamily: 'Poppins',
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.normal,
+                                          ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Align(
+                                  alignment: AlignmentDirectional(-1, 0),
+                                  child: Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        30, 0, 0, 0),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          '${optiona}',
+                                          textAlign: TextAlign.start,
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyText1
+                                              .override(
+                                                fontFamily: 'Poppins',
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.normal,
+                                              ),
+                                        ),
+                                        optionaimage != ""
+                                            ? SizedBox(
+                                                height: 200,
+                                                width: 300,
+                                                child:
+                                                    Image.network(optionaimage),
+                                              )
+                                            : Container(),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+        optionb == ""
+            ? Container()
+            : Align(
+                alignment: AlignmentDirectional(-1, -1),
+                child: Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(0, 5, 0, 0),
+                  child: Wrap(
+                    spacing: 0,
+                    runSpacing: 0,
+                    alignment: WrapAlignment.start,
+                    crossAxisAlignment: WrapCrossAlignment.start,
+                    direction: Axis.horizontal,
+                    runAlignment: WrapAlignment.start,
+                    verticalDirection: VerticalDirection.down,
+                    clipBehavior: Clip.none,
+                    children: [
+                      Align(
+                        alignment: AlignmentDirectional(-1, 0),
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              C = false;
+                              B = !B;
+                              A = false;
+                              D = false;
+                            });
+                            save();
+                          },
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Padding(
+                                padding:
+                                    EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
+                                child: Container(
+                                  width: 50,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    color: answervalue == "B" || B == true
+                                        ? Color.fromARGB(255, 117, 255, 121)
+                                        : Color(0xFFC9C1C1),
+                                  ),
+                                  child: Align(
+                                    alignment: AlignmentDirectional(0.05, 0),
+                                    child: Text(
+                                      'B',
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyText1
+                                          .override(
+                                            fontFamily: 'Poppins',
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.normal,
+                                          ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Align(
+                                  alignment: AlignmentDirectional(-1, 0),
+                                  child: Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        30, 0, 0, 0),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          '${optionb}',
+                                          textAlign: TextAlign.start,
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyText1
+                                              .override(
+                                                fontFamily: 'Poppins',
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.normal,
+                                              ),
+                                        ),
+                                        optionbimage != ""
+                                            ? SizedBox(
+                                                height: 200,
+                                                width: 300,
+                                                child:
+                                                    Image.network(optionbimage),
+                                              )
+                                            : Container(),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+        optionc == ""
+            ? Container()
+            : Align(
+                alignment: AlignmentDirectional(-1, -1),
+                child: Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(0, 5, 0, 0),
+                  child: Wrap(
+                    spacing: 0,
+                    runSpacing: 0,
+                    alignment: WrapAlignment.start,
+                    crossAxisAlignment: WrapCrossAlignment.start,
+                    direction: Axis.horizontal,
+                    runAlignment: WrapAlignment.start,
+                    verticalDirection: VerticalDirection.down,
+                    clipBehavior: Clip.none,
+                    children: [
+                      Align(
+                        alignment: AlignmentDirectional(-1, 0),
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              C = !C;
+                              B = false;
+                              A = false;
+                              D = false;
+                            });
+                            save();
+                          },
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Padding(
+                                padding:
+                                    EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
+                                child: Container(
+                                  width: 50,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    color: answervalue == "C" || C == true
+                                        ? Color.fromARGB(255, 117, 255, 121)
+                                        : Color(0xFFC9C1C1),
+                                  ),
+                                  child: Align(
+                                    alignment: AlignmentDirectional(0.05, 0),
+                                    child: Text(
+                                      'C',
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyText1
+                                          .override(
+                                            fontFamily: 'Poppins',
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.normal,
+                                          ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Align(
+                                  alignment: AlignmentDirectional(-1, 0),
+                                  child: Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        30, 0, 0, 0),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          '${optionc}',
+                                          textAlign: TextAlign.start,
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyText1
+                                              .override(
+                                                fontFamily: 'Poppins',
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.normal,
+                                              ),
+                                        ),
+                                        optioncimage != ""
+                                            ? SizedBox(
+                                                height: 200,
+                                                width: 300,
+                                                child:
+                                                    Image.network(optioncimage),
+                                              )
+                                            : Container(),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+        optiond == ""
+            ? Container()
+            : Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(0, 5, 0, 110),
+                child: Wrap(
+                  spacing: 0,
+                  runSpacing: 0,
+                  alignment: WrapAlignment.start,
+                  crossAxisAlignment: WrapCrossAlignment.start,
+                  direction: Axis.horizontal,
+                  runAlignment: WrapAlignment.start,
+                  verticalDirection: VerticalDirection.down,
+                  clipBehavior: Clip.none,
+                  children: [
+                    Align(
+                      alignment: AlignmentDirectional(-1, 0),
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            D = !D;
+                            B = false;
+                            C = false;
+                            A = false;
+                          });
+                          save();
+                        },
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
+                              child: Container(
+                                width: 50,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: answervalue == "D" || D == true
+                                      ? Color.fromARGB(255, 117, 255, 121)
+                                      : Color(0xFFC9C1C1),
+                                ),
+                                child: Align(
+                                  alignment: AlignmentDirectional(0.05, 0),
+                                  child: Text(
+                                    'D',
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyText1
+                                        .override(
+                                          fontFamily: 'Poppins',
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Align(
+                                alignment: AlignmentDirectional(-1, 0),
+                                child: Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      30, 0, 0, 0),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        '${optiond}',
+                                        textAlign: TextAlign.start,
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyText1
+                                            .override(
+                                              fontFamily: 'Poppins',
+                                              fontSize: 17,
+                                              fontWeight: FontWeight.normal,
+                                            ),
+                                      ),
+                                      optiondimage != ""
+                                          ? SizedBox(
+                                              height: 200,
+                                              width: 300,
+                                              child:
+                                                  Image.network(optiondimage),
+                                            )
+                                          : Container(),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+      ],
+    );
+  }
 }
 
 class QuizReportDialog extends StatefulWidget {
@@ -5161,6 +5304,32 @@ class _QuizReportDialogState extends State<QuizReportDialog> {
           });
         },
       ),
+    );
+  }
+}
+
+class QuizConfirmationDialog extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text('Submit Quiz'),
+      content: Text('Are you sure you want to submit the quiz?'),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () {
+            // User pressed the Cancel button
+            Navigator.of(context).pop(false);
+          },
+          child: Text('Cancel'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            // User pressed the Submit button
+            Navigator.of(context).pop(true);
+          },
+          child: Text('Submit'),
+        ),
+      ],
     );
   }
 }
