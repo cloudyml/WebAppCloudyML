@@ -52,7 +52,7 @@ class _OtpPageState extends State<OtpPage> {
   bool loading = false;
   late String actualCode;
 
-  late String diurl;
+  String? diurl;
   // late String payurl;
   // late String depayurl;
   // late String suppayurl;
@@ -60,11 +60,11 @@ class _OtpPageState extends State<OtpPage> {
   // late String deurl;
   // late String supurl;
   // late String promEng;
-  late String  schlrquiz;
-var courseinfo;
+  late String schlrquiz;
+  var courseinfo;
   late String allpayurl;
 
-late String trialink;
+  late String trialink;
   // late String interntnl;
   FocusNode _buttonFocusNode = FocusNode();
   void _onKeyboardTap(String value) {
@@ -128,16 +128,15 @@ late String trialink;
     // });
 
     // print("url is=====$diurl");
-    
-    trialink=globals.trial_link;
-    schlrquiz= globals.schurl;
 
-    allpayurl=globals.Payurl;
+    trialink = globals.trial_link;
+    schlrquiz = globals.schurl;
 
+    allpayurl = globals.Payurl;
 
-       courseinfo = await FirebaseFirestore.instance
+    courseinfo = await FirebaseFirestore.instance
         .collection("courses")
-        .where('docid' ,isEqualTo: trialink)
+        .where('docid', isEqualTo: trialink)
         .get()
         .then((value) {
       print(value.docs.first.data());
@@ -146,8 +145,6 @@ late String trialink;
 
     print("courseinfo is ${courseinfo['Course Price']}");
 
-
-    
     // await FirebaseFirestore.instance
     //     .collection("Notice")
     //     .doc("2OePOtTIa8B1Jd0WiQoj_scholarship_quiz")
@@ -156,12 +153,11 @@ late String trialink;
     //   print(value.data()!.values.first);
     //   return value.data()!.values.first;
     // });
-    
 
-        // print("url is=====$schlrquiz");
-        // print("url1 is=====${globals.schurl}");
- print("allpayurl is=====$allpayurl");
-        print("allpayurl1 is=====${globals.Payurl}");
+    // print("url is=====$schlrquiz");
+    // print("url1 is=====${globals.schurl}");
+    print("allpayurl is=====$allpayurl");
+    print("allpayurl1 is=====${globals.Payurl}");
 
     // interntnl = await FirebaseFirestore.instance
     //     .collection("Notice")
@@ -828,7 +824,7 @@ late String trialink;
                 } catch (e) {
                   print("jghbjkuj: ${e}");
                 }
-                  if (allpayurl.isNotEmpty) {
+                if (allpayurl.isNotEmpty) {
                   final cID = "aEGX6kMfHzQrVgP3WCwU";
                   GoRouter.of(context).go(
                     '/comboPaymentPortal?cID=${allpayurl}',
@@ -837,15 +833,12 @@ late String trialink;
                     //   }
                   );
 
-                    allpayurl='';
+                  allpayurl = '';
                   print('the allpayurl after navigation is ${allpayurl}');
-                }
-                
-                else if (trialink.isNotEmpty) {
+                } else if (trialink.isNotEmpty) {
                   final id = "0";
                   final cID = trialink;
-                  final courseName =
-                      courseinfo['name'];
+                  final courseName = courseinfo['name'];
                   final courseP = courseinfo['Course Price'];
                   GoRouter.of(context).goNamed('NewFeature', queryParams: {
                     'cID': cID,
@@ -853,8 +846,8 @@ late String trialink;
                     'id': id,
                     'coursePrice': courseP
                   });
-                  trialink='';
-                } 
+                  trialink = '';
+                }
                 // else if (deurl == 'F9gxnjW9nf5Lxg5A6758') {
                 //   final id = "0";
                 //   final cID = "F9gxnjW9nf5Lxg5A6758";
@@ -867,7 +860,7 @@ late String trialink;
                 //     'id': id,
                 //     'coursePrice': courseP
                 //   });
-                // } 
+                // }
                 // else if (supurl == 'XSNqt0oNpuY7i2kb7zsW') {
                 //   final id = "0";
                 //   final cID = "XSNqt0oNpuY7i2kb7zsW";
@@ -880,7 +873,7 @@ late String trialink;
                 //     'id': id,
                 //     'coursePrice': courseP
                 //   });
-                // } 
+                // }
                 // else if (interntnl == 'mPqg2Z2BdNHvwaqAEfA0') {
                 //   final id = "0";
                 //   final cID = "mPqg2Z2BdNHvwaqAEfA0";
@@ -892,7 +885,7 @@ late String trialink;
                 //     'id': id,
                 //     'coursePrice': courseP
                 //   });
-                // } 
+                // }
                 else if (diurl == '/InternationalPaymentScreen') {
                   print("i am in otp else");
                   final cID = "aEGX6kMfHzQrVgP3WCwU";
@@ -902,8 +895,7 @@ late String trialink;
                     //   'cID': cID,
                     //   }
                   );
-                }
-                else if (schlrquiz.isNotEmpty) {
+                } else if (schlrquiz.isNotEmpty) {
                   print("i am in otp else");
                   final cID = schlrquiz;
                   GoRouter.of(context).go(
@@ -912,7 +904,7 @@ late String trialink;
                     //   'cID': cID,
                     //   }
                   );
-                  schlrquiz='';
+                  schlrquiz = '';
                   print('the schlrquiz after navigation is ${schlrquiz}');
                 }
                 //  else if (payurl == 'aEGX6kMfHzQrVgP3WCwU') {
@@ -947,7 +939,7 @@ late String trialink;
                 //     //   'cID': cID,
                 //     //   }
                 //   );
-                // } 
+                // }
                 else {
                   Navigator.of(context)
                       .push(MaterialPageRoute(builder: (_) => LandingScreen()));

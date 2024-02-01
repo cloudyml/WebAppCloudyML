@@ -552,8 +552,12 @@ class _StudentReviewScreenState extends State<StudentReviewScreen> {
     var rating;
     try {
       rating = reviews[0].rating!;
+
       print(rating.runtimeType);
       print(rating);
+      if (rating == "") {
+        rating = "3.0";
+      }
     } catch (e) {
       print("error 15: ${e}");
     }
@@ -709,7 +713,7 @@ class _StudentReviewScreenState extends State<StudentReviewScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     StarRating(
-                      rating: double.parse(rating.toString()),
+                      rating: double.parse(rating),
                       starSize: 20,
                       color: Colors.deepPurpleAccent,
                       length: 5,
