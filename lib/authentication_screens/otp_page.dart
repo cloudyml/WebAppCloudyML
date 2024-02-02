@@ -118,16 +118,16 @@ late String trialink;
   }
 
   void url() async {
-    // diurl = await FirebaseFirestore.instance
-    //     .collection("Notice")
-    //     .doc("7A85zuoLi4YQpbXlbOAh_redirect")
-    //     .get()
-    //     .then((value) {
-    //   print(value.data()!.values.first);
-    //   return value.data()!.values.first;
-    // });
+    diurl = await FirebaseFirestore.instance
+        .collection("Notice")
+        .doc("7A85zuoLi4YQpbXlbOAh_redirect")
+        .get()
+        .then((value) {
+      print(value.data()!.values.first);
+      return value.data()!.values.first;
+    });
 
-    // print("url is=====$diurl");
+    print("url is=====$diurl");
     
     trialink=globals.trial_link;
     schlrquiz= globals.schurl;
