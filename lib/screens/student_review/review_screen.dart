@@ -382,7 +382,7 @@ class _StudentReviewScreenState extends State<StudentReviewScreen> {
                                                                       children: [
                                                                         IconButton(
                                                                             onPressed: () =>
-                                                                                updateReview(id: reviews[index].id!),
+                                                                               showEditBoxDialog(context, reviews[index]),
                                                                             icon: Icon(
                                                                               Icons.edit,
                                                                               color: Colors.green,
@@ -552,8 +552,12 @@ class _StudentReviewScreenState extends State<StudentReviewScreen> {
     var rating;
     try {
       rating = reviews[0].rating!;
+
       print(rating.runtimeType);
       print(rating);
+      if (rating == "") {
+        rating = "3.0";
+      }
     } catch (e) {
       print("error 15: ${e}");
     }
@@ -709,7 +713,7 @@ class _StudentReviewScreenState extends State<StudentReviewScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     StarRating(
-                      rating: double.parse(rating.toString()),
+                      rating: double.parse(rating),
                       starSize: 20,
                       color: Colors.deepPurpleAccent,
                       length: 5,
@@ -740,7 +744,7 @@ class _StudentReviewScreenState extends State<StudentReviewScreen> {
                           email == useremail
                               ? IconButton(
                                   onPressed: () =>
-                                      showEditBoxDialog(context, firstreview),
+                                      showEditBoxDialog(context, reviews[0]),
                                   icon: Icon(
                                     Icons.edit,
                                     color:
@@ -755,7 +759,7 @@ class _StudentReviewScreenState extends State<StudentReviewScreen> {
                         //     MainAxisAlignment.spaceBetween,
                         children: [
                           IconButton(
-                              onPressed: () => updateReview(id: id),
+                              onPressed: () => showEditBoxDialog(context, reviews[0]),
                               icon: Icon(
                                 Icons.edit,
                                 color: Colors.green,
