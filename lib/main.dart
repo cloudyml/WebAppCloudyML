@@ -134,13 +134,16 @@ Future<void> main() async {
     print('url');
   } 
   else if (Uri.base.path == '/InternationalPaymentScreen') {
-    final url = Uri.base.path;
-    FirebaseFirestore.instance
-        .collection("Notice")
-        .doc("7A85zuoLi4YQpbXlbOAh_redirect")
-        .set({'url': url});
+    final url = Uri.base.queryParameters['cID'];
 
-    print('pushed');
+    internlpay=url!;
+
+    // FirebaseFirestore.instance
+    //     .collection("Notice")
+    //     .doc("7A85zuoLi4YQpbXlbOAh_redirect")
+    //     .set({'url': url});
+
+    print('pushed intrnlpay $internlpay');
   }
    else if (Uri.base.path == '/NewFeature') {
 

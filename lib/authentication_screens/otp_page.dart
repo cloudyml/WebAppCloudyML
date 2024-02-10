@@ -52,7 +52,7 @@ class _OtpPageState extends State<OtpPage> {
   bool loading = false;
   late String actualCode;
 
-  String? diurl;
+  // String? diurl;
   // late String payurl;
   // late String depayurl;
   // late String suppayurl;
@@ -63,6 +63,9 @@ class _OtpPageState extends State<OtpPage> {
   late String schlrquiz;
   var courseinfo;
   late String allpayurl;
+
+    late String internatnalpay;
+
 
   late String trialink;
   // late String interntnl;
@@ -118,20 +121,20 @@ class _OtpPageState extends State<OtpPage> {
   }
 
   void url() async {
-    diurl = await FirebaseFirestore.instance
-        .collection("Notice")
-        .doc("7A85zuoLi4YQpbXlbOAh_redirect")
-        .get()
-        .then((value) {
-      print(value.data()!.values.first);
-      return value.data()!.values.first;
-    });
+    // diurl = await FirebaseFirestore.instance
+    //     .collection("Notice")
+    //     .doc("7A85zuoLi4YQpbXlbOAh_redirect")
+    //     .get()
+    //     .then((value) {
+    //   print(value.data()!.values.first);
+    //   return value.data()!.values.first;
+    // });
 
-    print("url is=====$diurl");
+    // print("url is=====$diurl");
     
     trialink=globals.trial_link;
     schlrquiz= globals.schurl;
-
+    internatnalpay=globals.internlpay;
     allpayurl = globals.Payurl;
 
     courseinfo = await FirebaseFirestore.instance
@@ -886,15 +889,16 @@ class _OtpPageState extends State<OtpPage> {
                 //     'coursePrice': courseP
                 //   });
                 // }
-                else if (diurl == '/InternationalPaymentScreen') {
+                else if (internatnalpay.isNotEmpty) {
                   print("i am in otp else");
-                  final cID = "aEGX6kMfHzQrVgP3WCwU";
+                  final cID = internatnalpay;
                   GoRouter.of(context).go(
-                    '/InternationalPaymentScreen?cID=mPqg2Z2BdNHvwaqAEfA0',
+                    '/InternationalPaymentScreen?cID=${cID}',
                     // queryParams: {
                     //   'cID': cID,
                     //   }
                   );
+                  internatnalpay="";
                 } else if (schlrquiz.isNotEmpty) {
                   print("i am in otp else");
                   final cID = schlrquiz;

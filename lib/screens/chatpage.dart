@@ -697,6 +697,24 @@ void updateStream(String? selectedCourse) {
       textColor: Colors.white,
     );
   }
+Set<String> selectedCourses = Set<String>();
+
+void updateCollectionStream() {
+  if (selectedCourses.isEmpty) {
+    _collectionStream = FirebaseFirestore.instance
+        .collection('groups')
+        .orderBy('time', descending: true)
+        .limit(500)
+        .snapshots();
+  } else {
+    _collectionStream = FirebaseFirestore.instance
+        .collection('groups')
+        .where('name', whereIn: selectedCourses.toList())
+        .orderBy('time', descending: true)
+        .limit(500)
+        .snapshots();
+  }
+}
 
   List<String> coursesList = [];
   Future<List<String>> getcourses() async {
@@ -823,113 +841,93 @@ void updateStream(String? selectedCourse) {
                       ],
                     ),
                   ),
-                  Container(
-                     margin: EdgeInsets.only(top: 0),
-                  //  width: double.infinity,
-                   // height: 10.h,
-                    child: FutureBuilder<List<String>>(
-  future: getcourses(),
-  builder: (context, snapshot) {
-    if (snapshot.connectionState == ConnectionState.waiting) {
-      return CircularProgressIndicator(); // Or any loading indicator
-    } else if (snapshot.hasError) {
-      return Text(
-        'Error: ${snapshot.error}',
-        style: TextStyle(color: Colors.black),
-      );
-    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-      return Text(
-        'No courses available',
-        style: TextStyle(color: Colors.black),
-      ); // Handle the case when no courses are fetched
-    } else {
-  return Row(
-  children: [
-    SizedBox(
-      width: 300, // Set your desired width here
-      child: DropdownButtonHideUnderline(
-        child: ButtonTheme(
-          alignedDropdown: true,
-          child: DropdownButton<String>(
-            isExpanded: true, // Ensure the dropdown button takes full width
-            value: snapshot.data!.contains(selectedCourse) ? selectedCourse : null,
-            onChanged: (String? newValue) {
-              setState(() {
-                if (newValue == null || newValue.isEmpty) {
-                  // If "Clear Filters" is selected, reset the filters
-                   _collectionStream = FirebaseFirestore.instance
-                    .collection('groups')
-                  //  .where('name', isEqualTo: selectedCourse)
-                    .orderBy('time', descending: true)
-                    .limit(500)
-                    .snapshots();
-                  selectedCourse = "All Courses";
-                } else {
-                  selectedCourse = newValue!;
-                  _collectionStream = FirebaseFirestore.instance
-                      .collection('groups')
-                      .where('name', isEqualTo: selectedCourse)
-                      .orderBy('time', descending: true)
-                      .limit(500)
-                      .snapshots();
-                }
-              });
-            },
-            items: [
-              // Adding the "All Courses" option
-              DropdownMenuItem<String>(
-                value: null,
-                child: Text(
-                  'All Courses',
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(color: Colors.black),
-                ),
-              ),
-              // Mapping other items from snapshot data
-              ...snapshot.data!
-                  .toSet()
-                  .toList()
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(
-                    value,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(color: Colors.black),
-                  ),
-                );
-              }).toList(),
-            ],
-          ),
-        ),
-      ),
-    ),
-    // Add the clear button
-    Container(
-      child: IconButton(
-        color:Colors.purple,
-        onPressed: () {
-          setState(() {
-     _collectionStream = FirebaseFirestore.instance
-                    .collection('groups')
-                  //  .where('name', isEqualTo: selectedCourse)
-                    .orderBy('time', descending: true)
-                    .limit(500)
-                    .snapshots();
-            selectedCourse = "All Courses";
-          });
-        },
-        icon: Icon(Icons.clear), // Use any icon you like
-      ),
-    ),
-  ],
-);
-
-    }
-  },
-),
-
-                  ),
+                 Padding(
+                   padding: const EdgeInsets.all(20.0),
+                   child: Row(
+                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                   children: [
+                     ElevatedButton(
+                      style: ButtonStyle(
+    backgroundColor: MaterialStateProperty.all<Color>(Colors.purple),
+    foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+  ),
+                       onPressed: () {
+                         showDialog(
+                           context: context,
+                           builder: (BuildContext context) {
+                             return AlertDialog(
+                               content: Container(
+                                 width: MediaQuery.of(context).size.width * 0.8, // Adjust width as needed
+                                 height: MediaQuery.of(context).size.height * 0.6, // Adjust height as needed
+                                 child: FutureBuilder<List<String>>(
+                    future: getcourses(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else if (snapshot.hasError) {
+                        return Text(
+                          'Error: ${snapshot.error}',
+                          style: TextStyle(color: Colors.black),
+                        );
+                      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        return Text(
+                          'No courses available',
+                          style: TextStyle(color: Colors.black),
+                        );
+                      } else {
+                        return ListView(
+                          children: [
+                         Wrap(
+                   spacing: 10,
+                   children: snapshot.data!.map((course) {
+                     return CourseFilterChip(
+                       course: course,
+                       isSelected: selectedCourses.contains(course),
+                       onSelected: (isSelected) {
+                         setState(() {
+                           if (isSelected) {
+                             selectedCourses.add(course);
+                           } else {
+                             selectedCourses.remove(course);
+                           }
+                           updateCollectionStream();
+                         });
+                       },
+                     );
+                   }).toList(),
+                 ),
+                 
+                 
+                          ],
+                        );
+                      }
+                    },
+                                 ),
+                               ),
+                             );
+                           },
+                         );
+                       },
+                       child: Text('Filter by course'),
+                     ),
+                     ElevatedButton(
+                      style: ButtonStyle(
+    backgroundColor: MaterialStateProperty.all<Color>(Colors.purple),
+    foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+  ),
+                       onPressed: () {
+                         setState(() {
+                           selectedCourses.clear();
+                           updateCollectionStream();
+                         });
+                       },
+                       child: Text('Clear Selection'),
+                     ),
+                   ],
+                 ),
+                 ),
                   Expanded(
                       child: StreamBuilder<QuerySnapshot>(
                     stream: role == "student"
@@ -2041,3 +2039,45 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
     return Chewie(controller: _chewieController);
   }
 }
+class CourseFilterChip extends StatefulWidget {
+  final String course;
+  final bool isSelected;
+  final Function(bool) onSelected;
+
+  const CourseFilterChip({
+    required this.course,
+    required this.isSelected,
+    required this.onSelected,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  _CourseFilterChipState createState() => _CourseFilterChipState();
+}
+
+class _CourseFilterChipState extends State<CourseFilterChip> {
+  bool _isSelected = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _isSelected = widget.isSelected;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FilterChip(
+      label: Text(widget.course),
+      selected: _isSelected,
+      onSelected: (isSelected) {
+        setState(() {
+          _isSelected = isSelected;
+        });
+        widget.onSelected(isSelected);
+      },
+      selectedColor: _isSelected ? Colors.green : null,
+      backgroundColor: _isSelected ? Colors.green.withOpacity(0.3) : null,
+    );
+  }
+}
+

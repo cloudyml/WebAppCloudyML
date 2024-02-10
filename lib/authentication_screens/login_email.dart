@@ -48,8 +48,9 @@ class _LoginEmailPageState extends State<LoginEmailPage> {
   late String promEng;
   late String schlrquiz;
   late String allpayurl;
-  late String diurl;
+  // late String diurl;
   late String trialink;
+    late String internatnalpay;
 
   var courseinfo;
 
@@ -58,6 +59,8 @@ class _LoginEmailPageState extends State<LoginEmailPage> {
 
     allpayurl = globals.Payurl;
     trialink = globals.trial_link;
+    internatnalpay=globals.internlpay;
+
 
     print("url is at login1=====$schlrquiz");
     print("allpayurl is at login1=====${globals.Payurl}");
@@ -89,16 +92,16 @@ class _LoginEmailPageState extends State<LoginEmailPage> {
 
     print("courseinfo is ${courseinfo['Course Price']}");
 
-    diurl = await FirebaseFirestore.instance
-        .collection("Notice")
-        .doc("7A85zuoLi4YQpbXlbOAh_redirect")
-        .get()
-        .then((value) {
-      print(value.data()!.values.first);
-      return value.data()!.values.first;
-    });
+    // diurl = await FirebaseFirestore.instance
+    //     .collection("Notice")
+    //     .doc("7A85zuoLi4YQpbXlbOAh_redirect")
+    //     .get()
+    //     .then((value) {
+    //   print(value.data()!.values.first);
+    //   return value.data()!.values.first;
+    // });
 
-    print("url is=====$diurl");
+    // print("url is=====$diurl");
 
     // interntnl = await FirebaseFirestore.instance
     //     .collection("Notice")
@@ -1224,17 +1227,28 @@ class _LoginEmailPageState extends State<LoginEmailPage> {
                                                                 });
                                                             trialink = '';
                                                           }
-                                                    else if (diurl ==
-                                                        '/InternationalPaymentScreen') {
-                                                      final cID =
-                                                          "aEGX6kMfHzQrVgP3WCwU";
-                                                      GoRouter.of(context).go(
-                                                        '/InternationalPaymentScreen?cID=mPqg2Z2BdNHvwaqAEfA0',
-                                                        // queryParams: {
-                                                        //   'cID': cID,
-                                                        //   }
-                                                      );
-                                                    } 
+                                                          else if (internatnalpay.isNotEmpty) {
+                  print("i am in otp else");
+                  final cID = internatnalpay;
+                  GoRouter.of(context).go(
+                    '/InternationalPaymentScreen?cID=${cID}',
+                    // queryParams: {
+                    //   'cID': cID,
+                    //   }
+                  );
+                  internatnalpay="";
+                }
+                                                    // else if (diurl ==
+                                                    //     '/InternationalPaymentScreen') {
+                                                    //   final cID =
+                                                    //       "aEGX6kMfHzQrVgP3WCwU";
+                                                    //   GoRouter.of(context).go(
+                                                    //     '/InternationalPaymentScreen?cID=mPqg2Z2BdNHvwaqAEfA0',
+                                                    //     // queryParams: {
+                                                    //     //   'cID': cID,
+                                                    //     //   }
+                                                    //   );
+                                                    // } 
                                                     // else if (deurl ==
                                                     //     'F9gxnjW9nf5Lxg5A6758') {
                                                     //   final id = "0";
@@ -1886,17 +1900,29 @@ class _LoginEmailPageState extends State<LoginEmailPage> {
                                                     allpayurl = '';
                                                     print(
                                                         'the allpayurl after navigation login is ${allpayurl}');
-                                                  } else if (diurl ==
-                                                      '/InternationalPaymentScreen') {
-                                                    final cID =
-                                                        "aEGX6kMfHzQrVgP3WCwU";
-                                                    GoRouter.of(context).go(
-                                                      '/InternationalPaymentScreen?cID=mPqg2Z2BdNHvwaqAEfA0',
-                                                      // queryParams: {
-                                                      //   'cID': cID,
-                                                      //   }
-                                                    );
-                                                  }
+                                                  } 
+                                                  else if (internatnalpay.isNotEmpty) {
+                  print("i am in otp else");
+                  final cID = internatnalpay;
+                  GoRouter.of(context).go(
+                    '/InternationalPaymentScreen?cID=${cID}',
+                    // queryParams: {
+                    //   'cID': cID,
+                    //   }
+                  );
+                  internatnalpay="";
+                }
+                                                  // else if (diurl ==
+                                                  //     '/InternationalPaymentScreen') {
+                                                  //   final cID =
+                                                  //       "aEGX6kMfHzQrVgP3WCwU";
+                                                  //   GoRouter.of(context).go(
+                                                  //     '/InternationalPaymentScreen?cID=mPqg2Z2BdNHvwaqAEfA0',
+                                                  //     // queryParams: {
+                                                  //     //   'cID': cID,
+                                                  //     //   }
+                                                  //   );
+                                                  // }
                                                   // else if (payurl ==
                                                   //     'aEGX6kMfHzQrVgP3WCwU') {
                                                   //   final cID =
@@ -2252,17 +2278,28 @@ class _LoginEmailPageState extends State<LoginEmailPage> {
                                                                 });
                                                             trialink = '';
                                                           }
-                                            else if (diurl ==
-                                                '/InternationalPaymentScreen') {
-                                              final cID =
-                                                  "aEGX6kMfHzQrVgP3WCwU";
-                                              GoRouter.of(context).go(
-                                                '/InternationalPaymentScreen?cID=mPqg2Z2BdNHvwaqAEfA0',
-                                                // queryParams: {
-                                                //   'cID': cID,
-                                                //   }
-                                              );
-                                            }
+                                                          else if (internatnalpay.isNotEmpty) {
+                  print("i am in otp else");
+                  final cID = internatnalpay;
+                  GoRouter.of(context).go(
+                    '/InternationalPaymentScreen?cID=${cID}',
+                    // queryParams: {
+                    //   'cID': cID,
+                    //   }
+                  );
+                  internatnalpay="";
+                }
+                                            // else if (diurl ==
+                                            //     '/InternationalPaymentScreen') {
+                                            //   final cID =
+                                            //       "aEGX6kMfHzQrVgP3WCwU";
+                                            //   GoRouter.of(context).go(
+                                            //     '/InternationalPaymentScreen?cID=mPqg2Z2BdNHvwaqAEfA0',
+                                            //     // queryParams: {
+                                            //     //   'cID': cID,
+                                            //     //   }
+                                            //   );
+                                            // }
                                             // else if (payurl ==
                                             //     'aEGX6kMfHzQrVgP3WCwU') {
                                             //   final cID =

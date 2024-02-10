@@ -386,8 +386,8 @@ class _NewFeatureState extends State<NewFeature> {
                                 return Container();
                               }
                               if (courseList.length != 0) {
-                                print('listtto ${courseList.length}');
-                                print('listtto $courseList');
+                                // print('listtto ${courseList.length}');
+                                // print('listtto $courseList');
 
                                 return Padding(
                                   padding: const EdgeInsets.all(8.0),
