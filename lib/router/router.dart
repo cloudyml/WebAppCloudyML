@@ -26,6 +26,7 @@ import 'package:cloudyml_app2/screens/daily_quiz/add_daily_quiz.dart';
 import 'package:cloudyml_app2/screens/groups_list.dart';
 import 'package:cloudyml_app2/screens/quiz/quizList.dart';
 import 'package:cloudyml_app2/screens/quiz/quiz_new_combo_course.dart';
+import 'package:cloudyml_app2/screens/scholarship_data/scholarship_student_data.dart';
 import 'package:cloudyml_app2/screens/splash.dart';
 import 'package:cloudyml_app2/screens/student_review/review_screen.dart';
 import 'package:cloudyml_app2/store.dart';
@@ -616,6 +617,13 @@ class MyRouter {
           path: '/addCourseInUser',
           pageBuilder: (context, state) {
             return MaterialPage(child: AddCourseInUser());
+          },
+        ),
+        GoRoute(
+          name: 'ScholarshipSudentData',
+          path: '/scholarshipSudentData',
+          pageBuilder: (context, state) {
+            return MaterialPage(child: ScholarshipQuizStudentData());
           },
         ),
         // GoRoute(

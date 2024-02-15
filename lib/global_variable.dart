@@ -26,6 +26,7 @@ List moduleList = [];
 List courseList = [
   "Select Course Name"
 ];
+Set<String> coursesgroups= Set<String>();
 Map coursemoduelmap = {
   "Data Analyst Case Studies": [
     "US Pollution Analysis",

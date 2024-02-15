@@ -251,6 +251,7 @@ class _MyAppState extends State<MyApp> {
                 navigatorObservers: [VdoPlayerController.navigatorObserver('/player/(.*)')],
                 debugShowCheckedModeBanner: false,
                 title: 'CloudyML',
+                
                 scrollBehavior: MyCustomScrollBehavior(),
                 builder: (BuildContext context, child) {
                   child = MediaQuery(
@@ -267,6 +268,7 @@ class _MyAppState extends State<MyApp> {
                 },
                 theme: ThemeData(
                   primarySwatch: Colors.blue,
+                  useMaterial3: false,
                   scrollbarTheme: ScrollbarThemeData(
                     thumbColor:
                         MaterialStateProperty.all<Color>(Colors.purpleAccent),

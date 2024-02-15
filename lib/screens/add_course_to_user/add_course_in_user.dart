@@ -249,12 +249,25 @@ class AddCourseInUser extends StatelessWidget {
              return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: List.generate(
-              controller.studentCoursesById.length,
+              controller.studentCoursesByName.length,
               (index) => Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Chip(
-                  label: Text(controller.studentCoursesById[index]),
+                  label: Text(controller.studentCoursesByName[index].courseName),
                   onDeleted: () => ctr.updateCourseRemove(index),
+                  avatar: 
+                  controller.studentCoursesByName[index].isTrial ?
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.green,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.black)
+                    ),
+                    child: Center(
+                      child: Text('Trial', style: TextStyle(color: Colors.white, fontSize: 6),),
+                    ),
+
+                  ) : SizedBox()
                 ),
               ),
                 ),
@@ -263,7 +276,6 @@ class AddCourseInUser extends StatelessWidget {
                  ),
             SizedBox(height: 15,),
              SizedBox(
-             height: 30,
              width: Adaptive.w(40),
              child: ElevatedButton(
               style: ButtonStyle(
@@ -274,7 +286,6 @@ class AddCourseInUser extends StatelessWidget {
                ],
              ),
            )
-          
                       
                       
                     ],

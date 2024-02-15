@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'dart:async';
+import 'dart:ui';
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'dart:html' as html;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
+import '../global_variable.dart';
 //import 'package:flutter_sound_lite/public/flutter_sound_recorder.dart';
 import 'package:microphone/microphone.dart';
 import 'package:ntp/ntp.dart';
@@ -509,28 +511,29 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-StreamController<Stream<QuerySnapshot>> _streamController =
-    StreamController<Stream<QuerySnapshot>>();
+  StreamController<Stream<QuerySnapshot>> _streamController =
+      StreamController<Stream<QuerySnapshot>>();
 
-Stream<QuerySnapshot> _collectionStream = FirebaseFirestore.instance
-    .collection('groups')
-    .orderBy('time', descending: true)
-    .limit(500)
-    .snapshots();
+  Stream<QuerySnapshot> _collectionStream = FirebaseFirestore.instance
+      .collection('groups')
+      .orderBy('time', descending: true)
+      .limit(500)
+      .snapshots();
 
-void updateStream(String? selectedCourse) {
-  if (selectedCourse != null) {
-    Stream<QuerySnapshot> filteredStream = FirebaseFirestore.instance
-        .collection('groups')
-        .where('name', isEqualTo: selectedCourse)
-        .orderBy('time', descending: true)
-        .limit(500)
-        .snapshots();
-    _streamController.add(filteredStream);
-  } else {
-    _streamController.add(_collectionStream);
+  void updateStream(String? selectedCourse) {
+    if (selectedCourse != null) {
+      Stream<QuerySnapshot> filteredStream = FirebaseFirestore.instance
+          .collection('groups')
+          .where('name', isEqualTo: selectedCourse)
+          .orderBy('time', descending: true)
+          .limit(500)
+          .snapshots();
+      _streamController.add(filteredStream);
+    } else {
+      _streamController.add(_collectionStream);
+    }
   }
-}
+
   Stream<QuerySnapshot> _collectionStream1 = FirebaseFirestore.instance
       .collection('groups')
       .where('student_id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
@@ -697,34 +700,52 @@ void updateStream(String? selectedCourse) {
       textColor: Colors.white,
     );
   }
-Set<String> selectedCourses = Set<String>();
 
-void updateCollectionStream() {
-  if (selectedCourses.isEmpty) {
-    _collectionStream = FirebaseFirestore.instance
-        .collection('groups')
-        .orderBy('time', descending: true)
-        .limit(500)
-        .snapshots();
-  } else {
-    _collectionStream = FirebaseFirestore.instance
-        .collection('groups')
-        .where('name', whereIn: selectedCourses.toList())
-        .orderBy('time', descending: true)
-        .limit(500)
-        .snapshots();
+  Set<String> selectedCourses = Set<String>();
+
+  void updateCollectionStream() {
+    if (selectedCourses.isEmpty) {
+      _collectionStream = FirebaseFirestore.instance
+          .collection('groups')
+          .orderBy('time', descending: true)
+          .limit(500)
+          .snapshots();
+    } else {
+      _collectionStream = FirebaseFirestore.instance
+          .collection('groups')
+          .where('name', whereIn: selectedCourses.toList())
+          .orderBy('time', descending: true)
+          .limit(500)
+          .snapshots();
+    }
   }
-}
 
-  List<String> coursesList = [];
-  Future<List<String>> getcourses() async {
-    await FirebaseFirestore.instance.collection("courses").get().then((value) {
+  Set<String> coursesList = Set<String>();
+  Future<Set<String>> getcourses() async {
+    if(coursesgroups.length==0)
+ {   await FirebaseFirestore.instance
+        .collection("courses")
+        .get()
+        .then((value) async {
+      Set<String> normalcourse = Set<String>();
       for (var i in value.docs) {
-        coursesList.add(i['name']);
+        CollectionReference groupsCollection =
+            FirebaseFirestore.instance.collection('groups');
+        QuerySnapshot querySnapshot =
+            await groupsCollection.where('name', isEqualTo: i['name']).get();
+        if (querySnapshot.size != 0) {
+          if (i['combo'] != true) {
+            normalcourse.add(i['name']);
+          } else {
+            coursesList.add(i['name']);
+          }
+        }
       }
+      coursesList.addAll(normalcourse);
+      coursesgroups.addAll(coursesList);
       print("coursenamelist: ${coursesList}");
-    });
-    return coursesList;
+    });}
+    return coursesgroups;
   }
 
   String selectedCourse = "";
@@ -767,6 +788,7 @@ void updateCollectionStream() {
     super.dispose();
   }
 
+  bool openoverlay = false;
   @override
   Widget build(BuildContext context) {
     double baseWidth = 1280;
@@ -775,286 +797,250 @@ void updateCollectionStream() {
     DateTime now = DateTime.now();
     return Scaffold(
       key: _scaffoldKey,
-      body: Container(
-        child: Row(
-          children: [
-            Container(
-              width: 30.w,
-              child: Column(
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(top: 0),
-                    width: double.infinity,
-                    height: 10.h,
-                    child: Row(
-                      children: [
-                        // Padding(
-                        //   padding:
-                        //       const EdgeInsets.only(top: 0, left: 1, right: 1),
-                        //   child: Container(
-                        //     child: Image.asset(
-                        //       'assets/page-1/images/vector.png',
-                        //       height: 5.h,
-                        //       width: 3.h,
-                        //     ),
-                        //   ),
-                        // ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 2.w, right: 0.5.w),
-                          child: Container(
-                            width: 22.w,
-                            height: 4.h,
-                            padding: EdgeInsets.only(left: 1.w),
-                            decoration: BoxDecoration(
-                              color: Color(0xfff5f5f5),
-                              borderRadius: BorderRadius.circular(22.h),
-                            ),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  child: Image.asset(
-                                    'assets/page-1/images/search.png',
-                                    height: 5.h,
-                                    width: 3.h,
-                                  ),
-                                ),
-                                SizedBox(width: 1.w),
-                                Expanded(
-                                  child: TextField(
-                                    onChanged: _onSearchTextChanged,
-                                    decoration: InputDecoration(
-                                      hintText: "Search",
-                                      border: InputBorder.none,
-                                    ),
-                                    style: TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontWeight: FontWeight.w400,
-                                      color: Color(0xff707991),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                 Padding(
-                   padding: const EdgeInsets.all(20.0),
-                   child: Row(
-                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                   children: [
-                     ElevatedButton(
-                      style: ButtonStyle(
-    backgroundColor: MaterialStateProperty.all<Color>(Colors.purple),
-    foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-  ),
-                       onPressed: () {
-                         showDialog(
-                           context: context,
-                           builder: (BuildContext context) {
-                             return AlertDialog(
-                               content: Container(
-                                 width: MediaQuery.of(context).size.width * 0.8, // Adjust width as needed
-                                 height: MediaQuery.of(context).size.height * 0.6, // Adjust height as needed
-                                 child: FutureBuilder<List<String>>(
-                    future: getcourses(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      } else if (snapshot.hasError) {
-                        return Text(
-                          'Error: ${snapshot.error}',
-                          style: TextStyle(color: Colors.black),
-                        );
-                      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                        return Text(
-                          'No courses available',
-                          style: TextStyle(color: Colors.black),
-                        );
-                      } else {
-                        return ListView(
+      body: Stack(
+        children: [
+          Container(
+            child: Row(
+              children: [
+                Container(
+                  width: 30.w,
+                  child: Column(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(top: 0),
+                        width: double.infinity,
+                        height: 10.h,
+                        child: Row(
                           children: [
-                         Wrap(
-                   spacing: 10,
-                   children: snapshot.data!.map((course) {
-                     return CourseFilterChip(
-                       course: course,
-                       isSelected: selectedCourses.contains(course),
-                       onSelected: (isSelected) {
-                         setState(() {
-                           if (isSelected) {
-                             selectedCourses.add(course);
-                           } else {
-                             selectedCourses.remove(course);
-                           }
-                           updateCollectionStream();
-                         });
-                       },
-                     );
-                   }).toList(),
-                 ),
-                 
-                 
-                          ],
-                        );
-                      }
-                    },
-                                 ),
-                               ),
-                             );
-                           },
-                         );
-                       },
-                       child: Text('Filter by course'),
-                     ),
-                     ElevatedButton(
-                      style: ButtonStyle(
-    backgroundColor: MaterialStateProperty.all<Color>(Colors.purple),
-    foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-  ),
-                       onPressed: () {
-                         setState(() {
-                           selectedCourses.clear();
-                           updateCollectionStream();
-                         });
-                       },
-                       child: Text('Clear Selection'),
-                     ),
-                   ],
-                 ),
-                 ),
-                  Expanded(
-                      child: StreamBuilder<QuerySnapshot>(
-                    stream: role == "student"
-                        ? _collectionStream1
-                        : _collectionStream,
-                    builder: (BuildContext context,
-                        AsyncSnapshot<QuerySnapshot> snapshot) {
-                      if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      }
-
-                      switch (snapshot.connectionState) {
-                        case ConnectionState.waiting:
-                          return Center(
-                            child:
-                                Image.asset("assets/page-1/images/loader.gif"),
-                          );
-                        default:
-                          return ListView.builder(
-                            itemCount: snapshot.data!.docs.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              DocumentSnapshot document =
-                                  snapshot.data!.docs[index];
-                              Map<String, dynamic> data =
-                                  document.data() as Map<String, dynamic>;
-
-                              return GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    _messageStream = FirebaseFirestore.instance
-                                        .collection("groups")
-                                        .doc(document.id)
-                                        .collection("chats")
-                                        .orderBy('time', descending: true)
-                                        .snapshots();
-                                    selectedTileIndex = document.id;
-                                    idcurr = document.id;
-                                    name = document["name"].toString();
-                                    time = document["student_name"].toString();
-                                    if (_updatedDocuments
-                                        .contains(document.id)) {
-                                      setState(() {
-                                        _updatedDocuments.remove(document.id);
-                                      });
-                                    }
-                                  });
-                                },
-                                child: Padding(
-                                  padding:
-                                      EdgeInsets.only(left: 0.w, right: 0.w),
-                                  child: Container(
-                                    width: 30.w,
-                                    padding: EdgeInsets.fromLTRB(
-                                        1.w, 0.2.h, 0.w, 0.2.h),
-                                    color: _updatedDocuments
-                                            .contains(document.id)
-                                        ? Color.fromARGB(255, 157, 239, 159)
-                                        : selectedTileIndex == document.id
-                                            ? Color.fromARGB(255, 237, 213, 248)
-                                            : Colors.transparent,
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          margin: EdgeInsets.fromLTRB(
-                                              0 * fem, 0 * fem, 2.h, 0 * fem),
-                                          width: 4.w,
-                                          height: 4.w,
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(100.sp),
-                                            child: Image.asset(
-                                              'assets/icon.jpeg',
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
+                            // Padding(
+                            //   padding:
+                            //       const EdgeInsets.only(top: 0, left: 1, right: 1),
+                            //   child: Container(
+                            //     child: Image.asset(
+                            //       'assets/page-1/images/vector.png',
+                            //       height: 5.h,
+                            //       width: 3.h,
+                            //     ),
+                            //   ),
+                            // ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 2.w, right: 0.5.w),
+                              child: Container(
+                                width: 22.w,
+                                height: 4.h,
+                                padding: EdgeInsets.only(left: 1.w),
+                                decoration: BoxDecoration(
+                                  color: Color(0xfff5f5f5),
+                                  borderRadius: BorderRadius.circular(22.h),
+                                ),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      child: Image.asset(
+                                        'assets/page-1/images/search.png',
+                                        height: 5.h,
+                                        width: 3.h,
+                                      ),
+                                    ),
+                                    SizedBox(width: 1.w),
+                                    Expanded(
+                                      child: TextField(
+                                        onChanged: _onSearchTextChanged,
+                                        decoration: InputDecoration(
+                                          hintText: "Search",
+                                          border: InputBorder.none,
                                         ),
-                                        Container(
-                                          width: 23.w,
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Container(
-                                                child: Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  children: [
-                                                    Container(
-                                                      width: 16.w,
-                                                      child: Text(
-                                                        "${document["name"]}",
-                                                        style: TextStyle(
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          fontFamily: 'Inter',
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          color:
-                                                              Color(0xff011627),
+                                        style: TextStyle(
+                                          fontFamily: 'Inter',
+                                          fontWeight: FontWeight.w400,
+                                          color: Color(0xff707991),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      if(role!="student")
+                      Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            ElevatedButton(
+                              style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.purple),
+                                foregroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.white),
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  openoverlay = true;
+                                });
+                                // showDialog(
+                                //   context: context,
+                                //   builder: (BuildContext context) {
+                                //     return AlertDialog(
+                                //       content:
+                                //     );
+                                //   },
+                                // );
+                              },
+                              child: Text('Filter by course'),
+                            ),
+                            ElevatedButton(
+                              style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.purple),
+                                foregroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.white),
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  selectedCourses.clear();
+                                  updateCollectionStream();
+                                });
+                              },
+                              child: Text('Clear Selection'),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                          child: StreamBuilder<QuerySnapshot>(
+                        stream: role == "student"
+                            ? _collectionStream1
+                            : _collectionStream,
+                        builder: (BuildContext context,
+                            AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          }
+
+                          switch (snapshot.connectionState) {
+                            case ConnectionState.waiting:
+                              return Center(
+                                child: Image.asset(
+                                    "assets/page-1/images/loader.gif"),
+                              );
+                            default:
+                              return ListView.builder(
+                                itemCount: snapshot.data!.docs.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  DocumentSnapshot document =
+                                      snapshot.data!.docs[index];
+                                  Map<String, dynamic> data =
+                                      document.data() as Map<String, dynamic>;
+
+                                  return GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        _messageStream = FirebaseFirestore
+                                            .instance
+                                            .collection("groups")
+                                            .doc(document.id)
+                                            .collection("chats")
+                                            .orderBy('time', descending: true)
+                                            .snapshots();
+                                        selectedTileIndex = document.id;
+                                        idcurr = document.id;
+                                        name = document["name"].toString();
+                                        time =
+                                            document["student_name"].toString();
+                                        if (_updatedDocuments
+                                            .contains(document.id)) {
+                                          setState(() {
+                                            _updatedDocuments
+                                                .remove(document.id);
+                                          });
+                                        }
+                                      });
+                                    },
+                                    child: Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 0.w, right: 0.w),
+                                      child: Container(
+                                        width: 30.w,
+                                        padding: EdgeInsets.fromLTRB(
+                                            1.w, 0.2.h, 0.w, 0.2.h),
+                                        color: _updatedDocuments
+                                                .contains(document.id)
+                                            ? Color.fromARGB(255, 157, 239, 159)
+                                            : selectedTileIndex == document.id
+                                                ? Color.fromARGB(
+                                                    255, 237, 213, 248)
+                                                : Colors.transparent,
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              margin: EdgeInsets.fromLTRB(
+                                                  0 * fem,
+                                                  0 * fem,
+                                                  2.h,
+                                                  0 * fem),
+                                              width: 4.w,
+                                              height: 4.w,
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        100.sp),
+                                                child: Image.asset(
+                                                  'assets/icon.jpeg',
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            ),
+                                            Container(
+                                              width: 23.w,
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Container(
+                                                    child: Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Container(
+                                                          width: 16.w,
+                                                          child: Text(
+                                                            "${document["name"]}",
+                                                            style: TextStyle(
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              fontFamily:
+                                                                  'Inter',
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                              color: Color(
+                                                                  0xff011627),
+                                                            ),
+                                                          ),
                                                         ),
-                                                      ),
-                                                    ),
-                                                    Padding(
-                                                      padding: EdgeInsets.only(
-                                                          left: 1.w),
-                                                      child: Text(
-                                                        (document["time"]
-                                                                        .toDate()
-                                                                        .day ==
-                                                                    now.day) &&
-                                                                (document["time"]
-                                                                        .toDate()
-                                                                        .month ==
-                                                                    now
-                                                                        .month) &&
-                                                                (document["time"]
-                                                                        .toDate()
-                                                                        .year ==
-                                                                    now.year)
-                                                            ? "Today"
-                                                            : (document["time"]
+                                                        Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  left: 1.w),
+                                                          child: Text(
+                                                            (document["time"]
                                                                             .toDate()
                                                                             .day ==
-                                                                        (now.day -
-                                                                            1)) &&
+                                                                        now
+                                                                            .day) &&
                                                                     (document["time"]
                                                                             .toDate()
                                                                             .month ==
@@ -1063,9 +1049,37 @@ void updateCollectionStream() {
                                                                     (document["time"]
                                                                             .toDate()
                                                                             .year ==
-                                                                        now.year)
-                                                                ? "Yesterday"
-                                                                : "${document["time"].toDate().day}/${document["time"].toDate().month}/${document["time"].toDate().year}",
+                                                                        now
+                                                                            .year)
+                                                                ? "Today"
+                                                                : (document["time"].toDate().day ==
+                                                                            (now.day -
+                                                                                1)) &&
+                                                                        (document["time"].toDate().month ==
+                                                                            now
+                                                                                .month) &&
+                                                                        (document["time"].toDate().year ==
+                                                                            now.year)
+                                                                    ? "Yesterday"
+                                                                    : "${document["time"].toDate().day}/${document["time"].toDate().month}/${document["time"].toDate().year}",
+                                                            style: TextStyle(
+                                                              fontFamily:
+                                                                  'Inter',
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400,
+                                                              color: Color(
+                                                                  0xff707991),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        "${document["student_name"]}",
                                                         style: TextStyle(
                                                           fontFamily: 'Inter',
                                                           fontWeight:
@@ -1074,336 +1088,450 @@ void updateCollectionStream() {
                                                               Color(0xff707991),
                                                         ),
                                                       ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    "${document["student_name"]}",
-                                                    style: TextStyle(
-                                                      fontFamily: 'Inter',
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color: Color(0xff707991),
-                                                    ),
+                                                      Spacer(),
+                                                      !(data.containsKey(
+                                                              'last'))
+                                                          ? Text(
+                                                              "NEW!!!",
+                                                              style: TextStyle(
+                                                                fontFamily:
+                                                                    'Inter',
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                color: Color
+                                                                    .fromARGB(
+                                                                        255,
+                                                                        144,
+                                                                        5,
+                                                                        149),
+                                                              ),
+                                                            )
+                                                          : Spacer(),
+                                                    ],
                                                   ),
-                                                  Spacer(),
-                                                  !(data.containsKey('last'))
-                                                      ? Text(
-                                                          "NEW!!!",
-                                                          style: TextStyle(
-                                                            fontFamily: 'Inter',
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color:
-                                                                Color.fromARGB(
-                                                                    255,
-                                                                    144,
-                                                                    5,
-                                                                    149),
-                                                          ),
-                                                        )
-                                                      : Spacer(),
                                                 ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
-                          );
-                      }
-                    },
-                  ))
-                ],
-              ),
-            ),
-            Container(
-              width: 70.w,
-              child: Column(
-                children: [
-                  name == ""
-                      ? Container()
-                      : Container(
-                          width: double.infinity,
-                          height: 10.h,
-                          child: Container(
-                            // topbartFx (1:345)
-                            padding: EdgeInsets.fromLTRB(2.w, 1.h, 2.w, 0),
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Color(0xffd9dce0)),
-                              color: Color(0xffffffff),
-                            ),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  // otherusera8n (1:346)
-                                  padding: EdgeInsets.fromLTRB(0, 0, 2.h, 0),
-                                  height: 10.h,
-                                  decoration: BoxDecoration(
-                                    color: Color(0xffffffff),
-                                  ),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.only(bottom: 0.5.h),
-                                        child: Container(
-                                          // avatarJ4n (1:347)
-                                          margin:
-                                              EdgeInsets.fromLTRB(0, 0, 1.w, 0),
-                                          width: 5.w,
-                                          height: 5.w,
-                                          child: ClipRRect(
-                                            borderRadius: BorderRadius.circular(
-                                                100 * fem),
-                                            child: Image.asset(
-                                              'assets/icon.jpeg',
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        // textszCW (1:348)
-                                        height: double.infinity,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Container(
-                                              // datascienceanalyticswdY (1:350)
-                                              margin: EdgeInsets.fromLTRB(
-                                                  0 * fem,
-                                                  0 * fem,
-                                                  0 * fem,
-                                                  4 * fem),
-                                              child: Text(
-                                                '$name',
-                                                style: SafeGoogleFont(
-                                                  'Inter',
-                                                  fontSize: 16 * ffem,
-                                                  fontWeight: FontWeight.w600,
-                                                  height: 1.25 * ffem / fem,
-                                                  color: Color(0xff011627),
-                                                ),
-                                              ),
-                                            ),
-                                            Text(
-                                              // lastmessage5minsagoeXx (1:352)
-                                              '$time',
-                                              style: SafeGoogleFont(
-                                                'Inter',
-                                                fontSize: 14 * ffem,
-                                                fontWeight: FontWeight.w400,
-                                                height:
-                                                    1.2857142857 * ffem / fem,
-                                                color: Color(0xff707991),
                                               ),
                                             ),
                                           ],
                                         ),
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  );
+                                },
+                              );
+                          }
+                        },
+                      ))
+                    ],
+                  ),
+                ),
+                Container(
+                  width: 70.w,
+                  child: Column(
+                    children: [
+                      name == ""
+                          ? Container()
+                          : Container(
+                              width: double.infinity,
+                              height: 10.h,
+                              child: Container(
+                                // topbartFx (1:345)
+                                padding: EdgeInsets.fromLTRB(2.w, 1.h, 2.w, 0),
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Color(0xffd9dce0)),
+                                  color: Color(0xffffffff),
                                 ),
-                                SizedBox(
-                                  width: 8 * fem,
-                                ),
-                                SizedBox(
-                                  width: 8 * fem,
-                                ),
-                                Container(
-                                  // callicon5NN (1:356)
-                                  width: 40 * fem,
-                                  height: 40 * fem,
-                                  decoration: BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.circular(100 * fem),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 8 * fem,
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                  name == ""
-                      ? Container(
-                          width: 70.w,
-                          height: 100.h,
-                          color: Color(0xFFB27ECA),
-                          //  height: double.infinity,
-                          child: Image.asset(
-                            "assets/page-1/images/bg-1.png",
-                            fit: BoxFit.cover,
-                          ),
-                        )
-                      : Container(
-                          width: 70.w,
-                          height: 90.h,
-                          decoration: BoxDecoration(
-                            color: Color(0xFFB27ECA),
-                            image: DecorationImage(
-                              image: AssetImage(
-                                  "assets/page-1/images/bg-1.png"), // Replace with your image path
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          child: Column(
-                            children: [
-                              Container(
-                                width: 70.w,
-                                height: 75.h,
-                                child: StreamBuilder<QuerySnapshot>(
-                                  stream: _messageStream,
-                                  builder: (context, snapshot) {
-                                    if (snapshot.hasError) {
-                                      print("snapshot.error");
-                                      return CircularProgressIndicator(
-                                        color: Colors.yellow,
-                                      );
-                                    }
-
-                                    if (!snapshot.hasData) {
-                                      return Center(
-                                        child: CircularProgressIndicator(),
-                                      );
-                                    }
-                                    final messages = snapshot.data!.docs;
-                                    print(
-                                        'Number of documents: ${messages.length}');
-                                    List<MessageBubble> messageBubbles = [];
-                                    for (var message in messages) {
-                                      final data = message.data()
-                                          as Map<String, dynamic>;
-                                      final messageText = message['message'];
-                                      final messageSender = message['sendBy'];
-                                      final messageType = message['type'];
-                                      final messagetime = message['time'];
-                                      final mid = message.id;
-                                      final gid = idcurr;
-                                      final messageid =
-                                          data.containsKey('studentid')
-                                              ? message['studentid']
-                                              : "old message";
-                                      final link = messageType == "image" ||
-                                              messageType == "audio" ||
-                                              messageType == "video" ||
-                                              messageType == "file"
-                                          ? message["link"]
-                                          : "";
-
-                                      final messageBubble = MessageBubble(
-                                        mid: mid,
-                                        gid: gid!,
-                                        message: messageText,
-                                        sender: messageSender,
-                                        timestamp: messagetime,
-                                        isMe: messageSender == namecurrent,
-                                        link: link,
-                                        //  recording: recording,
-                                        type: messageType,
-                                        isURL: isURL(messageText),
-                                      );
-                                      messageBubbles.add(messageBubble);
-                                    }
-                                    return Container(
-                                      height: 80.h,
-                                      width: 65.w,
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      // otherusera8n (1:346)
+                                      padding:
+                                          EdgeInsets.fromLTRB(0, 0, 2.h, 0),
+                                      height: 10.h,
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(40.sp),
-                                          topRight: Radius.circular(40.sp),
-                                        ),
-                                        // color: Colors.white,
+                                        color: Color(0xffffffff),
                                       ),
-                                      child: ListView(
-                                        reverse: true,
-                                        children: messageBubbles,
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                              Divider(),
-                              Padding(
-                                padding: EdgeInsets.all(1.h),
-                                child: Container(
-                                  height: 8.h,
-                                  color: Colors.white,
-                                  child: Row(
-                                    children: [
-                                      SizedBox(
-                                        width: 1.w,
-                                      ),
-                                      _isRecording
-                                          ? _buildStopRecordingButton()
-                                          : _buildMicButton(),
-                                      _isRecording
-                                          ? _buildCancelButton()
-                                          : Expanded(
-                                              child: TextField(
-                                                maxLines: 1,
-                                                controller: _textController,
-                                                onTap: () {
-                                                  _focusNode.requestFocus();
-                                                },
-                                                onTapOutside: (event) {
-                                                  _focusNode.unfocus();
-                                                },
-                                                focusNode: _focusNode,
-                                                decoration: InputDecoration(
-                                                  hintText: 'Type a message...',
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding:
+                                                EdgeInsets.only(bottom: 0.5.h),
+                                            child: Container(
+                                              // avatarJ4n (1:347)
+                                              margin: EdgeInsets.fromLTRB(
+                                                  0, 0, 1.w, 0),
+                                              width: 5.w,
+                                              height: 5.w,
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        100 * fem),
+                                                child: Image.asset(
+                                                  'assets/icon.jpeg',
+                                                  fit: BoxFit.cover,
                                                 ),
                                               ),
-                                              // ),
                                             ),
-                                      _isRecording
-                                          ? SizedBox()
-                                          : Row(
+                                          ),
+                                          Container(
+                                            // textszCW (1:348)
+                                            height: double.infinity,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
-                                                IconButton(
-                                                  icon: Icon(
-                                                      Icons.attachment_outlined,
-                                                      color: Colors.purple),
-                                                  onPressed: _pickFileany,
+                                                Container(
+                                                  // datascienceanalyticswdY (1:350)
+                                                  margin: EdgeInsets.fromLTRB(
+                                                      0 * fem,
+                                                      0 * fem,
+                                                      0 * fem,
+                                                      4 * fem),
+                                                  child: Text(
+                                                    '$name',
+                                                    style: SafeGoogleFont(
+                                                      'Inter',
+                                                      fontSize: 16 * ffem,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      height: 1.25 * ffem / fem,
+                                                      color: Color(0xff011627),
+                                                    ),
+                                                  ),
                                                 ),
-                                                IconButton(
-                                                  icon: Icon(
-                                                      Icons.add_a_photo_rounded,
-                                                      color: Colors.purple),
-                                                  onPressed: _selectimage,
-                                                ),
-                                                IconButton(
-                                                  icon: Icon(Icons.send,
-                                                      color: Colors.purple),
-                                                  onPressed: _sendMessage,
+                                                Text(
+                                                  // lastmessage5minsagoeXx (1:352)
+                                                  '$time',
+                                                  style: SafeGoogleFont(
+                                                    'Inter',
+                                                    fontSize: 14 * ffem,
+                                                    fontWeight: FontWeight.w400,
+                                                    height: 1.2857142857 *
+                                                        ffem /
+                                                        fem,
+                                                    color: Color(0xff707991),
+                                                  ),
                                                 ),
                                               ],
                                             ),
-                                    ],
-                                  ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 8 * fem,
+                                    ),
+                                    SizedBox(
+                                      width: 8 * fem,
+                                    ),
+                                    Container(
+                                      // callicon5NN (1:356)
+                                      width: 40 * fem,
+                                      height: 40 * fem,
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(100 * fem),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 8 * fem,
+                                    )
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                ],
+                            ),
+                      name == ""
+                          ? Container(
+                              width: 70.w,
+                              height: 100.h,
+                              color: Color(0xFFB27ECA),
+                              //  height: double.infinity,
+                              child: Image.asset(
+                                "assets/page-1/images/bg-1.png",
+                                fit: BoxFit.cover,
+                              ),
+                            )
+                          : Container(
+                              width: 70.w,
+                              height: 90.h,
+                              decoration: BoxDecoration(
+                                color: Color(0xFFB27ECA),
+                                image: DecorationImage(
+                                  image: AssetImage(
+                                      "assets/page-1/images/bg-1.png"), // Replace with your image path
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    width: 70.w,
+                                    height: 75.h,
+                                    child: StreamBuilder<QuerySnapshot>(
+                                      stream: _messageStream,
+                                      builder: (context, snapshot) {
+                                        if (snapshot.hasError) {
+                                          print("snapshot.error");
+                                          return CircularProgressIndicator(
+                                            color: Colors.yellow,
+                                          );
+                                        }
+
+                                        if (!snapshot.hasData) {
+                                          return Center(
+                                            child: CircularProgressIndicator(),
+                                          );
+                                        }
+                                        final messages = snapshot.data!.docs;
+                                        print(
+                                            'Number of documents: ${messages.length}');
+                                        List<MessageBubble> messageBubbles = [];
+                                        for (var message in messages) {
+                                          final data = message.data()
+                                              as Map<String, dynamic>;
+                                          final messageText =
+                                              message['message'];
+                                          final messageSender =
+                                              message['sendBy'];
+                                          final messageType = message['type'];
+                                          final messagetime = message['time'];
+                                          final mid = message.id;
+                                          final gid = idcurr;
+                                          final messageid =
+                                              data.containsKey('studentid')
+                                                  ? message['studentid']
+                                                  : "old message";
+                                          final link = messageType == "image" ||
+                                                  messageType == "audio" ||
+                                                  messageType == "video" ||
+                                                  messageType == "file"
+                                              ? message["link"]
+                                              : "";
+
+                                          final messageBubble = MessageBubble(
+                                            mid: mid,
+                                            gid: gid!,
+                                            message: messageText,
+                                            sender: messageSender,
+                                            timestamp: messagetime,
+                                            isMe: messageSender == namecurrent,
+                                            link: link,
+                                            //  recording: recording,
+                                            type: messageType,
+                                            isURL: isURL(messageText),
+                                          );
+                                          messageBubbles.add(messageBubble);
+                                        }
+                                        return Container(
+                                          height: 80.h,
+                                          width: 65.w,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(40.sp),
+                                              topRight: Radius.circular(40.sp),
+                                            ),
+                                            // color: Colors.white,
+                                          ),
+                                          child: ListView(
+                                            reverse: true,
+                                            children: messageBubbles,
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  Divider(),
+                                  Padding(
+                                    padding: EdgeInsets.all(1.h),
+                                    child: Container(
+                                      height: 8.h,
+                                      color: Colors.white,
+                                      child: Row(
+                                        children: [
+                                          SizedBox(
+                                            width: 1.w,
+                                          ),
+                                          _isRecording
+                                              ? _buildStopRecordingButton()
+                                              : _buildMicButton(),
+                                          _isRecording
+                                              ? _buildCancelButton()
+                                              : Expanded(
+                                                  child: TextField(
+                                                    maxLines: 1,
+                                                    controller: _textController,
+                                                    onTap: () {
+                                                      _focusNode.requestFocus();
+                                                    },
+                                                    onTapOutside: (event) {
+                                                      _focusNode.unfocus();
+                                                    },
+                                                    focusNode: _focusNode,
+                                                    decoration: InputDecoration(
+                                                      hintText:
+                                                          'Type a message...',
+                                                    ),
+                                                  ),
+                                                  // ),
+                                                ),
+                                          _isRecording
+                                              ? SizedBox()
+                                              : Row(
+                                                  children: [
+                                                    IconButton(
+                                                      icon: Icon(
+                                                          Icons
+                                                              .attachment_outlined,
+                                                          color: Colors.purple),
+                                                      onPressed: _pickFileany,
+                                                    ),
+                                                    IconButton(
+                                                      icon: Icon(
+                                                          Icons
+                                                              .add_a_photo_rounded,
+                                                          color: Colors.purple),
+                                                      onPressed: _selectimage,
+                                                    ),
+                                                    IconButton(
+                                                      icon: Icon(Icons.send,
+                                                          color: Colors.purple),
+                                                      onPressed: _sendMessage,
+                                                    ),
+                                                  ],
+                                                ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+          if (openoverlay)
+            InkWell(
+              onTap: () {
+                setState(() {
+                  openoverlay = false;
+                });
+              },
+              child: Container(
+                height: 100.h,
+                width: 100.w,
+                color: Color.fromARGB(165, 255, 255, 255),
               ),
-            )
-          ],
-        ),
+            ),
+          if (openoverlay)
+            AnimatedPositioned(
+              duration: Duration(milliseconds: 500),
+              curve: Curves.easeInOut,
+              right: openoverlay ? 0 : -MediaQuery.of(context).size.width * 0.6,
+              top: 0,
+              bottom: 0,
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    openoverlay = false;
+                  });
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.6,
+                  color: Colors.transparent,
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                    child: Container(
+                      color: Colors.white.withOpacity(0.8),
+                      padding: EdgeInsets.all(20.0),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width *
+                            0.8, // Adjust width as needed
+                        height: MediaQuery.of(context).size.height *
+                            0.6, // Adjust height as needed
+                        child: FutureBuilder<Set<String>>(
+                          future: getcourses(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Center(
+                                child: Image.asset(
+                                    "assets/page-1/images/loader.gif"),
+                              );
+                            } else if (snapshot.hasError) {
+                              return Text(
+                                'Error: ${snapshot.error}',
+                                style: TextStyle(color: Colors.black),
+                              );
+                            } else if (!snapshot.hasData ||
+                                snapshot.data!.isEmpty) {
+                              return Text(
+                                'No courses available',
+                                style: TextStyle(color: Colors.black),
+                              );
+                            } else {
+                              return ListView(
+                                children: [
+                                  Container(
+                                    color: Colors.purple,
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          "Select the course to filter",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20),
+                                        ),
+                                        Column(
+                                          // spacing: 10,
+                                          children:
+                                              snapshot.data!.map((course) {
+                                            return Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: CourseFilterChip(
+                                                course: course,
+                                                isSelected: selectedCourses
+                                                    .contains(course),
+                                                onSelected: (isSelected) {
+                                                  setState(() {
+                                                    if (isSelected) {
+                                                      selectedCourses
+                                                          .add(course);
+                                                    } else {
+                                                      selectedCourses
+                                                          .remove(course);
+                                                    }
+                                                    updateCollectionStream();
+                                                  });
+                                                },
+                                              ),
+                                            );
+                                          }).toList(),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
@@ -2039,17 +2167,17 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
     return Chewie(controller: _chewieController);
   }
 }
+
 class CourseFilterChip extends StatefulWidget {
   final String course;
   final bool isSelected;
-  final Function(bool) onSelected;
+  final Function(bool)? onSelected;
 
-  const CourseFilterChip({
+  CourseFilterChip({
     required this.course,
     required this.isSelected,
-    required this.onSelected,
-    Key? key,
-  }) : super(key: key);
+    this.onSelected,
+  });
 
   @override
   _CourseFilterChipState createState() => _CourseFilterChipState();
@@ -2066,18 +2194,42 @@ class _CourseFilterChipState extends State<CourseFilterChip> {
 
   @override
   Widget build(BuildContext context) {
-    return FilterChip(
-      label: Text(widget.course),
-      selected: _isSelected,
-      onSelected: (isSelected) {
+    return GestureDetector(
+      onTap: () {
         setState(() {
-          _isSelected = isSelected;
+          _isSelected = !_isSelected;
+          if (widget.onSelected != null) {
+            widget.onSelected!(_isSelected);
+          }
         });
-        widget.onSelected(isSelected);
       },
-      selectedColor: _isSelected ? Colors.green : null,
-      backgroundColor: _isSelected ? Colors.green.withOpacity(0.3) : null,
+      child: Container(
+        width: 50.w,
+        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+        decoration: BoxDecoration(
+          color: _isSelected ? Colors.green : Colors.white,
+          border: Border.all(color: Colors.black),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Checkbox(
+              value: _isSelected,
+              onChanged: (value) {
+                setState(() {
+                  _isSelected = value!;
+                  if (widget.onSelected != null) {
+                    widget.onSelected!(_isSelected);
+                  }
+                });
+              },
+            ),
+            SizedBox(width: 5),
+            Text(widget.course),
+          ],
+        ),
+      ),
     );
   }
 }
-

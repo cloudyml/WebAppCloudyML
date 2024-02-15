@@ -821,6 +821,7 @@ var mentorItems = [
   'My Profile',
   'Students Review',
   'Add Course In User',
+  'Scholarship Data',
   'Logout'
 ];
 
@@ -1077,6 +1078,10 @@ Widget customMenuBar(BuildContext context, String? isReviewed) {
                   GoRouter.of(context).pushReplacement('/login');
                 } else if(value == 'Add Course In User'){
                   GoRouter.of(context).pushNamed('AddCourseInUser');
+
+                }
+                else if(value == 'Scholarship Data'){
+                  GoRouter.of(context).pushNamed('ScholarshipSudentData');
 
                 }
                 else {
