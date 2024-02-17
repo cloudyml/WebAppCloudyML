@@ -5,6 +5,9 @@ import 'package:cloudyml_app2/screens/coupon/models/createCouponModel.dart';
 import 'package:cloudyml_app2/screens/quiz/certificatemodel.dart';
 import 'package:cloudyml_app2/screens/quiz/congralutation_scholarship.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_highlight/flutter_highlight.dart';
+import 'package:flutter_highlight/themes/atom-one-dark.dart';
+import 'package:flutter_highlight/themes/atom-one-light.dart';
 import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloudyml_app2/MyAccount/myaccount.dart';
@@ -2506,15 +2509,49 @@ class _QuizPageState extends State<QuizPage> {
                                                                               alignment: AlignmentDirectional(-1, 0),
                                                                               child: Padding(
                                                                                 padding: EdgeInsetsDirectional.fromSTEB(20, 0, 0, 30),
-                                                                                child: Text(
-                                                                                  '${quizdata[questionindex]["question"].toString().split("(--image--)")[0]}',
-                                                                                  textAlign: TextAlign.start,
-                                                                                  style: FlutterFlowTheme.of(context).bodyText1.override(
-                                                                                        fontFamily: 'Poppins',
-                                                                                        fontSize: 17,
-                                                                                        fontWeight: FontWeight.normal,
+                                                                                // child: Text(
+                                                                                //   '${quizdata[questionindex]["question"].toString().split("(--image--)")[0]}',
+                                                                                //   textAlign: TextAlign.start,
+                                                                                //   style: FlutterFlowTheme.of(context).bodyText1.override(
+                                                                                //         fontFamily: 'Poppins',
+                                                                                //         fontSize: 17,
+                                                                                //         fontWeight: FontWeight.normal,
+                                                                                //       ),
+                                                                                // ),
+                                                                                child: quizdata[questionindex]["question"].toString().contains("'''")
+                                                                                    ? Column(
+                                                                                        mainAxisAlignment: MainAxisAlignment.start,
+                                                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                        children: [
+                                                                                          HighlightView(
+                                                                                            '${quizdata[questionindex]["question"].toString().split("'''")[0]}',
+                                                                                            language: 'dart',
+                                                                                            theme: atomOneLightTheme,
+                                                                                            padding: EdgeInsets.all(12),
+                                                                                            textStyle: TextStyle(fontFamily: 'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace'),
+                                                                                          ),
+                                                                                          HighlightView(
+                                                                                            '${quizdata[questionindex]["question"].toString().split("'''")[1].toString()}',
+                                                                                            language: 'dart',
+                                                                                            theme: atomOneDarkTheme,
+                                                                                            padding: EdgeInsets.all(12),
+                                                                                            textStyle: TextStyle(fontFamily: 'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace'),
+                                                                                          ),
+                                                                                          quizdata[questionindex]["question"].toString().split("'''").length >= 2
+                                                                                              ? HighlightView(
+                                                                                                  '${quizdata[questionindex]["question"].toString().split("'''")[2]}',
+                                                                                                  language: 'dart',
+                                                                                                  theme: atomOneLightTheme,
+                                                                                                  padding: EdgeInsets.all(12),
+                                                                                                  textStyle: TextStyle(fontFamily: 'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace'),
+                                                                                                )
+                                                                                              : Container(),
+                                                                                        ],
+                                                                                      )
+                                                                                    : Text(
+                                                                                        '${quizdata[questionindex]["question"].toString()}',
+                                                                                        style: TextStyle(fontFamily: 'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace'),
                                                                                       ),
-                                                                                ),
                                                                               ),
                                                                             ),
                                                                             quizdata[questionindex]["questionImage"] == null || quizdata[questionindex]["questionImage"] == ''
@@ -2544,6 +2581,7 @@ class _QuizPageState extends State<QuizPage> {
                                                                         ),
                                                                       ),
                                                                     ),
+                                                                    Divider(),
                                                                     quizdata[questionindex]["options"]['A'] ==
                                                                             ""
                                                                         ? Container()
@@ -2599,15 +2637,49 @@ class _QuizPageState extends State<QuizPage> {
                                                                                                       mainAxisAlignment: MainAxisAlignment.center,
                                                                                                       crossAxisAlignment: CrossAxisAlignment.start,
                                                                                                       children: [
-                                                                                                        Text(
-                                                                                                          '${quizdata[questionindex]["options"]['A']}',
-                                                                                                          textAlign: TextAlign.start,
-                                                                                                          style: FlutterFlowTheme.of(context).bodyText1.override(
-                                                                                                                fontFamily: 'Poppins',
-                                                                                                                fontSize: 17,
-                                                                                                                fontWeight: FontWeight.normal,
+                                                                                                        quizdata[questionindex]["options"]['A'].toString().contains("'''")
+                                                                                                            ? Column(
+                                                                                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                                children: [
+                                                                                                                  HighlightView(
+                                                                                                                    '${quizdata[questionindex]["options"]['A'].toString().split("'''")[0]}',
+                                                                                                                    // language: 'dart',
+                                                                                                                    theme: atomOneLightTheme,
+                                                                                                                    padding: EdgeInsets.all(12),
+                                                                                                                    textStyle: TextStyle(fontFamily: 'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace'),
+                                                                                                                  ),
+                                                                                                                  HighlightView(
+                                                                                                                    '${quizdata[questionindex]["options"]['A'].toString().split("'''")[1].toString()}',
+                                                                                                                    language: 'dart',
+                                                                                                                    theme: atomOneDarkTheme,
+                                                                                                                    padding: EdgeInsets.all(12),
+                                                                                                                    textStyle: TextStyle(fontFamily: 'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace'),
+                                                                                                                  ),
+                                                                                                                  quizdata[questionindex]["options"]['A'].toString().split("'''").length >= 2
+                                                                                                                      ? HighlightView(
+                                                                                                                          '${quizdata[questionindex]["options"]['A'].toString().split("'''")[2]}',
+                                                                                                                          // language: 'dart',
+                                                                                                                          theme: atomOneLightTheme,
+                                                                                                                          padding: EdgeInsets.all(12),
+                                                                                                                          textStyle: TextStyle(fontFamily: 'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace'),
+                                                                                                                        )
+                                                                                                                      : Container(),
+                                                                                                                ],
+                                                                                                              )
+                                                                                                            : Text(
+                                                                                                                '${quizdata[questionindex]["options"]['A'].toString()}',
+                                                                                                                style: TextStyle(fontFamily: 'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace'),
                                                                                                               ),
-                                                                                                        ),
+                                                                                                        // Text(
+                                                                                                        //   '${quizdata[questionindex]["options"]['A']}',
+                                                                                                        //   textAlign: TextAlign.start,
+                                                                                                        //   style: FlutterFlowTheme.of(context).bodyText1.override(
+                                                                                                        //         fontFamily: 'Poppins',
+                                                                                                        //         fontSize: 17,
+                                                                                                        //         fontWeight: FontWeight.normal,
+                                                                                                        //       ),
+                                                                                                        // ),
                                                                                                         showimagea
                                                                                                             ? SizedBox(
                                                                                                                 height: 200,
@@ -2615,6 +2687,7 @@ class _QuizPageState extends State<QuizPage> {
                                                                                                                 child: Image.network(quizdata[questionindex]["OptionsImage"]['A']),
                                                                                                               )
                                                                                                             : Container(),
+                                                                                                        Divider()
                                                                                                       ],
                                                                                                     ),
                                                                                                   ),
@@ -2689,15 +2762,49 @@ class _QuizPageState extends State<QuizPage> {
                                                                                                       mainAxisAlignment: MainAxisAlignment.center,
                                                                                                       crossAxisAlignment: CrossAxisAlignment.start,
                                                                                                       children: [
-                                                                                                        Text(
-                                                                                                          '${quizdata[questionindex]["options"]['B']}',
-                                                                                                          textAlign: TextAlign.start,
-                                                                                                          style: FlutterFlowTheme.of(context).bodyText1.override(
-                                                                                                                fontFamily: 'Poppins',
-                                                                                                                fontSize: 17,
-                                                                                                                fontWeight: FontWeight.normal,
+                                                                                                        quizdata[questionindex]["options"]['B'].toString().contains("'''")
+                                                                                                            ? Column(
+                                                                                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                                children: [
+                                                                                                                  HighlightView(
+                                                                                                                    '${quizdata[questionindex]["options"]['B'].toString().split("'''")[0]}',
+                                                                                                                    // language: 'dart',
+                                                                                                                    theme: atomOneLightTheme,
+                                                                                                                    padding: EdgeInsets.all(12),
+                                                                                                                    textStyle: TextStyle(fontFamily: 'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace'),
+                                                                                                                  ),
+                                                                                                                  HighlightView(
+                                                                                                                    '${quizdata[questionindex]["options"]['B'].toString().split("'''")[1].toString()}',
+                                                                                                                    language: 'dart',
+                                                                                                                    theme: atomOneDarkTheme,
+                                                                                                                    padding: EdgeInsets.all(12),
+                                                                                                                    textStyle: TextStyle(fontFamily: 'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace'),
+                                                                                                                  ),
+                                                                                                                  quizdata[questionindex]["options"]['B'].toString().split("'''").length >= 2
+                                                                                                                      ? HighlightView(
+                                                                                                                          '${quizdata[questionindex]["options"]['B'].toString().split("'''")[2]}',
+                                                                                                                          // language: 'dart',
+                                                                                                                          theme: atomOneLightTheme,
+                                                                                                                          padding: EdgeInsets.all(12),
+                                                                                                                          textStyle: TextStyle(fontFamily: 'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace'),
+                                                                                                                        )
+                                                                                                                      : Container(),
+                                                                                                                ],
+                                                                                                              )
+                                                                                                            : Text(
+                                                                                                                '${quizdata[questionindex]["options"]['B'].toString()}',
+                                                                                                                style: TextStyle(fontFamily: 'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace'),
                                                                                                               ),
-                                                                                                        ),
+                                                                                                        // Text(
+                                                                                                        //   '${quizdata[questionindex]["options"]['B']}',
+                                                                                                        //   textAlign: TextAlign.start,
+                                                                                                        //   style: FlutterFlowTheme.of(context).bodyText1.override(
+                                                                                                        //         fontFamily: 'Poppins',
+                                                                                                        //         fontSize: 17,
+                                                                                                        //         fontWeight: FontWeight.normal,
+                                                                                                        //       ),
+                                                                                                        // ),
                                                                                                         showimageb
                                                                                                             ? SizedBox(
                                                                                                                 height: 200,
@@ -2705,6 +2812,7 @@ class _QuizPageState extends State<QuizPage> {
                                                                                                                 child: Image.network(quizdata[questionindex]["OptionsImage"]['B']),
                                                                                                               )
                                                                                                             : Container(),
+                                                                                                        Divider()
                                                                                                       ],
                                                                                                     ),
                                                                                                   ),
@@ -2779,15 +2887,40 @@ class _QuizPageState extends State<QuizPage> {
                                                                                                   mainAxisAlignment: MainAxisAlignment.center,
                                                                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                                                                   children: [
-                                                                                                    Text(
-                                                                                                      '${quizdata[questionindex]["options"]['C']}',
-                                                                                                      textAlign: TextAlign.start,
-                                                                                                      style: FlutterFlowTheme.of(context).bodyText1.override(
-                                                                                                            fontFamily: 'Poppins',
-                                                                                                            fontSize: 17,
-                                                                                                            fontWeight: FontWeight.normal,
+                                                                                                    quizdata[questionindex]["options"]['C'].toString().contains("'''")
+                                                                                                        ? Column(
+                                                                                                            mainAxisAlignment: MainAxisAlignment.start,
+                                                                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                            children: [
+                                                                                                              HighlightView(
+                                                                                                                '${quizdata[questionindex]["options"]['C'].toString().split("'''")[0]}',
+                                                                                                                // language: 'dart',
+                                                                                                                theme: atomOneLightTheme,
+                                                                                                                padding: EdgeInsets.all(12),
+                                                                                                                textStyle: TextStyle(fontFamily: 'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace'),
+                                                                                                              ),
+                                                                                                              HighlightView(
+                                                                                                                '${quizdata[questionindex]["options"]['C'].toString().split("'''")[1].toString()}',
+                                                                                                                language: 'dart',
+                                                                                                                theme: atomOneDarkTheme,
+                                                                                                                padding: EdgeInsets.all(12),
+                                                                                                                textStyle: TextStyle(fontFamily: 'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace'),
+                                                                                                              ),
+                                                                                                              quizdata[questionindex]["options"]['C'].toString().split("'''").length >= 2
+                                                                                                                  ? HighlightView(
+                                                                                                                      '${quizdata[questionindex]["options"]['C'].toString().split("'''")[2]}',
+                                                                                                                      // language: 'dart',
+                                                                                                                      theme: atomOneLightTheme,
+                                                                                                                      padding: EdgeInsets.all(12),
+                                                                                                                      textStyle: TextStyle(fontFamily: 'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace'),
+                                                                                                                    )
+                                                                                                                  : Container(),
+                                                                                                            ],
+                                                                                                          )
+                                                                                                        : Text(
+                                                                                                            '${quizdata[questionindex]["options"]['C'].toString()}',
+                                                                                                            style: TextStyle(fontFamily: 'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace'),
                                                                                                           ),
-                                                                                                    ),
                                                                                                     showimagec
                                                                                                         ? SizedBox(
                                                                                                             height: 200,
@@ -2795,6 +2928,7 @@ class _QuizPageState extends State<QuizPage> {
                                                                                                             child: Image.network(quizdata[questionindex]["OptionsImage"]['C']),
                                                                                                           )
                                                                                                         : Container(),
+                                                                                                    Divider()
                                                                                                   ],
                                                                                                 ),
                                                                                               ),
@@ -2871,15 +3005,40 @@ class _QuizPageState extends State<QuizPage> {
                                                                                                 mainAxisAlignment: MainAxisAlignment.center,
                                                                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                                                                 children: [
-                                                                                                  Text(
-                                                                                                    '${quizdata[questionindex]["options"]['D']}',
-                                                                                                    textAlign: TextAlign.start,
-                                                                                                    style: FlutterFlowTheme.of(context).bodyText1.override(
-                                                                                                          fontFamily: 'Poppins',
-                                                                                                          fontSize: 17,
-                                                                                                          fontWeight: FontWeight.normal,
+                                                                                                  quizdata[questionindex]["options"]['D'].toString().contains("'''")
+                                                                                                      ? Column(
+                                                                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                          children: [
+                                                                                                            HighlightView(
+                                                                                                              '${quizdata[questionindex]["options"]['D'].toString().split("'''")[0]}',
+                                                                                                              // language: 'dart',
+                                                                                                              theme: atomOneLightTheme,
+                                                                                                              padding: EdgeInsets.all(12),
+                                                                                                              textStyle: TextStyle(fontFamily: 'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace'),
+                                                                                                            ),
+                                                                                                            HighlightView(
+                                                                                                              '${quizdata[questionindex]["options"]['D'].toString().split("'''")[1].toString()}',
+                                                                                                              language: 'dart',
+                                                                                                              theme: atomOneDarkTheme,
+                                                                                                              padding: EdgeInsets.all(12),
+                                                                                                              textStyle: TextStyle(fontFamily: 'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace'),
+                                                                                                            ),
+                                                                                                            quizdata[questionindex]["options"]['D'].toString().split("'''").length >= 2
+                                                                                                                ? HighlightView(
+                                                                                                                    '${quizdata[questionindex]["options"]['D'].toString().split("'''")[2]}',
+                                                                                                                    // language: 'dart',
+                                                                                                                    theme: atomOneLightTheme,
+                                                                                                                    padding: EdgeInsets.all(12),
+                                                                                                                    textStyle: TextStyle(fontFamily: 'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace'),
+                                                                                                                  )
+                                                                                                                : Container(),
+                                                                                                          ],
+                                                                                                        )
+                                                                                                      : Text(
+                                                                                                          '${quizdata[questionindex]["options"]['D'].toString()}',
+                                                                                                          style: TextStyle(fontFamily: 'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace'),
                                                                                                         ),
-                                                                                                  ),
                                                                                                   showimaged
                                                                                                       ? SizedBox(
                                                                                                           height: 200,
@@ -2887,6 +3046,7 @@ class _QuizPageState extends State<QuizPage> {
                                                                                                           child: Image.network(quizdata[questionindex]["OptionsImage"]['D']),
                                                                                                         )
                                                                                                       : Container(),
+                                                                                                  Divider()
                                                                                                 ],
                                                                                               ),
                                                                                             ),
@@ -2987,7 +3147,7 @@ class _QuizPageState extends State<QuizPage> {
                                                                               print('Button pressed ...');
                                                                             },
                                                                             text:
-                                                                                'SAVE & NEXT1',
+                                                                                'SAVE & NEXT',
                                                                             options:
                                                                                 FFButtonOptions(
                                                                               width: 100,
@@ -4738,15 +4898,54 @@ class _QuizPageState extends State<QuizPage> {
                   alignment: AlignmentDirectional(-1, 0),
                   child: Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(20, 0, 0, 30),
-                    child: Text(
-                      '${question}',
-                      textAlign: TextAlign.start,
-                      style: FlutterFlowTheme.of(context).bodyText1.override(
-                            fontFamily: 'Poppins',
-                            fontSize: 17,
-                            fontWeight: FontWeight.normal,
+                    child: quizdata[questionindex]["question"]
+                            .toString()
+                            .contains("'''")
+                        ? Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              HighlightView(
+                                '${quizdata[questionindex]["question"].toString().split("'''")[0]}',
+                                language: 'dart',
+                                theme: atomOneLightTheme,
+                                padding: EdgeInsets.all(12),
+                                textStyle: TextStyle(
+                                    fontFamily:
+                                        'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace'),
+                              ),
+                              HighlightView(
+                                '${quizdata[questionindex]["question"].toString().split("'''")[1].toString()}',
+                                language: 'dart',
+                                theme: atomOneDarkTheme,
+                                padding: EdgeInsets.all(12),
+                                textStyle: TextStyle(
+                                    fontFamily:
+                                        'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace'),
+                              ),
+                              quizdata[questionindex]["question"]
+                                          .toString()
+                                          .split("'''")
+                                          .length >=
+                                      2
+                                  ? HighlightView(
+                                      '${quizdata[questionindex]["question"].toString().split("'''")[2]}',
+                                      language: 'dart',
+                                      theme: atomOneLightTheme,
+                                      padding: EdgeInsets.all(12),
+                                      textStyle: TextStyle(
+                                          fontFamily:
+                                              'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace'),
+                                    )
+                                  : Container(),
+                            ],
+                          )
+                        : Text(
+                            '${quizdata[questionindex]["question"].toString()}',
+                            style: TextStyle(
+                                fontFamily:
+                                    'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace'),
                           ),
-                    ),
                   ),
                 ),
                 questionimage == null || questionimage == ''
@@ -4833,17 +5032,61 @@ class _QuizPageState extends State<QuizPage> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                          '${optiona}',
-                                          textAlign: TextAlign.start,
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyText1
-                                              .override(
-                                                fontFamily: 'Poppins',
-                                                fontSize: 17,
-                                                fontWeight: FontWeight.normal,
+                                        quizdata[questionindex]["options"]['A']
+                                                .toString()
+                                                .contains("'''")
+                                            ? Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  HighlightView(
+                                                    '${quizdata[questionindex]["options"]['A'].toString().split("'''")[0]}',
+                                                    // language: 'dart',
+                                                    theme: atomOneLightTheme,
+                                                    padding: EdgeInsets.all(12),
+                                                    textStyle: TextStyle(
+                                                        fontFamily:
+                                                            'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace'),
+                                                  ),
+                                                  HighlightView(
+                                                    '${quizdata[questionindex]["options"]['A'].toString().split("'''")[1].toString()}',
+                                                    language: 'dart',
+                                                    theme: atomOneDarkTheme,
+                                                    padding: EdgeInsets.all(12),
+                                                    textStyle: TextStyle(
+                                                        fontFamily:
+                                                            'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace'),
+                                                  ),
+                                                  quizdata[questionindex][
+                                                                      "options"]
+                                                                  ['A']
+                                                              .toString()
+                                                              .split("'''")
+                                                              .length >=
+                                                          2
+                                                      ? HighlightView(
+                                                          '${quizdata[questionindex]["options"]['A'].toString().split("'''")[2]}',
+                                                          // language: 'dart',
+                                                          theme:
+                                                              atomOneLightTheme,
+                                                          padding:
+                                                              EdgeInsets.all(
+                                                                  12),
+                                                          textStyle: TextStyle(
+                                                              fontFamily:
+                                                                  'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace'),
+                                                        )
+                                                      : Container(),
+                                                ],
+                                              )
+                                            : Text(
+                                                '${quizdata[questionindex]["options"]['A'].toString()}',
+                                                style: TextStyle(
+                                                    fontFamily:
+                                                        'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace'),
                                               ),
-                                        ),
                                         optionaimage != ""
                                             ? SizedBox(
                                                 height: 200,
@@ -4935,17 +5178,61 @@ class _QuizPageState extends State<QuizPage> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                          '${optionb}',
-                                          textAlign: TextAlign.start,
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyText1
-                                              .override(
-                                                fontFamily: 'Poppins',
-                                                fontSize: 17,
-                                                fontWeight: FontWeight.normal,
+                                        quizdata[questionindex]["options"]['B']
+                                                .toString()
+                                                .contains("'''")
+                                            ? Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  HighlightView(
+                                                    '${quizdata[questionindex]["options"]['B'].toString().split("'''")[0]}',
+                                                    // language: 'dart',
+                                                    theme: atomOneLightTheme,
+                                                    padding: EdgeInsets.all(12),
+                                                    textStyle: TextStyle(
+                                                        fontFamily:
+                                                            'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace'),
+                                                  ),
+                                                  HighlightView(
+                                                    '${quizdata[questionindex]["options"]['B'].toString().split("'''")[1].toString()}',
+                                                    language: 'dart',
+                                                    theme: atomOneDarkTheme,
+                                                    padding: EdgeInsets.all(12),
+                                                    textStyle: TextStyle(
+                                                        fontFamily:
+                                                            'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace'),
+                                                  ),
+                                                  quizdata[questionindex][
+                                                                      "options"]
+                                                                  ['B']
+                                                              .toString()
+                                                              .split("'''")
+                                                              .length >=
+                                                          2
+                                                      ? HighlightView(
+                                                          '${quizdata[questionindex]["options"]['B'].toString().split("'''")[2]}',
+                                                          // language: 'dart',
+                                                          theme:
+                                                              atomOneLightTheme,
+                                                          padding:
+                                                              EdgeInsets.all(
+                                                                  12),
+                                                          textStyle: TextStyle(
+                                                              fontFamily:
+                                                                  'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace'),
+                                                        )
+                                                      : Container(),
+                                                ],
+                                              )
+                                            : Text(
+                                                '${quizdata[questionindex]["options"]['B'].toString()}',
+                                                style: TextStyle(
+                                                    fontFamily:
+                                                        'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace'),
                                               ),
-                                        ),
                                         optionbimage != ""
                                             ? SizedBox(
                                                 height: 200,
@@ -5037,17 +5324,61 @@ class _QuizPageState extends State<QuizPage> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                          '${optionc}',
-                                          textAlign: TextAlign.start,
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyText1
-                                              .override(
-                                                fontFamily: 'Poppins',
-                                                fontSize: 17,
-                                                fontWeight: FontWeight.normal,
+                                        quizdata[questionindex]["options"]['C']
+                                                .toString()
+                                                .contains("'''")
+                                            ? Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  HighlightView(
+                                                    '${quizdata[questionindex]["options"]['C'].toString().split("'''")[0]}',
+                                                    language: 'dart',
+                                                    theme: atomOneLightTheme,
+                                                    padding: EdgeInsets.all(12),
+                                                    textStyle: TextStyle(
+                                                        fontFamily:
+                                                            'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace'),
+                                                  ),
+                                                  HighlightView(
+                                                    '${quizdata[questionindex]["options"]['C'].toString().split("'''")[1].toString()}',
+                                                    language: 'dart',
+                                                    theme: atomOneDarkTheme,
+                                                    padding: EdgeInsets.all(12),
+                                                    textStyle: TextStyle(
+                                                        fontFamily:
+                                                            'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace'),
+                                                  ),
+                                                  quizdata[questionindex][
+                                                                      "options"]
+                                                                  ['C']
+                                                              .toString()
+                                                              .split("'''")
+                                                              .length >=
+                                                          2
+                                                      ? HighlightView(
+                                                          '${quizdata[questionindex]["options"]['C'].toString().split("'''")[2]}',
+                                                          language: 'dart',
+                                                          theme:
+                                                              atomOneLightTheme,
+                                                          padding:
+                                                              EdgeInsets.all(
+                                                                  12),
+                                                          textStyle: TextStyle(
+                                                              fontFamily:
+                                                                  'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace'),
+                                                        )
+                                                      : Container(),
+                                                ],
+                                              )
+                                            : Text(
+                                                '${quizdata[questionindex]["options"]['C'].toString()}',
+                                                style: TextStyle(
+                                                    fontFamily:
+                                                        'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace'),
                                               ),
-                                        ),
                                         optioncimage != ""
                                             ? SizedBox(
                                                 height: 200,
@@ -5136,17 +5467,70 @@ class _QuizPageState extends State<QuizPage> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        '${optiond}',
-                                        textAlign: TextAlign.start,
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyText1
-                                            .override(
-                                              fontFamily: 'Poppins',
-                                              fontSize: 17,
-                                              fontWeight: FontWeight.normal,
+                                      quizdata[questionindex]["options"]['D']
+                                              .toString()
+                                              .contains("'''")
+                                          ? Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                HighlightView(
+                                                  '${quizdata[questionindex]["options"]['D'].toString().split("'''")[0]}',
+                                                  language: 'dart',
+                                                  theme: atomOneDarkTheme,
+                                                  padding: EdgeInsets.all(12),
+                                                  textStyle: TextStyle(
+                                                      fontFamily:
+                                                          'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace'),
+                                                ),
+                                                HighlightView(
+                                                  '${quizdata[questionindex]["options"]['D'].toString().split("'''")[1].toString()}',
+                                                  // language: 'dart',
+                                                  theme: atomOneLightTheme,
+                                                  padding: EdgeInsets.all(12),
+                                                  textStyle: TextStyle(
+                                                      fontFamily:
+                                                          'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace'),
+                                                ),
+                                                quizdata[questionindex]
+                                                                ["options"]['D']
+                                                            .toString()
+                                                            .split("'''")
+                                                            .length >=
+                                                        2
+                                                    ? HighlightView(
+                                                        '${quizdata[questionindex]["options"]['D'].toString().split("'''")[2]}',
+                                                        // language: 'dart',
+                                                        theme:
+                                                            atomOneLightTheme,
+                                                        padding:
+                                                            EdgeInsets.all(12),
+                                                        textStyle: TextStyle(
+                                                            fontFamily:
+                                                                'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace'),
+                                                      )
+                                                    : Container(),
+                                              ],
+                                            )
+                                          : Text(
+                                              '${quizdata[questionindex]["options"]['D'].toString()}',
+                                              style: TextStyle(
+                                                  fontFamily:
+                                                      'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace'),
                                             ),
-                                      ),
+                                      // Text(
+                                      //   '${optiond}',
+                                      //   textAlign: TextAlign.start,
+                                      //   style: FlutterFlowTheme.of(context)
+                                      //       .bodyText1
+                                      //       .override(
+                                      //         fontFamily: 'Poppins',
+                                      //         fontSize: 17,
+                                      //         fontWeight: FontWeight.normal,
+                                      //       ),
+                                      // ),
                                       optiondimage != ""
                                           ? SizedBox(
                                               height: 200,

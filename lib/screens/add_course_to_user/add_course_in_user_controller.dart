@@ -86,8 +86,10 @@ class AddCourseInUserController extends GetxController {
             studentCoursesByName.add(
 
               StudentCourseData(courseId: element, courseName: await getCourseName(courseId: element), isTrial:
-              studentData['trialCourseList'].contains(element)?
-               true : false)
+              
+              studentData.containsKey('trialCourseList') ?
+              studentData['trialCourseList'].contains(element) ?
+               true : false : false)
             );
           });
          
@@ -124,8 +126,11 @@ class AddCourseInUserController extends GetxController {
           studentCoursesById = studentData['paidCourseNames'];
 
            studentCoursesById.forEach((element) async{
-            studentCoursesByName.add(StudentCourseData(courseId: element, courseName: await getCourseName(courseId: element), isTrial: studentData['trialCourseList'].contains(element)?
-               true : false));
+            studentCoursesByName.add(StudentCourseData(courseId: element, courseName: await getCourseName(courseId: element), isTrial: 
+            
+            studentData.containsKey('trialCourseList') ?
+            studentData['trialCourseList'].contains(element)?
+               true : false : false));
           });
           BotToast.showText(text: 'User Fetched Successfully');
         }

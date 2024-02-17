@@ -222,7 +222,7 @@ class _InstructionspageWidgetState extends State<InstructionspageWidget> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.white,
+        backgroundColor:  Color.fromARGB(255, 255, 255, 255),
         // leading: IconButton(
         //     onPressed: () {
         //       Navigator.pop(context);
@@ -233,44 +233,42 @@ class _InstructionspageWidgetState extends State<InstructionspageWidget> {
         //     )),
       ),
       key: scaffoldKey,
-      backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+      backgroundColor:  Color.fromARGB(255, 255, 255, 255),
       body: SafeArea(
         child: GestureDetector(
           onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
           child: Align(
-            alignment: Alignment.topCenter,
+            alignment: Alignment.centerLeft,
             child: Container(
               width: MediaQuery.of(context).size.width * 0.95,
-              height: MediaQuery.of(context).size.height,
+              // height: MediaQuery.of(context).size.height,
               decoration: BoxDecoration(
                 color: FlutterFlowTheme.of(context).secondaryBackground,
                 border: Border.all(
-                  color: Color(0xFF14181B),
+                  color: Color.fromARGB(255, 255, 255, 255),
                 ),
               ),
               child: ListView(
-                padding: EdgeInsets.zero,
+                padding: EdgeInsets.all(25),
                 scrollDirection: Axis.vertical,
                 children: [
                   Row(
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      Expanded(
-                        child: Align(
-                          alignment: AlignmentDirectional(0, 0),
-                          child: Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(0, 5, 0, 0),
-                            child: Text(
-                              'Instructions',
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyText1
-                                  .override(
-                                    fontFamily: 'Urbanist',
-                                    color: FlutterFlowTheme.of(context)
-                                        .primaryText,
-                                    fontSize: 24,
-                                  ),
-                            ),
+                      Align(
+                        alignment: AlignmentDirectional(0, 0),
+                        child: Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(0, 5, 0, 0),
+                          child: Text(
+                            'Instructions',
+                            style: FlutterFlowTheme.of(context)
+                                .bodyText1
+                                .override(
+                                  fontFamily: 'Urbanist',
+                                  color:
+                                      FlutterFlowTheme.of(context).primaryText,
+                                  fontSize: 24,
+                                ),
                           ),
                         ),
                       ),
@@ -300,7 +298,7 @@ class _InstructionspageWidgetState extends State<InstructionspageWidget> {
                   ),
                   Container(
                     width: MediaQuery.of(context).size.width * 0.1,
-                    height: 315.6,
+                    // height: 315.6,
                     decoration: BoxDecoration(
                       color: FlutterFlowTheme.of(context).secondaryBackground,
                     ),
@@ -535,51 +533,6 @@ class _InstructionspageWidgetState extends State<InstructionspageWidget> {
                             fontFamily: 'Urbanist',
                             color: Color(0xB1D90808),
                             fontStyle: FontStyle.italic,
-                          ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(5, 10, 0, 0),
-                    child: Text(
-                      'Navigating to a question:',
-                      style: FlutterFlowTheme.of(context).bodyText1.override(
-                            fontFamily: 'Urbanist',
-                            color: FlutterFlowTheme.of(context).primaryText,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w900,
-                            decoration: TextDecoration.underline,
-                          ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(5, 10, 5, 0),
-                    child: Text(
-                      '3. To answer a question, do the following:\na. Click on the question number in the Wuestion Palette to go to that numbered question directly.\nb. Click on Save & Next to save your answer for the current question and then go to the next question.\nc. Click on Mark for Review & Next to save your answer for the current question, mark if for review, and then go the next question.\nd. Caution: Note that your answer for the current question will not be saved, if you navigate to another question directly by clicking on its question number.\n4. You can view all the questions by clicking on the Question Pager button. Note that the options for multiple choice type questions will not be shown.',
-                      style: FlutterFlowTheme.of(context).bodyText1.override(
-                            fontFamily: 'Urbanist',
-                            color: FlutterFlowTheme.of(context).primaryText,
-                          ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(5, 10, 0, 0),
-                    child: Text(
-                      'Answering a Question:',
-                      style: FlutterFlowTheme.of(context).bodyText1.override(
-                            fontFamily: 'Urbanist',
-                            color: FlutterFlowTheme.of(context).primaryText,
-                            fontWeight: FontWeight.w900,
-                            decoration: TextDecoration.underline,
-                          ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(5, 5, 5, 0),
-                    child: Text(
-                      '5. Procedure for answering a multiple choice type question:\na. To select your answer, click on the button of one of the options.\nb. To deselect your chosen answer, click on the button of the chosen option again or click on the Clear Response\nbutton.\nc. To change your chosen answer, click on the button of another option.\nd. To save your answer, you MUST click on teh save & Next Button.\ne. To mark the question for review, click on the Mark for Review & Next button.\nf. If an answer is selected for a question that is \'Marked for Review\', that answer will be considered in the evaluation even if it is not marked as \'Save & Next\', at the time of final submission.\n\n6. To change your answer to a question that has already been answered, first select that question for answering and then\nfollow the procedure for answering that type of question.\n7. Note that questions for which option has been chosen and answers are saved or marked for review will be considered for evaluation.',
-                      style: FlutterFlowTheme.of(context).bodyText1.override(
-                            fontFamily: 'Urbanist',
-                            color: FlutterFlowTheme.of(context).primaryText,
                           ),
                     ),
                   ),

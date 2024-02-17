@@ -27,9 +27,11 @@ class AddCourseInUser extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double height  = MediaQuery.of(context).size.height;
+    double width  = MediaQuery.of(context).size.width;
     return Scaffold(
        appBar: AppBar(
-          title: Text('Add/Remove Course In User Account'),
+          title: Text('Add/Remove Course In User Account',style: TextStyle(fontSize: 14),),
           centerTitle: true,
           elevation: 2,
           backgroundColor: MyColors.primaryColor,
@@ -44,21 +46,27 @@ class AddCourseInUser extends StatelessWidget {
           
           SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
+              padding:  EdgeInsets.symmetric(vertical: 20, horizontal:  width > 750 ? 0 : 20),
               child: Center(
                 child: SizedBox(
-                  width: MediaQuery.of(context).size.width / 2,
+                  width:
+                  width > 750 ?
+                 MediaQuery.of(context).size.width/2 :
+                   MediaQuery.of(context).size.width,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
             'Add Course In User Using :',
-            style: TextStyle(fontSize: 14),
+            style: TextStyle(fontSize: 
+            14),
                   ),
                   SizedBox(height: 8,),
           
                       Container(
-                    width: Adaptive.w(40),
+                    width: 
+                    width > 750 ?
+                    Adaptive.w(40) : double.infinity,
                         decoration: BoxDecoration(
                           border: Border.all(color: MyColors.primaryColor),
                           borderRadius: BorderRadius.circular(10)
@@ -98,7 +106,8 @@ class AddCourseInUser extends StatelessWidget {
                           ctr.selectedItem == 'Email' ?
                           
                            SizedBox(
-                                      width: Adaptive.w(40),
+                                      width: width > 750 ?
+                    Adaptive.w(40) : double.infinity,
                                       child: Row(
                                         children: [
                                           Expanded(
@@ -125,7 +134,8 @@ class AddCourseInUser extends StatelessWidget {
                                           ),
                                           SizedBox(width: 20,),
                                             SizedBox(
-                                              width: Adaptive.w(8),
+                                              width:  width > 750 ?
+                    Adaptive.w(8) : 100,
                                             
                                               child: ElevatedButton(onPressed: ()async{
           
@@ -138,7 +148,8 @@ class AddCourseInUser extends StatelessWidget {
                                               }, child: Text('Fetch User', style: TextStyle(fontSize: 10),),style: ElevatedButton.styleFrom(backgroundColor: MyColors.primaryColor),))
                                         ],
                                       )) : SizedBox(
-                                      width: Adaptive.w(40),
+                                      width:  width > 750 ?
+                    Adaptive.w(40) : double.infinity,
                                       child: Row(
                                         children: [
                                           Expanded(
@@ -171,7 +182,8 @@ class AddCourseInUser extends StatelessWidget {
                                           ),
                                            SizedBox(width: 20,),
                                             SizedBox(
-                                              width: Adaptive.w(8),
+                                              width: width > 750 ?
+                    Adaptive.w(8) : 100,
                                             
                                               child: ElevatedButton(onPressed: ()async{
                                                             if(ctr.mobileController.text.isEmpty){
@@ -189,7 +201,8 @@ class AddCourseInUser extends StatelessWidget {
                        SizedBox(height: 15,),
                   
                            SizedBox(
-                             width: Adaptive.w(40),
+                             width:  width > 750 ?
+                    Adaptive.w(40) : double.infinity,
                              child: CustomDropdown<TempCourseModel>.search(
                                  hintText: 'Select Course',
                                  items: controller.courses,
@@ -210,7 +223,8 @@ class AddCourseInUser extends StatelessWidget {
            SizedBox(height: 15,),
            SizedBox(
             height: 30,
-             width: Adaptive.w(40),
+             width:  width > 750 ?
+                    Adaptive.w(40) : double.infinity,
              child: ElevatedButton(
               style: ButtonStyle(
                 backgroundColor: MaterialStatePropertyAll(MyColors.primaryColor)
@@ -229,7 +243,8 @@ class AddCourseInUser extends StatelessWidget {
            controller.studentCoursesById.isEmpty ?
            SizedBox() :
            Container(
-             width: Adaptive.w(40),
+             width: width > 750 ?
+                    Adaptive.w(40) : double.infinity,
              decoration: BoxDecoration(
               border: Border.all(color: MyColors.primaryColor),
               borderRadius: BorderRadius.circular(10)
@@ -253,21 +268,27 @@ class AddCourseInUser extends StatelessWidget {
               (index) => Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Chip(
-                  label: Text(controller.studentCoursesByName[index].courseName),
+                  label: Text(controller.studentCoursesByName[index].courseName, style: TextStyle(fontSize: width > 750 ?  14 : 8,color: Colors.black),overflow: TextOverflow.ellipsis,),
                   onDeleted: () => ctr.updateCourseRemove(index),
+                 // deleteIcon: Icon(Icons.delete, size: width > 750 ? 20 : 5),
                   avatar: 
                   controller.studentCoursesByName[index].isTrial ?
                   Container(
+                    height: width > 750 ? null : 15,
+                    width: width > 750 ? null : 15,
                     decoration: BoxDecoration(
                       color: Colors.green,
                       shape: BoxShape.circle,
                       border: Border.all(color: Colors.black)
                     ),
                     child: Center(
-                      child: Text('Trial', style: TextStyle(color: Colors.white, fontSize: 6),),
+                      child: Text('Trial', style: TextStyle(color: Colors.white, fontSize: width > 750 ?  6 : 3),),
                     ),
 
-                  ) : SizedBox()
+                  ) : SizedBox(
+                    height: width > 750 ? null : 1,
+                    width: width > 750 ? null : 1,
+                  )
                 ),
               ),
                 ),
@@ -276,12 +297,16 @@ class AddCourseInUser extends StatelessWidget {
                  ),
             SizedBox(height: 15,),
              SizedBox(
-             width: Adaptive.w(40),
+             width: 
+             width > 750 ?
+             Adaptive.w(40) : double.infinity,
              child: ElevatedButton(
               style: ButtonStyle(
                 backgroundColor: MaterialStatePropertyAll(MyColors.primaryColor)
               ),
-              onPressed: ()=> controller.removeCourseFromUserAcc(), child: Text('Update Course In User Account')),
+              onPressed: ()=> controller.removeCourseFromUserAcc(), child: Text('Update Course In User Account', style: TextStyle(
+                fontSize: 14
+              ),)),
               ),
                ],
              ),

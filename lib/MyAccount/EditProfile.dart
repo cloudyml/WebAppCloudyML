@@ -618,182 +618,182 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        ElevatedButton(
-                          onPressed: () async {
-                            FocusScope.of(context)
-                                .requestFocus(new FocusNode());
-                            await Future.delayed(Duration(milliseconds: 70));
-                            Navigator.pop(context);
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.all(
-                                min(horizontalScale, verticalScale) * 11),
-                            child: Text(
-                              'Discard Changes',
-                              textScaleFactor:
-                                  min(horizontalScale, verticalScale),
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  fontFamily: 'Bold',
-                                  color: Colors.black),
-                            ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                  min(horizontalScale, verticalScale) *
-                                      10), // <-- Radius
-                            ),
-                          ),
-                        ),
-                        appprovider.isLoading
-                            ? Loading()
-                            : ElevatedButton(
-                                onPressed: () async {
-                                  FocusScope.of(context)
-                                      .requestFocus(new FocusNode());
-                                  _formKey.currentState!.save();
-                                  if (_formKey.currentState!.validate()) {
-                                    appprovider.changeIsLoading();
-                                    if (_image != null) {
-                                      late String imageurl;
-                                      final FirebaseStorage storage =
-                                          FirebaseStorage.instance;
-                                      final picture =
-                                          '${userprovider.userModel!.name.toString()} Id:--- ${userprovider.userModel!.id.toString()} Time: ${DateTime.now().microsecondsSinceEpoch.toString()}.jpg';
-                                      final File _imagep = File(_image!.path);
-                                      UploadTask task = storage
-                                          .ref()
-                                          .child('Users/${picture}')
-                                          .putFile(_imagep);
-                                      TaskSnapshot snapshot = (await task
-                                          .whenComplete(() => task.snapshot));
-                                      await task.whenComplete(() async {
-                                        imageurl =
-                                            await snapshot.ref.getDownloadURL();
-                                      });
-                                      String image = imageurl;
-                                      (userprovider.userModel?.authType ==
-                                              'phoneAuth')
-                                          ? _firestore
-                                              .collection('Users')
-                                              .doc(userprovider.userModel!.id)
-                                              .update({
-                                              'name': _username,
-                                              'email': _phoneauthemail,
-                                              'mobilenumber': _mobile,
-                                              'image': image
-                                            })
-                                          : _firestore
-                                              .collection('Users')
-                                              .doc(userprovider.userModel!.id)
-                                              .update({
-                                              'name': _username,
-                                              'mobilenumber': _mobile,
-                                              'phoneVerified': (FirebaseAuth
-                                                          .instance
-                                                          .currentUser
-                                                          ?.phoneNumber ==
-                                                      "+91" +
-                                                          _mobile.toString())
-                                                  ? true
-                                                  : false,
-                                              'image': image
-                                            });
-                                            QuerySnapshot query=
-                                     await  _firestore
-                                          .collection('groups')
-                                          .where('student_id’',
-                                              isEqualTo:  Provider.of<UserProvider>(context, listen: false)
-        .userModel
-        ?.id
-        .toString()).get();
-                                               DocumentReference documentReference = query.docs.first.reference;
-      await documentReference.update({
-        "student_name":_username});
-                                      userprovider.reloadUserModel();
-                                      await Future.delayed(
-                                          Duration(seconds: 2));
-                                      appprovider.changeIsLoading();
-                                      Fluttertoast.showToast(
-                                          msg: 'Changes Saved');
-                                      Navigator.pop(context);
-                                    } else {
-                                      // Fluttertoast.showToast(
-                                      //     msg: 'Profile image must be provided');
-                                      (userprovider.userModel?.authType ==
-                                              'phoneAuth')
-                                          ? _firestore
-                                              .collection('Users')
-                                              .doc(userprovider.userModel!.id)
-                                              .update({
-                                              'name': _username,
-                                              'email': _phoneauthemail,
-                                              'mobilenumber': _mobile,
-                                            })
-                                          : _firestore
-                                              .collection('Users')
-                                              .doc(userprovider.userModel!.id)
-                                              .update({
-                                              'name': _username,
-                                              'mobilenumber': _mobile,
-                                              'phoneVerified': (FirebaseAuth
-                                                          .instance
-                                                          .currentUser
-                                                          ?.phoneNumber ==
-                                                      "+91" +
-                                                          _mobile.toString())
-                                                  ? true
-                                                  : false,
-                                            });
-                                      userprovider.reloadUserModel();
-                                      await Future.delayed(
-                                          Duration(seconds: 2));
-                                      appprovider.changeIsLoading();
-                                      Fluttertoast.showToast(
-                                          msg: 'Changes Saved');
-                                      Navigator.pop(context);
-                                      User? user =
-                                          FirebaseAuth.instance.currentUser;
-                                      user!.reload();
-                                      print(user.phoneNumber);
-                                           QuerySnapshot query=
-                                     await  _firestore
-                                          .collection('groups')
-                                          .where('student_id’',
-                                              isEqualTo:  Provider.of<UserProvider>(context, listen: false)
-        .userModel
-        ?.id
-        .toString()).get();
-                                               DocumentReference documentReference = query.docs.first.reference;
-      await documentReference.update({
-        "student_name":_username});
-                                    }
-                                  }
-                                },
-                                child: Padding(
-                                  padding: EdgeInsets.all(
-                                      min(horizontalScale, verticalScale) * 11),
-                                  child: Text(
-                                    'Save Changes',
-                                    textScaleFactor:
-                                        min(horizontalScale, verticalScale),
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontFamily: 'Bold',
-                                        color: Colors.white),
-                                  ),
-                                ),
-                                style: ElevatedButton.styleFrom(
-                                  primary: HexColor('7A62DE'),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                        min(horizontalScale, verticalScale) *
-                                            10), // <-- Radius
-                                  ),
-                                ),
-                              ),
+                        // ElevatedButton(
+                        //   onPressed: () async {
+                        //     FocusScope.of(context)
+                        //         .requestFocus(new FocusNode());
+                        //     await Future.delayed(Duration(milliseconds: 70));
+                        //     Navigator.pop(context);
+                        //   },
+                        //   child: Padding(
+                        //     padding: EdgeInsets.all(
+                        //         min(horizontalScale, verticalScale) * 11),
+                        //     child: Text(
+                        //       'Discard Changes',
+                        //       textScaleFactor:
+                        //           min(horizontalScale, verticalScale),
+                        //       style: TextStyle(
+                        //           fontSize: 14,
+                        //           fontFamily: 'Bold',
+                        //           color: Colors.black),
+                        //     ),
+                        //   ),
+                        //   style: ElevatedButton.styleFrom(
+                        //     primary: Colors.white,
+                        //     shape: RoundedRectangleBorder(
+                        //       borderRadius: BorderRadius.circular(
+                        //           min(horizontalScale, verticalScale) *
+                        //               10), // <-- Radius
+                        //     ),
+                        //   ),
+                        // ),
+      //                   appprovider.isLoading
+      //                       ? Loading()
+      //                       : ElevatedButton(
+      //                           onPressed: () async {
+      //                             FocusScope.of(context)
+      //                                 .requestFocus(new FocusNode());
+      //                             _formKey.currentState!.save();
+      //                             if (_formKey.currentState!.validate()) {
+      //                               appprovider.changeIsLoading();
+      //                               if (_image != null) {
+      //                                 late String imageurl;
+      //                                 final FirebaseStorage storage =
+      //                                     FirebaseStorage.instance;
+      //                                 final picture =
+      //                                     '${userprovider.userModel!.name.toString()} Id:--- ${userprovider.userModel!.id.toString()} Time: ${DateTime.now().microsecondsSinceEpoch.toString()}.jpg';
+      //                                 final File _imagep = File(_image!.path);
+      //                                 UploadTask task = storage
+      //                                     .ref()
+      //                                     .child('Users/${picture}')
+      //                                     .putFile(_imagep);
+      //                                 TaskSnapshot snapshot = (await task
+      //                                     .whenComplete(() => task.snapshot));
+      //                                 await task.whenComplete(() async {
+      //                                   imageurl =
+      //                                       await snapshot.ref.getDownloadURL();
+      //                                 });
+      //                                 String image = imageurl;
+      //                                 (userprovider.userModel?.authType ==
+      //                                         'phoneAuth')
+      //                                     ? _firestore
+      //                                         .collection('Users')
+      //                                         .doc(userprovider.userModel!.id)
+      //                                         .update({
+      //                                         'name': _username,
+      //                                         'email': _phoneauthemail,
+      //                                         'mobilenumber': _mobile,
+      //                                         'image': image
+      //                                       })
+      //                                     : _firestore
+      //                                         .collection('Users')
+      //                                         .doc(userprovider.userModel!.id)
+      //                                         .update({
+      //                                         'name': _username,
+      //                                         'mobilenumber': _mobile,
+      //                                         'phoneVerified': (FirebaseAuth
+      //                                                     .instance
+      //                                                     .currentUser
+      //                                                     ?.phoneNumber ==
+      //                                                 "+91" +
+      //                                                     _mobile.toString())
+      //                                             ? true
+      //                                             : false,
+      //                                         'image': image
+      //                                       });
+      //                                       QuerySnapshot query=
+      //                                await  _firestore
+      //                                     .collection('groups')
+      //                                     .where('student_id’',
+      //                                         isEqualTo:  Provider.of<UserProvider>(context, listen: false)
+      //   .userModel
+      //   ?.id
+      //   .toString()).get();
+      //                                          DocumentReference documentReference = query.docs.first.reference;
+      // await documentReference.update({
+      //   "student_name":_username});
+      //                                 userprovider.reloadUserModel();
+      //                                 await Future.delayed(
+      //                                     Duration(seconds: 2));
+      //                                 appprovider.changeIsLoading();
+      //                                 Fluttertoast.showToast(
+      //                                     msg: 'Changes Saved');
+      //                                 Navigator.pop(context);
+      //                               } else {
+      //                                 // Fluttertoast.showToast(
+      //                                 //     msg: 'Profile image must be provided');
+      //                                 (userprovider.userModel?.authType ==
+      //                                         'phoneAuth')
+      //                                     ? _firestore
+      //                                         .collection('Users')
+      //                                         .doc(userprovider.userModel!.id)
+      //                                         .update({
+      //                                         'name': _username,
+      //                                         'email': _phoneauthemail,
+      //                                         'mobilenumber': _mobile,
+      //                                       })
+      //                                     : _firestore
+      //                                         .collection('Users')
+      //                                         .doc(userprovider.userModel!.id)
+      //                                         .update({
+      //                                         'name': _username,
+      //                                         'mobilenumber': _mobile,
+      //                                         'phoneVerified': (FirebaseAuth
+      //                                                     .instance
+      //                                                     .currentUser
+      //                                                     ?.phoneNumber ==
+      //                                                 "+91" +
+      //                                                     _mobile.toString())
+      //                                             ? true
+      //                                             : false,
+      //                                       });
+      //                                 userprovider.reloadUserModel();
+      //                                 await Future.delayed(
+      //                                     Duration(seconds: 2));
+      //                                 appprovider.changeIsLoading();
+      //                                 Fluttertoast.showToast(
+      //                                     msg: 'Changes Saved');
+      //                                 Navigator.pop(context);
+      //                                 User? user =
+      //                                     FirebaseAuth.instance.currentUser;
+      //                                 user!.reload();
+      //                                 print(user.phoneNumber);
+      //                                      QuerySnapshot query=
+      //                                await  _firestore
+      //                                     .collection('groups')
+      //                                     .where('student_id’',
+      //                                         isEqualTo:  Provider.of<UserProvider>(context, listen: false)
+      //   .userModel
+      //   ?.id
+      //   .toString()).get();
+      //                                          DocumentReference documentReference = query.docs.first.reference;
+      // await documentReference.update({
+      //   "student_name":_username});
+      //                               }
+      //                             }
+      //                           },
+      //                           child: Padding(
+      //                             padding: EdgeInsets.all(
+      //                                 min(horizontalScale, verticalScale) * 11),
+      //                             child: Text(
+      //                               'Save Changes',
+      //                               textScaleFactor:
+      //                                   min(horizontalScale, verticalScale),
+      //                               style: TextStyle(
+      //                                   fontSize: 14,
+      //                                   fontFamily: 'Bold',
+      //                                   color: Colors.white),
+      //                             ),
+      //                           ),
+      //                           style: ElevatedButton.styleFrom(
+      //                             primary: HexColor('7A62DE'),
+      //                             shape: RoundedRectangleBorder(
+      //                               borderRadius: BorderRadius.circular(
+      //                                   min(horizontalScale, verticalScale) *
+      //                                       10), // <-- Radius
+      //                             ),
+      //                           ),
+      //                         ),
                       ],
                     ),
                     (userprovider.userModel?.authType == 'phoneAuth')

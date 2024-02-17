@@ -32,6 +32,8 @@ class _ScholarshipQuizStudentDataState
 
   @override
   Widget build(BuildContext context) {
+        double height  = MediaQuery.of(context).size.height;
+    double width  = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -49,7 +51,7 @@ class _ScholarshipQuizStudentDataState
         ],
         leading: IconButton(
             onPressed: () {
-              Get.back();
+              Navigator.of(context).pop();
             },
             icon: Icon(
               Icons.arrow_back,
@@ -67,7 +69,7 @@ class _ScholarshipQuizStudentDataState
                   allowSorting: true,
                   allowFiltering: true,
                   source: EmployeeDataSource(),
-                  columns: getColumns(),
+                  columns: getColumns(height: height,width: width),
                   gridLinesVisibility: GridLinesVisibility.both,
                   headerGridLinesVisibility: GridLinesVisibility.both,
                   columnWidthMode: ColumnWidthMode.fill),
@@ -75,18 +77,18 @@ class _ScholarshipQuizStudentDataState
     );
   }
 
-  List<GridColumn> getColumns() {
+  List<GridColumn> getColumns({required double height, required double width}) {
     // final bool isMobileView =
     //     !isWebOrDesktop || (isWebOrDesktop && model.isMobileResolution);
     return <GridColumn>[
       GridColumn(
           columnName: 'Date',
           columnWidthMode:
-              // !isWebOrDesktop ?
-              // ColumnWidthMode.none :
-              ColumnWidthMode.fill,
+        width < 750 ?
+        ColumnWidthMode.none :
+        ColumnWidthMode.fill,
           width:
-              // isMobileView ? 120.0 :
+               width < 750 ? 120.0 :
               double.nan,
           label: Container(
             alignment: Alignment.centerRight,
@@ -102,11 +104,11 @@ class _ScholarshipQuizStudentDataState
       GridColumn(
           columnName: 'Name',
           columnWidthMode:
-              // !isWebOrDesktop ?
-              // ColumnWidthMode.none :
-              ColumnWidthMode.fill,
+            width < 750 ?
+        ColumnWidthMode.none :
+        ColumnWidthMode.fill,
           width:
-              // isMobileView ? 120.0 :
+               width < 750 ?120.0 :
               double.nan,
           label: Container(
             alignment: Alignment.centerRight,
@@ -122,10 +124,11 @@ class _ScholarshipQuizStudentDataState
       GridColumn(
           columnName: 'Email',
           columnWidthMode:
-              // !isWebOrDesktop ? ColumnWidthMode.none :
-              ColumnWidthMode.fill,
+               width < 750 ?
+        ColumnWidthMode.none :
+        ColumnWidthMode.fill,
           width:
-              //isMobileView ? 150.0 :
+               width < 750 ? 150.0 :
               double.nan,
           label: Container(
             alignment: Alignment.centerRight,
@@ -140,8 +143,12 @@ class _ScholarshipQuizStudentDataState
           )),
       GridColumn(
           columnName: 'Phone',
+          columnWidthMode:
+               width < 750 ?
+        ColumnWidthMode.none :
+        ColumnWidthMode.fill,
           width:
-              // isMobileView ? 120.0 :
+               width < 750 ? 120.0 :
               double.nan,
           label: Container(
             alignment: Alignment.centerLeft,
@@ -156,8 +163,12 @@ class _ScholarshipQuizStudentDataState
           )),
       GridColumn(
         columnName: 'Quiz Score',
+         columnWidthMode:
+               width < 750 ?
+        ColumnWidthMode.none :
+        ColumnWidthMode.fill,
         width:
-            // isMobileView ? 120.0 :
+            width < 750 ? 120.0 :
             double.nan,
         label: Container(
           alignment: Alignment.centerRight,
@@ -173,8 +184,12 @@ class _ScholarshipQuizStudentDataState
       ),
       GridColumn(
         columnName: 'Coupen Code',
+         columnWidthMode:
+               width < 750 ?
+        ColumnWidthMode.none :
+        ColumnWidthMode.fill,
         width:
-            // isMobileView ? 120.0 :
+            width < 750 ? 120.0 :
             double.nan,
         label: Container(
           alignment: Alignment.centerRight,
@@ -190,8 +205,12 @@ class _ScholarshipQuizStudentDataState
       ),
       GridColumn(
         columnName: 'Coupen Type',
+         columnWidthMode:
+               width < 750 ?
+        ColumnWidthMode.none :
+        ColumnWidthMode.fill,
         width:
-            // isMobileView ? 120.0 :
+             width < 750 ? 120.0 :
             double.nan,
         label: Container(
           alignment: Alignment.centerRight,
@@ -207,8 +226,12 @@ class _ScholarshipQuizStudentDataState
       ),
       GridColumn(
         columnName: 'Coupen Value',
+         columnWidthMode:
+               width < 750 ?
+        ColumnWidthMode.none :
+        ColumnWidthMode.fill,
         width:
-            // isMobileView ? 120.0 :
+             width < 750 ? 120.0 :
             double.nan,
         label: Container(
           alignment: Alignment.centerRight,
