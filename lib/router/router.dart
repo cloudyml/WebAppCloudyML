@@ -20,6 +20,7 @@ import 'package:cloudyml_app2/router/error_page.dart';
 import 'package:cloudyml_app2/scholarship/course_screen.dart';
 import 'package:cloudyml_app2/scholarship/quiz.dart';
 import 'package:cloudyml_app2/screens/add_course_to_user/add_course_in_user.dart';
+import 'package:cloudyml_app2/screens/campaigns/create_campaign.dart';
 import 'package:cloudyml_app2/screens/chat_screen.dart';
 import 'package:cloudyml_app2/screens/chatpage.dart';
 import 'package:cloudyml_app2/screens/daily_quiz/add_daily_quiz.dart';
@@ -612,6 +613,13 @@ class MyRouter {
                 // chatScreen: chatScreen,
               ));
             }),
+            GoRoute(
+          name: 'CreateCampaign',
+          path: '/createCampaign',
+          pageBuilder: (context, state) {
+            return MaterialPage(child: CreateCampaign());
+          },
+        ),
             GoRoute(
           name: 'AddCourseInUser',
           path: '/addCourseInUser',

@@ -820,6 +820,7 @@ var mentorItems = [
   'Assignment Review',
   'My Profile',
   'Students Review',
+  'Create Campaign',
   'Add Course In User',
   'Scholarship Data',
   'Logout'
@@ -1082,6 +1083,10 @@ Widget customMenuBar(BuildContext context, String? isReviewed) {
                 }
                 else if(value == 'Scholarship Data'){
                   GoRouter.of(context).pushNamed('ScholarshipSudentData');
+
+                }
+                else if(value == 'Create Campaign'){
+                  GoRouter.of(context).pushNamed('CreateCampaign');
 
                 }
                 else {

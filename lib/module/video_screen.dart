@@ -1177,84 +1177,84 @@ class _VideoScreenState extends State<VideoScreen> {
         }
       },
     );
-    globalquizstatus();
+    // globalquizstatus();
   }
 
-  globalquizstatus() async {
-    List modularquizlist = [];
-    for (var j in videos) {
-      if (j['type'] == 'quiz') {
-        modularquizlist.add(j['name']);
-      }
-      print("wiefjwoie$modularquizlist");
-    }
-    print("hoiwejiowj${await modularquizlist}");
-    List userquiztakenlist = [];
-    bool showglobalquiz = true;
-    await FirebaseFirestore.instance
-        .collection("Users")
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .get()
-        .then((value) async {
-      print("fiweofw${await modularquizlist}");
-      try {
-        print("hoiwejiiweofowowj${modularquizlist}");
-        print("quiztaken iwfejo ${value.data()!['quiztrack']}");
-        print("hhhhh: ${widget.courseName}");
-        globals.quiztrack = value.data()!['quiztrack'];
-        try {
-          for (var i in value.data()!['quiztrack']) {
-            print(
-                "wjefweiwoeiw ${i['quizname']} ${i['quizlevel']}  ${i['quizlevel']}");
-            if (i['quizlevel'] == 'modulelevel' &&
-                i['courseName'] == widget.courseName) {
-              if (i['quizCleared'] == false &&
-                  i['quizlevel'] == 'modulelevel') {
-                setState(() {
-                  showglobalquiz = false;
-                });
-              } else {
-                userquiztakenlist.add(i['quizname']);
-              }
-            } else {
-              print("no quiz taken");
-              print(i['quizlevel']);
-              print(i['courseName']);
-              print(i['quizname']);
-            }
-          }
-        } catch (e) {
-          print("quiztrack does not exist");
-        }
+  // globalquizstatus() async {
+  //   List modularquizlist = [];
+  //   for (var j in videos) {
+  //     if (j['type'] == 'quiz') {
+  //       modularquizlist.add(j['name']);
+  //     }
+  //     print("wiefjwoie$modularquizlist");
+  //   }
+  //   print("hoiwejiowj${await modularquizlist}");
+  //   List userquiztakenlist = [];
+  //   bool showglobalquiz = true;
+  //   await FirebaseFirestore.instance
+  //       .collection("Users")
+  //       .doc(FirebaseAuth.instance.currentUser!.uid)
+  //       .get()
+  //       .then((value) async {
+  //     print("fiweofw${await modularquizlist}");
+  //     try {
+  //       print("hoiwejiiweofowowj${modularquizlist}");
+  //       print("quiztaken iwfejo ${value.data()!['quiztrack']}");
+  //       print("hhhhh: ${widget.courseName}");
+  //       globals.quiztrack = value.data()!['quiztrack'];
+  //       try {
+  //         for (var i in value.data()!['quiztrack']) {
+  //           print(
+  //               "wjefweiwoeiw ${i['quizname']} ${i['quizlevel']}  ${i['quizlevel']}");
+  //           if (i['quizlevel'] == 'modulelevel' &&
+  //               i['courseName'] == widget.courseName) {
+  //             if (i['quizCleared'] == false &&
+  //                 i['quizlevel'] == 'modulelevel') {
+  //               setState(() {
+  //                 showglobalquiz = false;
+  //               });
+  //             } else {
+  //               userquiztakenlist.add(i['quizname']);
+  //             }
+  //           } else {
+  //             print("no quiz taken");
+  //             print(i['quizlevel']);
+  //             print(i['courseName']);
+  //             print(i['quizname']);
+  //           }
+  //         }
+  //       } catch (e) {
+  //         print("quiztrack does not exist");
+  //       }
 
-        print("wefiwjeofiw${modularquizlist}");
-        print("userquiijowe ${userquiztakenlist.length}");
-        print("userquiijow2e ${userquiztakenlist}");
-        print("modularquis ijweo ${modularquizlist}");
-        if (userquiztakenlist.length != modularquizlist.length) {
-          print("yes it is not equal");
-          setState(() {
-            showglobalquiz = false;
-          });
-        }
+  //       print("wefiwjeofiw${modularquizlist}");
+  //       print("userquiijowe ${userquiztakenlist.length}");
+  //       print("userquiijow2e ${userquiztakenlist}");
+  //       print("modularquis ijweo ${modularquizlist}");
+  //       if (userquiztakenlist.length != modularquizlist.length) {
+  //         print("yes it is not equal");
+  //         setState(() {
+  //           showglobalquiz = false;
+  //         });
+  //       }
 
-        //("iffwoejf4${modularquizlist.length}");
-        if (modularquizlist.length == 0) {
-          //("iffwoejf${modularquizlist.length}");
-          setState(() {
-            showglobalquiz = true;
-          });
-        }
+  //       //("iffwoejf4${modularquizlist.length}");
+  //       if (modularquizlist.length == 0) {
+  //         //("iffwoejf${modularquizlist.length}");
+  //         setState(() {
+  //           showglobalquiz = true;
+  //         });
+  //       }
 
-        setState(() {
-          _switchValue = showglobalquiz;
-        });
-        print(showglobalquiz);
-      } catch (e) {
-        print("quizid: wej3434434fwio: ${e}");
-      }
-    });
-  }
+  //       setState(() {
+  //         _switchValue = showglobalquiz;
+  //       });
+  //       print(showglobalquiz);
+  //     } catch (e) {
+  //       print("quizid: wej3434434fwio: ${e}");
+  //     }
+  //   });
+  // }
 
   updateSessionExpiryTime() async {
     try {
@@ -1286,7 +1286,7 @@ class _VideoScreenState extends State<VideoScreen> {
     getAssignmentSolutionVideo();
     getAssignmentDescription();
     getScoreOfAllQuiz();
-    globalquizstatus();
+    // globalquizstatus();
     VideoScreen.currentSpeed.value = 1.0;
     streamVideoData();
     getCourseQuiz();

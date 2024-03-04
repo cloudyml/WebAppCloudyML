@@ -2349,6 +2349,38 @@ class _EditQuizState extends State<EditQuiz> {
                                             var coursequiz;
                                             var leng;
                                             var id;
+try{
+                                            for (var i = 0;
+                                                i < questionslist.length;
+                                                i++) {
+                                              if (questionslist[i]
+                                                      ['solution'] ==
+                                                  "") {
+                                                Toast.show(
+                                                    "solution of question number ${i + 1} is empty");
+                                                return;
+                                              }
+                                              ;
+                                            }
+                                          
+                                              if (timecontroller!.text == "") {
+                                              
+                                              Toast.show(
+                                                  "Time field cannot empty");
+                                              return;
+                                            }
+                                            if (numberofquestiontodisplay!.text ==
+                                                "") {
+                                              Toast.show(
+                                                  "no. of questions to display field cannot empty");
+                                              return;
+                                            }
+                                            }catch(e){
+                                              Toast.show('something went wrong $e');
+                                                print('error id woijfeow  $e');
+                                                return;
+                                            }
+                                            
                                             try {
                                               print(
                                                   "sdfoisjiofjisojdfoisjoidfjsiojfdiosjiodfjsoijdfosjd${tempcoursename} ${tempmodulename}");

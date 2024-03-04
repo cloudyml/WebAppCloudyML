@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'package:cloudyml_app2/homescreen/clipper.dart';
+import 'package:cloudyml_app2/screens/campaigns/ad_widget.dart';
 import 'package:cloudyml_app2/widgets/notification_popup.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -912,6 +913,7 @@ class _LandingScreenState extends State<LandingScreen> {
     inAppNotification();
     getQuizDataAndUpdateScores();
     super.initState();
+    ShowCampaign().showCampaignByCondition();
     // print('this is url ${html.window.location.href}');
     // print('this is path ${Uri.base.path}');
     // showNotification();

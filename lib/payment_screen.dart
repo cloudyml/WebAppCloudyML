@@ -7,6 +7,7 @@ import 'package:cloudyml_app2/widgets/coupon_code.dart';
 import 'package:cloudyml_app2/widgets/inter_payment_portal.dart';
 import 'package:cloudyml_app2/widgets/payment_portal.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:dotted_line/dotted_line.dart';
@@ -2067,12 +2068,15 @@ class _PaymentScreenState extends State<PaymentScreen> with CouponCodeMixin {
                                                           FontWeight.bold,
                                                       height: 1),
                                                 ),
+
                                               ],
                                             ),
                                           ),
                                         ),
                                       ),
                                     ),
+                                    SizedBox(height: 7.5.sp),
+                                    termsLineWidget(isWeb: true)
                                   ],
                                 ),
                               ),
@@ -3584,6 +3588,8 @@ class _PaymentScreenState extends State<PaymentScreen> with CouponCodeMixin {
                                         ),
                                       )
                                     : Container(),
+                                    SizedBox(height:8.sp),
+                                    termsLineWidget(isWeb: false)
                               ],
                             ),
                           ),
@@ -3599,4 +3605,51 @@ class _PaymentScreenState extends State<PaymentScreen> with CouponCodeMixin {
       }),
     );
   }
+
+  Widget termsLineWidget({
+    required bool isWeb
+  }){
+    return      Center(
+      child: RichText(
+            text: TextSpan(
+              text: 'By Processing you agree to our ',
+              style: TextStyle(color: Colors.black, fontSize: 
+              isWeb ?
+              11.sp :
+              15.sp),
+              children: <TextSpan>[
+                TextSpan(
+                  text: 'Terms',
+                  style: TextStyle(color: Colors.deepPurpleAccent,decoration: TextDecoration.underline),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = ()async {
+                      await launchURL('https://www.cloudyml.com/terms-and-conditions');
+                    },
+                ),
+                TextSpan(text: ', '),
+                TextSpan(
+                  text: 'Privacy',
+                  style: TextStyle(color: Colors.deepPurpleAccent,decoration: TextDecoration.underline),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () async{
+                      await launchURL('https://www.cloudyml.com/privacy-policy');
+                    },
+                ),
+                TextSpan(text: ' & '),
+                TextSpan(
+                  text: 'Refund policy',
+                  style: TextStyle(color: Colors.deepPurpleAccent,decoration: TextDecoration.underline),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = ()async {
+                       await launchURL('https://www.cloudyml.com/refund-policy');
+                    },
+                ),
+              ],
+            ),
+          ),
+    );
+                                
+  }
+
+
 }
