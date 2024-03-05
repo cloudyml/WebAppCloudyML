@@ -18,89 +18,131 @@ class ShowCampaign{
 
     }
   ){
-
+final height  = MediaQueryData.fromWindow(WidgetsBinding.instance.window).size.height;
+final width = MediaQueryData.fromWindow(WidgetsBinding.instance.window).size.width;
   return BotToast.showWidget(
+
+    
     
     toastBuilder: (cancelFunc) {
     return Center(
-      child: Container(
-        height:MediaQueryData.fromWindow(WidgetsBinding.instance.window).size.height / 1.3 ,
-       width: MediaQueryData.fromWindow(WidgetsBinding.instance.window).size.width / 2,
-      padding: EdgeInsets.symmetric(horizontal: 40,vertical: 20),
-        decoration: BoxDecoration(
-          borderRadius:  BorderRadius.circular(15.sp),
-          color: Colors.deepPurple
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(),
-               
-                Material(
-                  color: Colors.transparent,
-                  child: AnimatedTextKit(
-                                  isRepeatingAnimation: false,
-                                  animatedTexts: [
-                                    TyperAnimatedText(title,
-                                        speed: Duration(microseconds: 10000),
-                                        textStyle: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 20.sp,
-                                            fontWeight: FontWeight.bold))
-                                  ],
-                                ),
-                ),
-                    GestureDetector(
-                      
-                      onTap: cancelFunc,
-                      child: Container(
-                        padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Colors.white)
+      child: Padding(
+        padding:  EdgeInsets.symmetric(horizontal:    
+        width < 600 ?
+        20 :0
+        
+         ),
+        child: Container(
+          height:
+          width < 600 ?
+          height / 1.5 :
+          height / 1.3 ,
+         width: 
+         width < 600 ?
+        
+          width :
+        width / 2,
+        padding: EdgeInsets.symmetric(horizontal: 
+        width < 600 ?
+        10 :
+        40,vertical:
+        width < 600 ?
+        10 :
+         20),
+          decoration: BoxDecoration(
+            borderRadius:  BorderRadius.circular(15.sp),
+            color: Colors.deepPurple
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(),
+                 
+                  Material(
+                    color: Colors.transparent,
+                    child: AnimatedTextKit(
+                                    isRepeatingAnimation: false,
+                                    animatedTexts: [
+                                      TyperAnimatedText(title,
+                                          speed: Duration(microseconds: 10000),
+                                          textStyle: TextStyle(
+                                              color: Colors.white,
+                                              fontSize:
+                                              
+                                               20.sp,
+                                              fontWeight: FontWeight.bold))
+                                    ],
+                                  ),
+                  ),
+                      GestureDetector(
+                        
+                        onTap: cancelFunc,
+                        child: Container(
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white)
+                          ),
+                          child: Center(
+                            child: Icon(Icons.close, color: Colors.white,size: 15,),
+                          ),
                         ),
-                        child: Center(
-                          child: Icon(Icons.close, color: Colors.white,size: 15,),
-                        ),
-                      ),
-                    )         
-              ],
-            )
-          ,SizedBox(
-                                height: 15.sp,
-                              ),
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(15.sp),
-                                child: Image.network(
-                                  webImg,
-                                  fit: BoxFit.fill,
-                                  height: Adaptive.h(50),
-                                  width: Adaptive.w(50),
+                      )         
+                ],
+              )
+            ,SizedBox(
+                                  height: 15.sp,
                                 ),
-                              ),
-                              SizedBox(
-                                height: 15.sp,
-                              ),
-                              SizedBox(
-              width: 60.sp,
-              height: 20.sp,
-              child: ElevatedButton(
-                  onPressed: ()async {
-                    await launchURL(ctaLink);
-                  },
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.deepPurpleAccent),
-                  child: Text(
-                    ctaText,
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp),
-                  )),
-            ),
-         
-          ],
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(15.sp),
+                                  child: Image.network(
+                                     width < 600 ? 
+                                     phoneImg :
+                                    webImg,
+                                    fit: BoxFit.fill,
+                                    height: 
+                                    
+                                    Adaptive.h(50),
+                                    width:
+                                    width < 600?
+                                    Adaptive.w(80) :
+                                    
+                                     Adaptive.w(50),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 15.sp,
+                                ),
+                                SizedBox(
+                width: 
+                width < 600 ?
+                double.infinity :
+                60.sp,
+                height:
+                width < 600 ?
+                25.sp :
+                 20.sp,
+                child: ElevatedButton(
+                    onPressed: ()async {
+                      await launchURL(ctaLink);
+                    },
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.deepPurpleAccent),
+                    child: Text(
+                      ctaText,
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 
+                          width < 600 ? 
+                          16.sp :
+                          14.sp),
+                    )),
+              ),
+           
+            ],
+          ),
         ),
       ),
     );
@@ -179,9 +221,9 @@ showCampaignByCondition()async{
 
            await FirebaseFirestore.instance.collection('Campaigns').where('audienceType', isEqualTo: 'Not Enrolled').where('isActive', isEqualTo: true).get().then((value) {
                value.docs.forEach((element) {
-              var startDate = element.get('targetAudience')['startDate'].toDate();
-              var endDate = element.get('targetAudience')['endDate'].toDate();
-              var courseId = element.get('targetAudience')['targetCourseId'];
+              // var startDate = element.get('targetAudience')['startDate'].toDate();
+              // var endDate = element.get('targetAudience')['endDate'].toDate();
+              // var courseId = element.get('targetAudience')['targetCourseId'];
 
 
               if(ref.get('paidCourseNames').isEmpty){

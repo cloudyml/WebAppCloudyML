@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 
-import 'package:bot_toast/bot_toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloudyml_app2/screens/add_course_to_user/add_course_in_user_controller.dart';
 import 'package:cloudyml_app2/theme.dart';
@@ -31,6 +30,7 @@ class CampaignController extends GetxController{
     List<DateTime?> dateRangeVal = const [];
     DateTime? startDate;
     DateTime? endDate;
+    bool isActive = false;
 
 changeLoading(bool value) {
     isLoading = value;
@@ -52,6 +52,11 @@ updateUserType(){
     startDate = startDate;
     endDate = endDate;
      update(['updateDate']);
+  }
+
+  updateActive(){
+    isActive = isActive;
+ update(['isActive']);
   }
  
  void selectDateRange(int days) {
@@ -171,7 +176,7 @@ try {
   toast('Please enter call to action link');
 
  }else if(selectedCtaText.isEmpty){
-  toast('Please select call to action texte');
+  toast('Please select call to action text');
 
  }else if(imageBytesForPhone== null || imageBytesForWeb == null){
   toast('Please select both image');
@@ -189,7 +194,7 @@ try {
   await FirebaseFirestore.instance.collection('Campaigns').add({
     'campaignName' : campaignNameController.value.text.trim(),
     'createdAt' : DateTime.now(),
-    'isActive' : false,
+    'isActive' : isActive,
      'audienceType' : selectedUserType.trim(),
     'targetAudience' : {
      
@@ -246,5 +251,8 @@ toast(String msg){
    getAllCourse();
     super.onInit();
   }
+
+
+
 
 }

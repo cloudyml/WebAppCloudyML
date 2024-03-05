@@ -5,7 +5,6 @@ import 'package:cloudyml_app2/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
 
 
 import 'campaign_controller.dart';
@@ -63,7 +62,7 @@ class CreateCampaign extends StatelessWidget {
             Container(
               padding: EdgeInsets.all(16.0),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+               
                 children: [
                   GetBuilder<CampaignController>(
                     id: 'updateStep',
@@ -96,6 +95,8 @@ class CreateCampaign extends StatelessWidget {
                            return Row(
                                           mainAxisAlignment: MainAxisAlignment.start,
                                           children: <Widget>[
+                                            details.currentStep == 0 ?
+                                            SizedBox() :
                       ElevatedButton(
                         onPressed: details.onStepCancel,
                         child: Text('Back', style: TextStyle(color: Colors.black),),
@@ -112,13 +113,14 @@ class CreateCampaign extends StatelessWidget {
                           overlayColor: MaterialStateProperty.all<Color>(
                               Colors.grey.shade400), // Color when pressed
                         ),
-                      ),
-                      SizedBox(width: 7.5.sp,),
+                      ) ,
+                      SizedBox(width: 20,),
+
+                       details.currentStep == 2 ?
+                       SizedBox() :
                       ElevatedButton(
                         onPressed: details.onStepContinue,
                         child: Text(
-                          details.currentStep == 2 ?
-                          'Finish':
                           
                           'Next'),
                         style: ButtonStyle(
@@ -161,26 +163,31 @@ class CreateCampaign extends StatelessWidget {
                   ),
                    GetBuilder<CampaignController>(
                      builder: (ctr) {
-                       return InkWell(
-                           onTap: ()=> ctr.uploadCampaignData(),
-                           child: Container(
-                             height: 40,
-                            width:50,
-                             decoration: BoxDecoration(
-                               color: MyColors.primaryColorLight,
-                             
-                               borderRadius: BorderRadius.circular(10)
-                             ),
-                            padding: EdgeInsets.symmetric(horizontal: 15),
-                             child: Center(
-                               child: Text('Create Campaign', style: TextStyle(
-                                 fontSize: 15, 
-                                 color: Colors.white,
-                                 fontWeight: FontWeight.bold
-                               ),),
+                       return Align(
+                        alignment: Alignment.centerLeft,
+                         child: InkWell(
+                             onTap: ()=> 
+                             ctr.uploadCampaignData(),
+                             //ctr.uploadCampaignData(),
+                             child: Container(
+                               height: 40,
+                              width:width /3,
+                               decoration: BoxDecoration(
+                                 color: MyColors.primaryColorLight,
+                               
+                                 borderRadius: BorderRadius.circular(10)
+                               ),
+                              padding: EdgeInsets.symmetric(horizontal: 15),
+                               child: Center(
+                                 child: Text('Create Campaign', style: TextStyle(
+                                   fontSize: 15, 
+                                   color: Colors.white,
+                                   fontWeight: FontWeight.bold
+                                 ),),
+                               ),
                              ),
                            ),
-                         );
+                       );
                      }
                    )
                        
@@ -204,7 +211,6 @@ class CreateCampaign extends StatelessWidget {
             Text("Enter campaign name", style: TextStyle(fontSize: 14)),
             SizedBox(height: 10,),
              SizedBox(
-            
               width: MediaQuery.of(context).size.width / 2.5,
                child: TextFormField(
                                                     controller: controller.campaignNameController,
@@ -485,6 +491,28 @@ return Align(
                                    },
                                  ),
                    ),
+           SizedBox(height: 20,),
+      
+       
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+               Text("Display the ad", style: TextStyle(fontSize: 14)),
+                GetBuilder<CampaignController>(
+                  id: 'isActive',
+                  builder: (ctr) {
+                    return Switch(
+                      activeColor: MyColors.primaryColor,
+                      value: ctr.isActive, onChanged: (value) {
+                      ctr.isActive = value;
+                      ctr.updateActive();
+
+                    },);
+                  }
+                )
+            ],
+          )
           ],
           ),
         ),
