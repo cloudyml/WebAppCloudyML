@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloudyml_app2/Providers/chat_screen_provider.dart';
 import 'package:cloudyml_app2/fun.dart';
 import 'package:cloudyml_app2/helpers/file_handler.dart';
+import 'package:cloudyml_app2/roles.dart';
 import 'package:cloudyml_app2/widgets/audio_msg_tile.dart';
 import 'package:cloudyml_app2/widgets/bottom_sheet.dart';
 import 'package:cloudyml_app2/widgets/file_msg_tile.dart';
@@ -770,7 +771,7 @@ class _ChatScreenState extends State<ChatScreen> {
     var mentorList = gData["mentors"];
     print(mentorList);
 
-    if (uData["role"] == "mentor") {
+    if (uData["role"] == Roles.mentor || uData["role"] == Roles.admin) {
       mentorList.remove(uData["id"]);
       mentorList.add(gData["student_id"]);
     }

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:convert';
 import 'dart:math';
+import 'package:cloudyml_app2/roles.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:vdocipher_flutter/vdocipher_flutter.dart';
@@ -2956,7 +2957,7 @@ class _VideoScreenState extends State<VideoScreen> {
                                 key: ValueKey(
                                     listOfSectionData[widget.courseName]
                                         [sectionIndex]),
-                                enabled: role == 'mentor' ? true : false,
+                                enabled: (role == Roles.mentor || role == Roles.admin) ? true : false,
                                 child: Container(
                                   child: ExpansionTile(
                                       expandedCrossAxisAlignment:
@@ -3031,7 +3032,7 @@ class _VideoScreenState extends State<VideoScreen> {
                                                             FontWeight.bold),
                                                   ),
                                           ),
-                                          role == 'mentor'
+                                          role == Roles.mentor || role == Roles.admin
                                               ? PopupMenuButton<int>(
                                                   onSelected: (item) {
                                                     if (item == 0) {
@@ -3650,7 +3651,7 @@ class _VideoScreenState extends State<VideoScreen> {
                                                               if (role !=
                                                                   null) {
                                                                 if (role ==
-                                                                    "mentor") {
+                                                                    Roles.mentor || role == Roles.admin) {
                                                                   setState(() {
                                                                     // selectAssignment = null;
                                                                     subIndex =
@@ -4045,7 +4046,7 @@ class _VideoScreenState extends State<VideoScreen> {
                                                                         width:
                                                                             10,
                                                                       ),
-                                                                      role == 'mentor' &&
+                                                                      (role == Roles.mentor || role == Roles.admin) &&
                                                                               listOfSectionData[widget.courseName][sectionIndex]["videos"][subsectionIndex]["type"] == "video"
                                                                           ? PopupMenuButton<int>(
                                                                               onSelected: (item) {
@@ -4175,7 +4176,7 @@ class _VideoScreenState extends State<VideoScreen> {
                                                                                     PopupMenuItem<int>(value: 3, child: Text('Update video URL')),
                                                                                   ])
                                                                           : SizedBox(),
-                                                                      role == 'mentor' &&
+                                                                      (role == Roles.mentor || role == Roles.admin) &&
                                                                               listOfSectionData[widget.courseName][sectionIndex]["videos"][subsectionIndex]["type"] ==
                                                                                   "assignment"
                                                                           ? PopupMenuButton<
@@ -4470,7 +4471,7 @@ class _VideoScreenState extends State<VideoScreen> {
                                                                           ? Text(
                                                                               '${quizScoreMap[listOfSectionData[widget.courseName][sectionIndex]["videos"][subsectionIndex]["name"]]} %')
                                                                           : Container(),
-                                                                      role == 'mentor' &&
+                                                                      (role == Roles.mentor || role == Roles.admin) &&
                                                                               listOfSectionData[widget.courseName][sectionIndex]["videos"][subsectionIndex]["type"] ==
                                                                                   "quiz"
                                                                           ? PopupMenuButton<

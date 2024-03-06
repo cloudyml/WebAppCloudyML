@@ -1,4 +1,5 @@
 import 'package:cloudyml_app2/Services/local_notificationservice.dart';
+import 'package:cloudyml_app2/roles.dart';
 import 'package:cloudyml_app2/screens/chatscreen.dart';
 import 'package:cloudyml_app2/screens/config.dart';
 import 'package:flutter/material.dart';
@@ -14,23 +15,25 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ntp/ntp.dart';
 
-class GroupPage extends StatefulWidget { 
+class GroupPage extends StatefulWidget {
   Map<String, dynamic>? groupData;
   Map? userData;
   GroupPage({this.groupData, this.userData});
   @override
   State<GroupPage> createState() => _GroupPageState();
 }
-  List<String> coursesList = [];
-  Future<List<String>> getcourses() async {
-    await FirebaseFirestore.instance.collection("courses").get().then((value) {
-      for (var i in value.docs) {
-        coursesList.add(i['name']);
-      }
-      print("coursenamelist: ${coursesList}");
-    });
-    return coursesList;
-  }
+
+List<String> coursesList = [];
+Future<List<String>> getcourses() async {
+  await FirebaseFirestore.instance.collection("courses").get().then((value) {
+    for (var i in value.docs) {
+      coursesList.add(i['name']);
+    }
+    print("coursenamelist: ${coursesList}");
+  });
+  return coursesList;
+}
+
 final int _pageSize = 100;
 String? _lastVisibleIndex;
 DateTime now = DateTime.now();
@@ -67,8 +70,8 @@ class _GroupPageState extends State<GroupPage> {
       .orderBy('time', descending: true)
       .limit(500)
       .snapshots();
-      
-        String? selectedCourse;
+
+  String? selectedCourse;
   Future<List<String>> loadcoursedata() async {
     names1.clear();
 
@@ -175,14 +178,20 @@ class _GroupPageState extends State<GroupPage> {
                 _updatedDocuments.add(change.doc.id);
                 print(_updatedDocuments);
                 LocalNotificationService.createanddisplaynotificationmessage(
-                    "${change.doc["student_name"]} has a new message",changedData.containsKey("lastmessage")?(change.doc['lastmessage']):"new feature included");
+                    "${change.doc["student_name"]} has a new message",
+                    changedData.containsKey("lastmessage")
+                        ? (change.doc['lastmessage'])
+                        : "new feature included");
               }
             } else {
               _updatedDocuments.add(change.doc.id);
               print(_updatedDocuments);
-               LocalNotificationService.createanddisplaynotificationmessage(
-                    "${change.doc["student_name"]} has a new message",changedData.containsKey("lastmessage")?(change.doc['lastmessage']):"new feature included");
-              }
+              LocalNotificationService.createanddisplaynotificationmessage(
+                  "${change.doc["student_name"]} has a new message",
+                  changedData.containsKey("lastmessage")
+                      ? (change.doc['lastmessage'])
+                      : "new feature included");
+            }
           } else if (change.type == DocumentChangeType.added) {
             newdocuments.add(change.doc.id);
           }
@@ -232,14 +241,20 @@ class _GroupPageState extends State<GroupPage> {
                 _updatedDocuments.add(change.doc.id);
                 print(_updatedDocuments);
                 LocalNotificationService.createanddisplaynotificationmessage(
-                    "${change.doc["student_name"]} has a new message",changedData.containsKey("lastmessage")?(change.doc['lastmessage']):"new feature included");
+                    "${change.doc["student_name"]} has a new message",
+                    changedData.containsKey("lastmessage")
+                        ? (change.doc['lastmessage'])
+                        : "new feature included");
               }
             } else {
               _updatedDocuments.add(change.doc.id);
               print(_updatedDocuments);
-                LocalNotificationService.createanddisplaynotificationmessage(
-                    "${change.doc["student_name"]} has a new message",changedData.containsKey("lastmessage")?(change.doc['lastmessage']):"new feature included");
-              }
+              LocalNotificationService.createanddisplaynotificationmessage(
+                  "${change.doc["student_name"]} has a new message",
+                  changedData.containsKey("lastmessage")
+                      ? (change.doc['lastmessage'])
+                      : "new feature included");
+            }
           }
         });
         if (_updatedDocuments.isNotEmpty) {
@@ -266,6 +281,7 @@ class _GroupPageState extends State<GroupPage> {
     // print(name);
     return role;
   }
+
   Future<void> checkDeviceTime() async {
     try {
       final now = DateTime.now();
@@ -295,13 +311,14 @@ class _GroupPageState extends State<GroupPage> {
   }
 
   void showPopup(BuildContext context, String message) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return PopupBox(message: message);
-    },
-  );
-}
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return PopupBox(message: message);
+      },
+    );
+  }
+
   bool _isSearching = false;
   @override
   void initState() {
@@ -427,85 +444,96 @@ class _GroupPageState extends State<GroupPage> {
                             ],
                           ),
                         ),
-                          Container(
-                     margin: EdgeInsets.only(top: 0),
-                   width: 60.w,
-                   // height: 10.h,
-                    child: FutureBuilder<List<String>>(
-  future: getcourses(),
-  builder: (context, snapshot) {
-    if (snapshot.connectionState == ConnectionState.waiting) {
-      return CircularProgressIndicator(); // Or any loading indicator
-    } else if (snapshot.hasError) {
-      return Text(
-        'Error: ${snapshot.error}',
-        style: TextStyle(color: Colors.black),
-      );
-    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-      return Text(
-        'No courses available',
-        style: TextStyle(color: Colors.black),
-      ); // Handle the case when no courses are fetched
-    } else {
-  return DropdownButton<String>(
-  value: snapshot.data!.contains(selectedCourse) ? selectedCourse : null,
-  onChanged: (String? newValue) {
-    setState(() {
-      if (newValue == null || newValue.isEmpty) {
-        // If "Clear Filters" is selected, reset the filters
-        selectedCourse="All Courses";
-         _collectionStream = FirebaseFirestore.instance
-            .collection('groups')
-            //.where('name', isEqualTo: selectedCourse)
-            .orderBy('time', descending: true)
-            .limit(500)
-            .snapshots();
-      } else {
-        selectedCourse = newValue!;
-        _collectionStream = FirebaseFirestore.instance
-            .collection('groups')
-            .where('name', isEqualTo: selectedCourse)
-            .orderBy('time', descending: true)
-            .limit(500)
-            .snapshots();
-      }
-    });
-  },
-  items: [
-    // Adding the "Clear Filters" option
-    DropdownMenuItem<String>(
-      value: "",
-      child: Text(
-        'Clear Filters',
-        style: TextStyle(color: Colors.black),
-      ),
-    ),
-    // Adding the "All Courses" option
-    DropdownMenuItem<String>(
-      value: null,
-      child: Text(
-        'All Courses',
-        style: TextStyle(color: Colors.black),
-      ),
-    ),
-    // Mapping other items from snapshot data
-    ...snapshot.data!
-        .toSet()
-        .toList()
-        .map<DropdownMenuItem<String>>((String value) {
-      return DropdownMenuItem<String>(
-        value: value,
-        child: Text(
-          value,
-          style: TextStyle(color: Colors.black),
-        ),
-      );
-    }).toList(),
-  ],
-);
-    }
-  },
-                          )),
+                        Container(
+                            margin: EdgeInsets.only(top: 0),
+                            width: 60.w,
+                            // height: 10.h,
+                            child: FutureBuilder<List<String>>(
+                              future: getcourses(),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return CircularProgressIndicator(); // Or any loading indicator
+                                } else if (snapshot.hasError) {
+                                  return Text(
+                                    'Error: ${snapshot.error}',
+                                    style: TextStyle(color: Colors.black),
+                                  );
+                                } else if (!snapshot.hasData ||
+                                    snapshot.data!.isEmpty) {
+                                  return Text(
+                                    'No courses available',
+                                    style: TextStyle(color: Colors.black),
+                                  ); // Handle the case when no courses are fetched
+                                } else {
+                                  return DropdownButton<String>(
+                                    value:
+                                        snapshot.data!.contains(selectedCourse)
+                                            ? selectedCourse
+                                            : null,
+                                    onChanged: (String? newValue) {
+                                      setState(() {
+                                        if (newValue == null ||
+                                            newValue.isEmpty) {
+                                          // If "Clear Filters" is selected, reset the filters
+                                          selectedCourse = "All Courses";
+                                          _collectionStream = FirebaseFirestore
+                                              .instance
+                                              .collection('groups')
+                                              //.where('name', isEqualTo: selectedCourse)
+                                              .orderBy('time', descending: true)
+                                              .limit(500)
+                                              .snapshots();
+                                        } else {
+                                          selectedCourse = newValue!;
+                                          _collectionStream = FirebaseFirestore
+                                              .instance
+                                              .collection('groups')
+                                              .where('name',
+                                                  isEqualTo: selectedCourse)
+                                              .orderBy('time', descending: true)
+                                              .limit(500)
+                                              .snapshots();
+                                        }
+                                      });
+                                    },
+                                    items: [
+                                      // Adding the "Clear Filters" option
+                                      DropdownMenuItem<String>(
+                                        value: "",
+                                        child: Text(
+                                          'Clear Filters',
+                                          style: TextStyle(color: Colors.black),
+                                        ),
+                                      ),
+                                      // Adding the "All Courses" option
+                                      DropdownMenuItem<String>(
+                                        value: null,
+                                        child: Text(
+                                          'All Courses',
+                                          style: TextStyle(color: Colors.black),
+                                        ),
+                                      ),
+                                      // Mapping other items from snapshot data
+                                      ...snapshot.data!
+                                          .toSet()
+                                          .toList()
+                                          .map<DropdownMenuItem<String>>(
+                                              (String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(
+                                            value,
+                                            style:
+                                                TextStyle(color: Colors.black),
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ],
+                                  );
+                                }
+                              },
+                            )),
                         Padding(
                           padding: EdgeInsets.only(
                               left: 4.w, right: 4.w, top: 4.h, bottom: 1.h),
@@ -526,7 +554,6 @@ class _GroupPageState extends State<GroupPage> {
                             ),
                           ),
                         ),
-                  
                       ],
                     ),
                     Padding(
@@ -662,8 +689,7 @@ class _GroupPageState extends State<GroupPage> {
                                                                     maxLines: 1,
                                                                     style:
                                                                         TextStyle(
-                                                                      shadows: <
-                                                                          Shadow>[
+                                                                      shadows: <Shadow>[
                                                                         Shadow(
                                                                           offset: Offset(
                                                                               2.0,
@@ -689,7 +715,9 @@ class _GroupPageState extends State<GroupPage> {
                                                                     ),
                                                                   ),
                                                                 ),
-                                                                role == "mentor"
+                                                                (role == Roles.mentor ||
+                                                                        role ==
+                                                                            Roles.admin)
                                                                     ? Container(
                                                                         width:
                                                                             40.w,
@@ -744,8 +772,7 @@ class _GroupPageState extends State<GroupPage> {
                                                                     maxLines: 1,
                                                                     style:
                                                                         TextStyle(
-                                                                      shadows: <
-                                                                          Shadow>[
+                                                                      shadows: <Shadow>[
                                                                         Shadow(
                                                                           offset: Offset(
                                                                               2.0,
@@ -781,8 +808,7 @@ class _GroupPageState extends State<GroupPage> {
                                                                     maxLines: 1,
                                                                     style:
                                                                         TextStyle(
-                                                                      shadows: <
-                                                                          Shadow>[
+                                                                      shadows: <Shadow>[
                                                                         Shadow(
                                                                           offset: Offset(
                                                                               2.0,
@@ -896,6 +922,7 @@ class _GroupPageState extends State<GroupPage> {
     );
   }
 }
+
 class PopupBox extends StatelessWidget {
   final String message;
 
@@ -921,105 +948,107 @@ class PopupBox extends StatelessWidget {
             ),
             SizedBox(height: 8.0),
             Text(
-             "How you can learn better?",
-               style: TextStyle(
-                          
-                                    shadows: <Shadow>[
-                                      Shadow(
-                                        offset: Offset(2.0, 2.0),
-                                        blurRadius: 6.0,
-                                        color: Color.fromARGB(100, 0, 0, 0),
-                                      ),
-                                    ],
-                                    fontFamily: 'Inter',
-                                    fontSize: 10.sp,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500,
-                                     decoration: TextDecoration.underline,
-                                  ),
+              "How you can learn better?",
+              style: TextStyle(
+                shadows: <Shadow>[
+                  Shadow(
+                    offset: Offset(2.0, 2.0),
+                    blurRadius: 6.0,
+                    color: Color.fromARGB(100, 0, 0, 0),
+                  ),
+                ],
+                fontFamily: 'Inter',
+                fontSize: 10.sp,
+                color: Colors.black,
+                fontWeight: FontWeight.w500,
+                decoration: TextDecoration.underline,
+              ),
             ),
-            Text("It's a good idea to google once about your doubt and see what stackoverflow suggest and how others solved the same kind of doubt by looking at documentation once."
-             ,style: TextStyle(
-                          
-                                    shadows: <Shadow>[
-                                      Shadow(
-                                        offset: Offset(2.0, 2.0),
-                                        blurRadius: 6.0,
-                                        color: Color.fromARGB(100, 0, 0, 0),
-                                      ),
-                                    ],
-                                    fontFamily: 'Inter',
-                                    fontSize: 8.sp,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w400,
-                                     decoration: TextDecoration.underline,
-                                  ),),
-             Text("Note : "
-               ,style: TextStyle(
-                          
-                                    shadows: <Shadow>[
-                                      Shadow(
-                                        offset: Offset(2.0, 2.0),
-                                        blurRadius: 6.0,
-                                        color: Color.fromARGB(100, 0, 0, 0),
-                                      ),
-                                    ],
-                                    fontFamily: 'Inter',
-                                    fontSize: 10.sp,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500,
-                                     decoration: TextDecoration.underline,
-                                  ),),
-              Text(" If you see late response(more than 5 minutes or max more than 10 minutes ) from mentor multiple times during 6pm - 9am , then tag me and raise the concern. "
-               ,style: TextStyle(
-                          
-                                    shadows: <Shadow>[
-                                      Shadow(
-                                        offset: Offset(2.0, 2.0),
-                                        blurRadius: 6.0,
-                                        color: Color.fromARGB(100, 0, 0, 0),
-                                      ),
-                                    ],
-                                    fontFamily: 'Inter',
-                                    fontSize: 8.sp,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w400,
-                                     decoration: TextDecoration.underline,
-                                  ),),
-               Text("Assignment note : "
-                , style: TextStyle(
-                          
-                                    shadows: <Shadow>[
-                                      Shadow(
-                                        offset: Offset(2.0, 2.0),
-                                        blurRadius: 6.0,
-                                        color: Color.fromARGB(100, 0, 0, 0),
-                                      ),
-                                    ],
-                                    fontFamily: 'Inter',
-                                    fontSize: 10.sp,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500,
-                                     decoration: TextDecoration.underline,
-                                  ),
-               ),
-                Text("Assignments are self evaluated. After submission, there's a solution link provided, go through it and self evaluate."
-                 ,style: TextStyle(
-                          
-                                    shadows: <Shadow>[
-                                      Shadow(
-                                        offset: Offset(2.0, 2.0),
-                                        blurRadius: 6.0,
-                                        color: Color.fromARGB(100, 0, 0, 0),
-                                      ),
-                                    ],
-                                    fontFamily: 'Inter',
-                                    fontSize: 8.sp,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w400,
-                                     decoration: TextDecoration.underline,
-                                  ),
-                ),
+            Text(
+              "It's a good idea to google once about your doubt and see what stackoverflow suggest and how others solved the same kind of doubt by looking at documentation once.",
+              style: TextStyle(
+                shadows: <Shadow>[
+                  Shadow(
+                    offset: Offset(2.0, 2.0),
+                    blurRadius: 6.0,
+                    color: Color.fromARGB(100, 0, 0, 0),
+                  ),
+                ],
+                fontFamily: 'Inter',
+                fontSize: 8.sp,
+                color: Colors.black,
+                fontWeight: FontWeight.w400,
+                decoration: TextDecoration.underline,
+              ),
+            ),
+            Text(
+              "Note : ",
+              style: TextStyle(
+                shadows: <Shadow>[
+                  Shadow(
+                    offset: Offset(2.0, 2.0),
+                    blurRadius: 6.0,
+                    color: Color.fromARGB(100, 0, 0, 0),
+                  ),
+                ],
+                fontFamily: 'Inter',
+                fontSize: 10.sp,
+                color: Colors.black,
+                fontWeight: FontWeight.w500,
+                decoration: TextDecoration.underline,
+              ),
+            ),
+            Text(
+              " If you see late response(more than 5 minutes or max more than 10 minutes ) from mentor multiple times during 6pm - 9am , then tag me and raise the concern. ",
+              style: TextStyle(
+                shadows: <Shadow>[
+                  Shadow(
+                    offset: Offset(2.0, 2.0),
+                    blurRadius: 6.0,
+                    color: Color.fromARGB(100, 0, 0, 0),
+                  ),
+                ],
+                fontFamily: 'Inter',
+                fontSize: 8.sp,
+                color: Colors.black,
+                fontWeight: FontWeight.w400,
+                decoration: TextDecoration.underline,
+              ),
+            ),
+            Text(
+              "Assignment note : ",
+              style: TextStyle(
+                shadows: <Shadow>[
+                  Shadow(
+                    offset: Offset(2.0, 2.0),
+                    blurRadius: 6.0,
+                    color: Color.fromARGB(100, 0, 0, 0),
+                  ),
+                ],
+                fontFamily: 'Inter',
+                fontSize: 10.sp,
+                color: Colors.black,
+                fontWeight: FontWeight.w500,
+                decoration: TextDecoration.underline,
+              ),
+            ),
+            Text(
+              "Assignments are self evaluated. After submission, there's a solution link provided, go through it and self evaluate.",
+              style: TextStyle(
+                shadows: <Shadow>[
+                  Shadow(
+                    offset: Offset(2.0, 2.0),
+                    blurRadius: 6.0,
+                    color: Color.fromARGB(100, 0, 0, 0),
+                  ),
+                ],
+                fontFamily: 'Inter',
+                fontSize: 8.sp,
+                color: Colors.black,
+                fontWeight: FontWeight.w400,
+                decoration: TextDecoration.underline,
+              ),
+            ),
             SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {

@@ -10,6 +10,7 @@ import 'package:cloudyml_app2/offline/db.dart';
 import 'package:cloudyml_app2/globals.dart';
 import 'package:cloudyml_app2/models/offline_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloudyml_app2/roles.dart';
 import 'package:cloudyml_app2/screens/quiz/quizentry.dart';
 import 'package:cloudyml_app2/screens/quiz/quizinstructions.dart';
 import 'package:cloudyml_app2/widgets/assignment_bottomsheet.dart';
@@ -1542,7 +1543,7 @@ bool onExpandedQuizNameExistsInList = false;
                                               fontWeight: FontWeight.bold),
                                         ),
                                 ),
-                                role == 'mentor'
+                                (role == Roles.mentor || role == Roles.admin)
                                     ? PopupMenuButton<int>(
                                         onSelected: (item) {
                                           if (item == 0) {
@@ -2473,7 +2474,7 @@ bool onExpandedQuizNameExistsInList = false;
                                                                   SizedBox(
                                                                     width: 10,
                                                                   ),
-                                                                  role == 'mentor' &&
+                                                                 (role == Roles.mentor || role == Roles.admin) &&
                                                                           listOfSectionData[widget.courseName][sectionIndex]["videos"][subsectionIndex]["type"] ==
                                                                               "video"
                                                                       ? PopupMenuButton<
@@ -2587,7 +2588,7 @@ bool onExpandedQuizNameExistsInList = false;
                                                                                 PopupMenuItem<int>(value: 3, child: Text('Update video URL')),
                                                                               ])
                                                                       : SizedBox(),
-                                                                  role == 'mentor' &&
+                                                                  (role == Roles.mentor || role == Roles.admin) &&
                                                                           listOfSectionData[widget.courseName][sectionIndex]["videos"][subsectionIndex]["type"] ==
                                                                               "assignment"
                                                                       ? PopupMenuButton<
@@ -2802,7 +2803,7 @@ bool onExpandedQuizNameExistsInList = false;
                                                                       ? Text(
                                                                           '${quizScoreMap[listOfSectionData[widget.courseName][sectionIndex]["videos"][subsectionIndex]["name"]]} %')
                                                                       : Container(),
-                                                                  role == 'mentor' &&
+                                                                  (role == Roles.mentor || role == Roles.admin) &&
                                                                           listOfSectionData[widget.courseName][sectionIndex]["videos"][subsectionIndex]["type"] ==
                                                                               "quiz"
                                                                       ? PopupMenuButton<

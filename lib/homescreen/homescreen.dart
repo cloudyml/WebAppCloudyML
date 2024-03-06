@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'package:cloudyml_app2/homescreen/clipper.dart';
+import 'package:cloudyml_app2/roles.dart';
 import 'package:cloudyml_app2/screens/campaigns/ad_widget.dart';
 import 'package:cloudyml_app2/widgets/notification_popup.dart';
 import 'package:flutter/foundation.dart';
@@ -835,9 +836,9 @@ class _LandingScreenState extends State<LandingScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
 
       // print("Role  = ${globals.role}");
-      print("IDs: $isReviewed ${globals.role != "mentor"} ${isPurchased}");
+      print("IDs: $isReviewed ${globals.role == Roles.student} ${isPurchased}");
       // coursePercent[course[index].courseId.toString()]
-      if(!isReviewed && globals.role != "mentor" && isPurchased && precentGreater){
+      if(!isReviewed && globals.role == Roles.student && isPurchased && precentGreater){
 
         showDialog(
           context: context,

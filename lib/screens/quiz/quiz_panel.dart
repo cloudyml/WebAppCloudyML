@@ -50,35 +50,35 @@ class _QuizPanelState extends State<QuizPanel> {
           child: Center(
               child: Container(
             child: Row(children: [
-              TextButton(
-                onPressed: () {},
-                child: Container(
-                  color: Color.fromARGB(255, 58, 255, 160),
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        'Global Quiz: ',
-                        style: TextStyle(color: Colors.white, fontSize: 13.0),
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      CupertinoSwitch(
-                        value: _switchValue,
-                        onChanged: (value) {
-                          setState(() {
-                            _switchValue = value;
-                          });
-                          updatequizstatus();
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              // TextButton(
+              //   onPressed: () {},
+              //   child: Container(
+              //     color: Color.fromARGB(255, 58, 255, 160),
+              //     padding:
+              //         const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+              //     child: Row(
+              //       mainAxisAlignment: MainAxisAlignment.center,
+              //       children: [
+              //         const Text(
+              //           'Global Quiz: ',
+              //           style: TextStyle(color: Colors.white, fontSize: 13.0),
+              //         ),
+              //         SizedBox(
+              //           width: 5,
+              //         ),
+              //         CupertinoSwitch(
+              //           value: _switchValue,
+              //           onChanged: (value) {
+              //             setState(() {
+              //               _switchValue = value;
+              //             });
+              //             updatequizstatus();
+              //           },
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              // ),
               SizedBox(
                 width: 15,
               ),
@@ -112,23 +112,23 @@ class _QuizPanelState extends State<QuizPanel> {
                   ),
                 ),
               ),
-              TextButton(
-                onPressed: () {
-                  GoRouter.of(context).go('/createcoupon');
-                },
-                child: Container(
-                  height: 50,
-                  color: Color.fromARGB(255, 58, 255, 160),
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                  child: Center(
-                    child: const Text(
-                      'Create Coupon',
-                      style: TextStyle(color: Colors.white, fontSize: 13.0),
-                    ),
-                  ),
-                ),
-              ),
+              // TextButton(
+              //   onPressed: () {
+              //     GoRouter.of(context).go('/createcoupon');
+              //   },
+              //   child: Container(
+              //     height: 50,
+              //     color: Color.fromARGB(255, 58, 255, 160),
+              //     padding:
+              //         const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+              //     child: Center(
+              //       child: const Text(
+              //         'Create Coupon',
+              //         style: TextStyle(color: Colors.white, fontSize: 13.0),
+              //       ),
+              //     ),
+              //   ),
+              // ),
               
             ]),
           )),

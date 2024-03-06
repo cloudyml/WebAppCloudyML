@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloudyml_app2/api/firebase_api.dart';
 import 'package:cloudyml_app2/fun.dart';
+import 'package:cloudyml_app2/roles.dart';
 import 'package:cloudyml_app2/screens/student_review/review_screen.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -203,7 +204,7 @@ class _Review1State extends State<ReviewsScreen> {
                             }
                           }
                         },
-                        items: globals.role == 'mentor'
+                        items: (globals.role == Roles.mentor || globals.role == Roles.admin)
                             ? mentorItems.map((String mentorItems) {
                                 return DropdownMenuItem(
                                     value: mentorItems,
