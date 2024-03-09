@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:badges/badges.dart';
 import 'package:cloudyml_app2/all_certificate_screen.dart';
+import 'package:cloudyml_app2/roles.dart';
 import 'package:cloudyml_app2/screens/review_screen/review_screen.dart';
 import 'package:cloudyml_app2/widgets/notification_popup.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -815,14 +816,60 @@ var mentorItems = [
   'Your Certificates',
   'Admin Quiz Panel',
   'Add daily quiz',
+  'My Quizzes',
+  'Assignment Review',
+  'My Profile',
+  'Students Review',
+  'Logout'
+];
+
+var adminItems = [
+  'My Courses',
+  'Resume Review',
+  'Your Certificates',
+  'Create Coupon',
+  'Admin Quiz Panel',
   'Add Course',
   'My Quizzes',
   'Assignment Review',
   'My Profile',
   'Students Review',
   'Create Campaign',
-  'Campaign List',
   'Add Course In User',
+  'Scholarship Data',
+  'Logout'
+];
+
+var salesItems = [
+  'My Courses',
+  'Resume Review',
+  'Your Certificates',
+  'Create Coupon',
+  'My Quizzes',
+  'My Profile',
+  'Scholarship Data',
+  'Add Course In User',
+  'Logout'
+];
+
+var cstItems = [
+  'My Courses',
+  'Resume Review',
+  'Your Certificates',
+  'My Quizzes',
+  'Assignment Review',
+  'My Profile',
+  'Students Review',
+  'Logout'
+];
+
+var marketingItems = [
+  'My Courses',
+  'Your Certificates',
+  'Create Coupon',
+  'My Profile',
+  'Students Review',
+  'Create Campaign',
   'Scholarship Data',
   'Logout'
 ];
@@ -917,23 +964,30 @@ Widget customMenuBar(BuildContext context, String? isReviewed) {
         ),
         TextButton(
             onPressed: () {
-
               AwesomeDialog(
                 context: context,
                 width: 75.w,
-                customHeader: Icon(Icons.info, color: Colors.purple, size: 30.sp,),
+                customHeader: Icon(
+                  Icons.info,
+                  color: Colors.purple,
+                  size: 30.sp,
+                ),
                 // dialogType: DialogType.info,
                 enableEnterKey: true,
                 dismissOnBackKeyPress: true,
                 dismissOnTouchOutside: true,
-                padding: EdgeInsets.symmetric(vertical: 20.sp, horizontal: 15.sp),
+                padding:
+                    EdgeInsets.symmetric(vertical: 20.sp, horizontal: 15.sp),
                 body: Column(
                   children: [
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text("For technical related(login, video etc) - ", style: TextStyle(fontWeight: FontWeight.bold),),
+                        Text(
+                          "For technical related(login, video etc) - ",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                         SizedBox(
                           width: 30.w,
                           child: SelectableText(
@@ -941,20 +995,24 @@ Widget customMenuBar(BuildContext context, String? isReviewed) {
                         ),
                       ],
                     ),
-                    SizedBox(height: 10.sp,),
+                    SizedBox(
+                      height: 10.sp,
+                    ),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text("Course related query, placement, complaint - ", style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text("Course related query, placement, complaint - ",
+                            style: TextStyle(fontWeight: FontWeight.bold)),
                         SizedBox(
                           width: 30.w,
-                          child: SelectableText(
-                              'email at rahul@cloudyml.com.'),
+                          child: SelectableText('email at rahul@cloudyml.com.'),
                         ),
                       ],
                     ),
-                    SizedBox(height: 10.sp,),
+                    SizedBox(
+                      height: 10.sp,
+                    ),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -963,8 +1021,7 @@ Widget customMenuBar(BuildContext context, String? isReviewed) {
                             style: TextStyle(fontWeight: FontWeight.bold)),
                         SizedBox(
                           width: 30.w,
-                          child: SelectableText(
-                              ' email at team@cloudyml.com.'),
+                          child: SelectableText(' email at team@cloudyml.com.'),
                         ),
                       ],
                     ),
@@ -1048,23 +1105,23 @@ Widget customMenuBar(BuildContext context, String? isReviewed) {
             onChanged: (String? value) {
               if (value != dropdownValue) {
                 if (value == 'My Courses') {
-                  GoRouter.of(context).pushReplacementNamed('myCourses',
-                    queryParams: {
+                  GoRouter.of(context)
+                      .pushReplacementNamed('myCourses', queryParams: {
                     "isReviewed": isReviewed,
-                    }
-                  );
+                  });
                 } else if (value == 'Resume Review') {
                   GoRouter.of(context).pushReplacementNamed('reviewResume');
                 } else if (value == 'Admin Quiz Panel') {
                   GoRouter.of(context).pushReplacementNamed('quizpanel');
+                } else if (value == 'Create Coupon') {
+                  GoRouter.of(context).pushReplacementNamed('createcoupon');
                 } else if (value == 'Your Certificates') {
                   GoRouter.of(context)
                       .pushReplacementNamed('allcertificatescreen');
                 } else if (value == 'Add Course') {
                   GoRouter.of(context).pushNamed('AddCourse');
                 } else if (value == 'Add daily quiz') {
-                  GoRouter.of(context)
-                      .pushNamed('AddquizQuestion');
+                  GoRouter.of(context).pushNamed('AddquizQuestion');
                 } else if (value == 'My Quizzes') {
                   GoRouter.of(context).pushReplacementNamed('quizes');
                 } else if (value == 'Assignment Review') {
@@ -1078,33 +1135,25 @@ Widget customMenuBar(BuildContext context, String? isReviewed) {
                   logOut(context);
                   saveLoginOutState(context);
                   GoRouter.of(context).pushReplacement('/login');
-                } else if(value == 'Add Course In User'){
+                } else if (value == 'Add Course In User') {
                   GoRouter.of(context).pushNamed('AddCourseInUser');
-
-                }
-                else if(value == 'Scholarship Data'){
+                } else if (value == 'Scholarship Data') {
                   GoRouter.of(context).pushNamed('ScholarshipSudentData');
-
-                }
-                else if(value == 'Create Campaign'){
+                } else if (value == 'Create Campaign') {
                   GoRouter.of(context).pushNamed('CreateCampaign');
-
-                }
-                else if(value == 'Campaign List'){
+                } else if (value == 'Campaign List') {
                   GoRouter.of(context).pushNamed('CampaignList');
-
-                }
-                else {
+                } else {
                   Fluttertoast.showToast(msg: 'Please refresh the screen.');
                 }
               }
             },
-            items: globals.role == 'mentor'
-                ? mentorItems.map((String mentorItems) {
+            items: globals.role == Roles.admin
+                ? adminItems.map((String adminitems) {
                     return DropdownMenuItem(
-                        value: mentorItems,
+                        value: adminitems,
                         child: Text(
-                          mentorItems,
+                          adminitems,
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.white,
@@ -1112,16 +1161,70 @@ Widget customMenuBar(BuildContext context, String? isReviewed) {
                           ),
                         ));
                   }).toList()
-                : items.map((String items) {
-                    return DropdownMenuItem(
-                        value: items,
-                        child: Text(
-                          items,
-                          style: buttonTextStyle.copyWith(
-                            color: Colors.white,
-                          ),
-                        ));
-                  }).toList(),
+                : globals.role == Roles.admin || globals.role == Roles.mentor
+                    ? mentorItems.map((String mentoritems) {
+                        return DropdownMenuItem(
+                            value: mentoritems,
+                            child: Text(
+                              mentoritems,
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ));
+                      }).toList()
+                    : globals.role == Roles.admin || globals.role == Roles.sales
+                        ? salesItems.map((String salesitems) {
+                            return DropdownMenuItem(
+                                value: salesitems,
+                                child: Text(
+                                  salesitems,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ));
+                          }).toList()
+                        : globals.role == Roles.admin ||
+                                globals.role == Roles.marketing_team
+                            ? marketingItems.map((String marketingitems) {
+                                return DropdownMenuItem(
+                                    value: marketingitems,
+                                    child: Text(
+                                      marketingitems,
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ));
+                              }).toList()
+                            : globals.role == Roles.admin ||
+                                    globals.role == Roles.customer_support
+                                ? cstItems.map((String cstitems) {
+                                    return DropdownMenuItem(
+                                        value: cstitems,
+                                        child: Text(
+                                          cstitems,
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ));
+                                  }).toList()
+                                : items.map((String items) {
+                                    return DropdownMenuItem(
+                                        value: items,
+                                        child: Text(
+                                          items,
+                                          style: buttonTextStyle.copyWith(
+                                            color: Colors.white,
+                                          ),
+                                        ));
+                                  }).toList(),
           ),
         ),
         SizedBox(
@@ -1244,12 +1347,11 @@ Drawer customDrawer(BuildContext context) {
                   ),
                 ),
                 onTap: () {
-                  GoRouter.of(context).push('/myCourses', extra: {
-                  "isReviewed": "true"
-                  });
+                  GoRouter.of(context)
+                      .push('/myCourses', extra: {"isReviewed": "true"});
                 },
               ),
-              globals.role == 'mentor'
+              globals.role == Roles.mentor || globals.role == Roles.admin
                   ? InkWell(
                       child: ListTile(
                         title: Text('Review Resume'),
@@ -1278,20 +1380,20 @@ Drawer customDrawer(BuildContext context) {
                           builder: (context) => AllCertificateScreen()));
                 },
               ),
-              globals.role == "mentor"
-                  ? InkWell(
-                      child: ListTile(
-                        title: Text('Admin Quiz Panel'),
-                        leading: Icon(
-                          Icons.quiz,
-                          color: HexColor('691EC8'),
-                        ),
-                      ),
-                      onTap: () {
-                        GoRouter.of(context).push('/quizpanel');
-                      },
-                    )
-                  : Container(),
+              // globals.role == "mentor"
+              //     ? InkWell(
+              //         child: ListTile(
+              //           title: Text('Admin Quiz Panel'),
+              //           leading: Icon(
+              //             Icons.quiz,
+              //             color: HexColor('691EC8'),
+              //           ),
+              //         ),
+              //         onTap: () {
+              //           GoRouter.of(context).push('/quizpanel');
+              //         },
+              //       )
+              //     : Container(),
 
               //Assignments tab for mentors only
               // ref.data() != null && ref.data()!["role"] == 'mentor'

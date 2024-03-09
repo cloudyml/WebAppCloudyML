@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:convert';
 import 'dart:math';
+import 'package:cloudyml_app2/roles.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:vdocipher_flutter/vdocipher_flutter.dart';
@@ -1016,20 +1017,32 @@ class _VideoScreenState extends State<VideoScreen> {
     }
   }
 
-  dynamic updateLIstProgress({required dynamic map1, required dynamic map2}) {
-    List<Map<String, int>> newValue = [];
-    map1.forEach((key, value) {
-      if (map2.containsKey(key)) {
-        map2.forEach((key1, value1) {
-          for (int i = 0; i < value1.length; i++) {
-            newValue.add({value[i].keys.first: value1[i].values.first});
-          }
-        });
-      }
-    });
 
-    return newValue;
+  void checkAndReplace(List<dynamic> firstList, List<dynamic> secondList) {
+  try {
+    firstList.forEach((firstItem) {
+      firstItem.forEach((firstKey, firstValue) {
+        secondList.forEach((secondItem) {
+          secondItem.forEach((secondKey, secondValue) {
+            if (firstKey == secondKey) {
+              firstValue.forEach((firstMap) {
+                firstMap.forEach((innerKey, innerValue) {
+                  secondValue.forEach((secondMap) {
+                    if (secondMap.containsKey(innerKey)) {
+                      firstMap[innerKey] = secondMap[innerKey];
+                    }
+                  });
+                });
+              });
+            }
+          });
+        });
+      });
+    });
+  } catch (e) {
+    print('Error in progress replace $e');
   }
+}
 
   getAndUpdateCPData() async {
     // if (CourseID == 'DACSO1' || CourseID == 'IPML1' || CourseID == 'GA1') {
@@ -1086,20 +1099,15 @@ class _VideoScreenState extends State<VideoScreen> {
 
           print('User Progress List :${coursePData}');
 
-          for (int i = 0;
-              i < listOfMaps.length && i < coursePData.length;
-              i++) {
-            String key = listOfMaps[i].keys.first;
-            coursePData[i][key] =
-                updateLIstProgress(map1: listOfMaps[i], map2: coursePData[i]);
-          }
+      checkAndReplace(listOfMaps, coursePData );
 
-          print('main change : ${coursePData}');
+          print('main change : ${listOfMaps}');
 
           await FirebaseFirestore.instance
               .collection('courseprogress')
               .doc(FirebaseAuth.instance.currentUser!.uid)
-              .update({newCCId: coursePData});
+              .update({newCCId: listOfMaps});
+              getProgressData();
         }
       } catch (e) {
         print('Errro in cp data : $e');
@@ -1110,8 +1118,7 @@ class _VideoScreenState extends State<VideoScreen> {
   String? currentPlayingVideoName;
 
   getFirstVideo() async {
-    await updateModuleInProgress();
-    await getAndUpdateCPData();
+    
     print("Firstvideo---");
     var res = await FirebaseFirestore.instance
         .collection("courses")
@@ -1277,6 +1284,13 @@ class _VideoScreenState extends State<VideoScreen> {
     }
   }
 
+  getData() async {
+    await updateModuleInProgress();
+    
+    await getAndUpdateCPData();
+ 
+  }
+
   @override
   void initState() {
     print('wejfiowjoiefjwioefo');
@@ -1291,6 +1305,7 @@ class _VideoScreenState extends State<VideoScreen> {
     streamVideoData();
     getCourseQuiz();
     getUserRole();
+    getData();
     getProgressData();
     getpathway(widget.courseName);
     Future.delayed(Duration(milliseconds: 500), () {
@@ -2956,7 +2971,7 @@ class _VideoScreenState extends State<VideoScreen> {
                                 key: ValueKey(
                                     listOfSectionData[widget.courseName]
                                         [sectionIndex]),
-                                enabled: role == 'mentor' ? true : false,
+                                enabled: (role == Roles.mentor || role == Roles.admin) ? true : false,
                                 child: Container(
                                   child: ExpansionTile(
                                       expandedCrossAxisAlignment:
@@ -3031,7 +3046,7 @@ class _VideoScreenState extends State<VideoScreen> {
                                                             FontWeight.bold),
                                                   ),
                                           ),
-                                          role == 'mentor'
+                                          role == Roles.mentor || role == Roles.admin
                                               ? PopupMenuButton<int>(
                                                   onSelected: (item) {
                                                     if (item == 0) {
@@ -3650,7 +3665,7 @@ class _VideoScreenState extends State<VideoScreen> {
                                                               if (role !=
                                                                   null) {
                                                                 if (role ==
-                                                                    "mentor") {
+                                                                    Roles.mentor || role == Roles.admin) {
                                                                   setState(() {
                                                                     // selectAssignment = null;
                                                                     subIndex =
@@ -4045,7 +4060,7 @@ class _VideoScreenState extends State<VideoScreen> {
                                                                         width:
                                                                             10,
                                                                       ),
-                                                                      role == 'mentor' &&
+                                                                      (role == Roles.mentor || role == Roles.admin) &&
                                                                               listOfSectionData[widget.courseName][sectionIndex]["videos"][subsectionIndex]["type"] == "video"
                                                                           ? PopupMenuButton<int>(
                                                                               onSelected: (item) {
@@ -4175,7 +4190,7 @@ class _VideoScreenState extends State<VideoScreen> {
                                                                                     PopupMenuItem<int>(value: 3, child: Text('Update video URL')),
                                                                                   ])
                                                                           : SizedBox(),
-                                                                      role == 'mentor' &&
+                                                                      (role == Roles.mentor || role == Roles.admin) &&
                                                                               listOfSectionData[widget.courseName][sectionIndex]["videos"][subsectionIndex]["type"] ==
                                                                                   "assignment"
                                                                           ? PopupMenuButton<
@@ -4470,7 +4485,7 @@ class _VideoScreenState extends State<VideoScreen> {
                                                                           ? Text(
                                                                               '${quizScoreMap[listOfSectionData[widget.courseName][sectionIndex]["videos"][subsectionIndex]["name"]]} %')
                                                                           : Container(),
-                                                                      role == 'mentor' &&
+                                                                      (role == Roles.mentor || role == Roles.admin) &&
                                                                               listOfSectionData[widget.courseName][sectionIndex]["videos"][subsectionIndex]["type"] ==
                                                                                   "quiz"
                                                                           ? PopupMenuButton<

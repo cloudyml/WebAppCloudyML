@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloudyml_app2/fun.dart';
+import 'package:cloudyml_app2/roles.dart';
 import 'package:cloudyml_app2/screens/chat_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -319,7 +320,7 @@ class _GroupsListState extends State<GroupsList> {
           //   print(userData!["role"]);
           // });
           // !isLoading && userData!["role"]=="mentor"?_getGroupListNextData():null;
-          if(!callingAPI && userData!["role"]=="mentor")
+          if(!callingAPI && (userData["role"] == Roles.mentor || userData["role"] == Roles.admin))
           {
             print("calling...");
             _getGroupListData();
@@ -674,7 +675,7 @@ class _GroupsListState extends State<GroupsList> {
                   ],
                 ),
                 SizedBox(height: 3,),
-                userData!["role"]=="mentor"? Container(
+                (userData["role"] == Roles.mentor || userData["role"] == Roles.admin)? Container(
                   height: 41,
                   decoration: BoxDecoration(
                       color: Colors.white,
@@ -755,7 +756,7 @@ class _GroupsListState extends State<GroupsList> {
                         child:Container(
                             height: MediaQuery.of(context).size.height,
                             child:
-                            userData!["role"]=="mentor" && searchTextField?
+                            (userData["role"] == Roles.mentor || userData["role"] == Roles.admin) && searchTextField?
                             StreamBuilder<List<DocumentSnapshot>>(
                                 stream: _searchController.stream,
                                 builder: (context,snapshotGroupList){
@@ -886,7 +887,7 @@ class _GroupsListState extends State<GroupsList> {
                                                                   ),
                                                                 ),
                                                                 Text('', style: TextStyle(height: 0.5),),
-                                                                userData!["role"] == "mentor"
+                                                               (userData["role"] == Roles.mentor || userData["role"] == Roles.admin)
                                                                     ? Text(
                                                                   "Student: ${snapshotGroupList.data![index]["student_name"]}",
                                                                   style: TextStyle(
@@ -1335,7 +1336,7 @@ class _GroupsListState extends State<GroupsList> {
                                     return Center(
                                       heightFactor: 15,
                                       child: Text(
-                                          userData!["role"] == "student"
+                                          userData!["role"] == Roles.student
                                               ? "No Groups To Show!\n(Buy Course To Get Mentor's Support)!"
                                               : "Loading....",
                                           style: TextStyle(
@@ -1353,7 +1354,7 @@ class _GroupsListState extends State<GroupsList> {
                                     return Center(
                                       heightFactor: 15,
                                       child: Text(
-                                          userData!["role"] == "student"
+                                          userData!["role"] == Roles.student
                                               ? "No Groups To Show!\n(Buy Course To Get Mentor's Support)!"
                                               : "No search results found",
                                           style: TextStyle(
@@ -1364,7 +1365,7 @@ class _GroupsListState extends State<GroupsList> {
                                   }
 
                                 }):
-                            userData!["role"]=="mentor"?StreamBuilder<List<dynamic>>(
+                            (userData["role"] == Roles.mentor || userData["role"] == Roles.admin)?StreamBuilder<List<dynamic>>(
                                 stream: !isLoading?_stream:_stream,
                                 builder: (context, snapshotGroupList){
                                   // print("snapshotData = ${snapshotGroupList.data!.docs[0]["icon"]}");
@@ -1506,7 +1507,7 @@ class _GroupsListState extends State<GroupsList> {
                                                                   ),
                                                                 ),
                                                                 Text('', style: TextStyle(height: 0.5),),
-                                                                userData!["role"] == "mentor"
+                                                                (userData["role"] == Roles.mentor || userData["role"] == Roles.admin)
                                                                     ? Text(
                                                                   "Student: ${snapshotGroupList.data![index]["data"]["student_name"]}",
                                                                   style: TextStyle(
@@ -1896,7 +1897,7 @@ class _GroupsListState extends State<GroupsList> {
                                     return Center(
                                       heightFactor: 15,
                                       child: Text(
-                                          userData!["role"] == "student"
+                                          userData!["role"] == Roles.student
                                               ? "No Groups To Show!\n(Buy Course To Get Mentor's Support)!"
                                               : "No Groups To Show!",
                                           style: TextStyle(
@@ -1914,7 +1915,7 @@ class _GroupsListState extends State<GroupsList> {
                                     return Center(
                                       heightFactor: 15,
                                       child: Text(
-                                          userData!["role"] == "student"
+                                          userData!["role"] == Roles.student
                                               ? "No Groups To Show!\n(Buy Course To Get Mentor's Support)!"
                                               : "Loading...",
                                           style: TextStyle(
@@ -1927,7 +1928,7 @@ class _GroupsListState extends State<GroupsList> {
                                 }):
                             StreamBuilder(
                                 stream:
-                                userData!["role"]=="mentor"?
+                                (userData["role"] == Roles.mentor || userData["role"] == Roles.admin)?
                                 !isLoading?
                                 _lastDocument1!=null?
                                 FirebaseFirestore.instance.collection("groups").orderBy("time",descending: true)
@@ -2072,7 +2073,7 @@ class _GroupsListState extends State<GroupsList> {
                                                                   ),
                                                                 ),
                                                                 Text('', style: TextStyle(height: 0.5),),
-                                                                userData!["role"] == "mentor"
+                                                                (userData["role"] == Roles.mentor || userData["role"] == Roles.admin)
                                                                     ? Text(
                                                                   "Student: ${snapshotGroupList.data!.docs[index]["student_name"]}",
                                                                   style: TextStyle(
@@ -2520,7 +2521,7 @@ class _GroupsListState extends State<GroupsList> {
                                     return Center(
                                       heightFactor: 15,
                                       child: Text(
-                                          userData!["role"] == "student"
+                                          userData!["role"] == Roles.student
                                               ? "No Groups To Show!\n(Buy Course To Get Mentor's Support)!"
                                               : "No Groups To Show!",
                                           style: TextStyle(
@@ -2538,7 +2539,7 @@ class _GroupsListState extends State<GroupsList> {
                                     return Center(
                                       heightFactor: 15,
                                       child: Text(
-                                          userData!["role"] == "student"
+                                          userData!["role"] == Roles.student
                                               ? "No Groups To Show!\n(Buy Course To Get Mentor's Support)!"
                                               : "No Groups To Show!",
                                           style: TextStyle(

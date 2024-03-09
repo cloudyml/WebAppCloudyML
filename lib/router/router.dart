@@ -24,10 +24,14 @@ import 'package:cloudyml_app2/screens/campaigns/campaign_list.dart';
 import 'package:cloudyml_app2/screens/campaigns/create_campaign.dart';
 import 'package:cloudyml_app2/screens/chat_screen.dart';
 import 'package:cloudyml_app2/screens/chatpage.dart';
+import 'package:cloudyml_app2/screens/cx_chat.dart';
+import 'package:cloudyml_app2/screens/cx_chatgroup.dart';
 import 'package:cloudyml_app2/screens/daily_quiz/add_daily_quiz.dart';
 import 'package:cloudyml_app2/screens/groups_list.dart';
 import 'package:cloudyml_app2/screens/quiz/quizList.dart';
 import 'package:cloudyml_app2/screens/quiz/quiz_new_combo_course.dart';
+import 'package:cloudyml_app2/screens/sales_chatgroup.dart';
+import 'package:cloudyml_app2/screens/sales_chatpage.dart';
 import 'package:cloudyml_app2/screens/scholarship_data/scholarship_student_data.dart';
 import 'package:cloudyml_app2/screens/splash.dart';
 import 'package:cloudyml_app2/screens/student_review/review_screen.dart';
@@ -614,6 +618,29 @@ class MyRouter {
                 // chatScreen: chatScreen,
               ));
             }),
+             GoRoute(
+            name: 'saleschat',
+            path: '/saleschat',
+            pageBuilder: (context, state) {
+              return MaterialPage(child: SalesChatPage());
+            }),        GoRoute(
+            name: 'cxchat',
+            path: '/cxchat',
+            pageBuilder: (context, state) {
+              return MaterialPage(child: CXChatPage());
+            }),
+             GoRoute(
+            name: 'salesmobilechat',
+            path: '/salesmobilechat',
+            pageBuilder: ((context, state) {
+              return MaterialPage(child: SalesGroupPage());
+            })),
+             GoRoute(
+            name: 'cxmobilechat',
+            path: '/cxmobilechat',
+            pageBuilder: ((context, state) {
+              return MaterialPage(child: CXGroupPage());
+            })),
             GoRoute(
           name: 'CampaignList',
           path: '/campaignList',

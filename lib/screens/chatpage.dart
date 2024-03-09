@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:async';
 import 'dart:ui';
 import 'package:clipboard/clipboard.dart';
+import 'package:cloudyml_app2/constants.dart';
+import 'package:cloudyml_app2/screens/saleschatscreen.dart';
 import 'package:flutter/material.dart';
 import 'dart:html' as html;
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -133,7 +135,7 @@ class _ChatPageState extends State<ChatPage> {
     setState(() {
       if (searchText != "") {
         _collectionStream = FirebaseFirestore.instance
-            .collection('groups')
+            .collection(role=="customer_support"?'sales_chats':'groups')
             .where('student_name', isEqualTo: searchText)
             .orderBy('time', descending: true)
             .limit(500)
@@ -722,29 +724,30 @@ class _ChatPageState extends State<ChatPage> {
 
   Set<String> coursesList = Set<String>();
   Future<Set<String>> getcourses() async {
-    if(coursesgroups.length==0)
- {   await FirebaseFirestore.instance
-        .collection("courses")
-        .get()
-        .then((value) async {
-      Set<String> normalcourse = Set<String>();
-      for (var i in value.docs) {
-        CollectionReference groupsCollection =
-            FirebaseFirestore.instance.collection('groups');
-        QuerySnapshot querySnapshot =
-            await groupsCollection.where('name', isEqualTo: i['name']).get();
-        if (querySnapshot.size != 0) {
-          if (i['combo'] != true) {
-            normalcourse.add(i['name']);
-          } else {
-            coursesList.add(i['name']);
+    if (coursesgroups.length == 0) {
+      await FirebaseFirestore.instance
+          .collection("courses")
+          .get()
+          .then((value) async {
+        Set<String> normalcourse = Set<String>();
+        for (var i in value.docs) {
+          CollectionReference groupsCollection =
+              FirebaseFirestore.instance.collection('groups');
+          QuerySnapshot querySnapshot =
+              await groupsCollection.where('name', isEqualTo: i['name']).get();
+          if (querySnapshot.size != 0) {
+            if (i['combo'] != true) {
+              normalcourse.add(i['name']);
+            } else {
+              coursesList.add(i['name']);
+            }
           }
         }
-      }
-      coursesList.addAll(normalcourse);
-      coursesgroups.addAll(coursesList);
-      print("coursenamelist: ${coursesList}");
-    });}
+        coursesList.addAll(normalcourse);
+        coursesgroups.addAll(coursesList);
+        print("coursenamelist: ${coursesList}");
+      });
+    }
     return coursesgroups;
   }
 
@@ -804,264 +807,284 @@ class _ChatPageState extends State<ChatPage> {
               children: [
                 Container(
                   width: 30.w,
-                  child: Column(
+                  child: Stack(
                     children: [
-                      Container(
-                        margin: EdgeInsets.only(top: 0),
-                        width: double.infinity,
-                        height: 10.h,
-                        child: Row(
-                          children: [
-                            // Padding(
-                            //   padding:
-                            //       const EdgeInsets.only(top: 0, left: 1, right: 1),
-                            //   child: Container(
-                            //     child: Image.asset(
-                            //       'assets/page-1/images/vector.png',
-                            //       height: 5.h,
-                            //       width: 3.h,
-                            //     ),
-                            //   ),
-                            // ),
+                      Column(
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(top: 0),
+                            width: double.infinity,
+                            height: 10.h,
+                            child: Row(
+                              children: [
+                                // Padding(
+                                //   padding:
+                                //       const EdgeInsets.only(top: 0, left: 1, right: 1),
+                                //   child: Container(
+                                //     child: Image.asset(
+                                //       'assets/page-1/images/vector.png',
+                                //       height: 5.h,
+                                //       width: 3.h,
+                                //     ),
+                                //   ),
+                                // ),
+                                Padding(
+                                  padding:
+                                      EdgeInsets.only(left: 2.w, right: 0.5.w),
+                                  child: Container(
+                                    width: 22.w,
+                                    height: 4.h,
+                                    padding: EdgeInsets.only(left: 1.w),
+                                    decoration: BoxDecoration(
+                                      color: Color(0xfff5f5f5),
+                                      borderRadius: BorderRadius.circular(22.h),
+                                    ),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          child: Image.asset(
+                                            'assets/page-1/images/search.png',
+                                            height: 5.h,
+                                            width: 3.h,
+                                          ),
+                                        ),
+                                        SizedBox(width: 1.w),
+                                        Expanded(
+                                          child: TextField(
+                                            onChanged: _onSearchTextChanged,
+                                            decoration: InputDecoration(
+                                              hintText: "Search",
+                                              border: InputBorder.none,
+                                            ),
+                                            style: TextStyle(
+                                              fontFamily: 'Inter',
+                                              fontWeight: FontWeight.w400,
+                                              color: Color(0xff707991),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          if (role != "student")
                             Padding(
-                              padding: EdgeInsets.only(left: 2.w, right: 0.5.w),
-                              child: Container(
-                                width: 22.w,
-                                height: 4.h,
-                                padding: EdgeInsets.only(left: 1.w),
-                                decoration: BoxDecoration(
-                                  color: Color(0xfff5f5f5),
-                                  borderRadius: BorderRadius.circular(22.h),
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      child: Image.asset(
-                                        'assets/page-1/images/search.png',
-                                        height: 5.h,
-                                        width: 3.h,
-                                      ),
+                              padding: const EdgeInsets.all(20.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  ElevatedButton(
+                                    style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStateProperty.all<Color>(
+                                              Colors.purple),
+                                      foregroundColor:
+                                          MaterialStateProperty.all<Color>(
+                                              Colors.white),
                                     ),
-                                    SizedBox(width: 1.w),
-                                    Expanded(
-                                      child: TextField(
-                                        onChanged: _onSearchTextChanged,
-                                        decoration: InputDecoration(
-                                          hintText: "Search",
-                                          border: InputBorder.none,
-                                        ),
-                                        style: TextStyle(
-                                          fontFamily: 'Inter',
-                                          fontWeight: FontWeight.w400,
-                                          color: Color(0xff707991),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      if(role!="student")
-                      Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            ElevatedButton(
-                              style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        Colors.purple),
-                                foregroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        Colors.white),
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  openoverlay = true;
-                                });
-                                // showDialog(
-                                //   context: context,
-                                //   builder: (BuildContext context) {
-                                //     return AlertDialog(
-                                //       content:
-                                //     );
-                                //   },
-                                // );
-                              },
-                              child: Text('Filter by course'),
-                            ),
-                            ElevatedButton(
-                              style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        Colors.purple),
-                                foregroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        Colors.white),
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  selectedCourses.clear();
-                                  updateCollectionStream();
-                                });
-                              },
-                              child: Text('Clear Selection'),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                          child: StreamBuilder<QuerySnapshot>(
-                        stream: role == "student"
-                            ? _collectionStream1
-                            : _collectionStream,
-                        builder: (BuildContext context,
-                            AsyncSnapshot<QuerySnapshot> snapshot) {
-                          if (snapshot.hasError) {
-                            return Text('Error: ${snapshot.error}');
-                          }
-
-                          switch (snapshot.connectionState) {
-                            case ConnectionState.waiting:
-                              return Center(
-                                child: Image.asset(
-                                    "assets/page-1/images/loader.gif"),
-                              );
-                            default:
-                              return ListView.builder(
-                                itemCount: snapshot.data!.docs.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  DocumentSnapshot document =
-                                      snapshot.data!.docs[index];
-                                  Map<String, dynamic> data =
-                                      document.data() as Map<String, dynamic>;
-
-                                  return GestureDetector(
-                                    onTap: () {
+                                    onPressed: () {
                                       setState(() {
-                                        _messageStream = FirebaseFirestore
-                                            .instance
-                                            .collection("groups")
-                                            .doc(document.id)
-                                            .collection("chats")
-                                            .orderBy('time', descending: true)
-                                            .snapshots();
-                                        selectedTileIndex = document.id;
-                                        idcurr = document.id;
-                                        name = document["name"].toString();
-                                        time =
-                                            document["student_name"].toString();
-                                        if (_updatedDocuments
-                                            .contains(document.id)) {
-                                          setState(() {
-                                            _updatedDocuments
-                                                .remove(document.id);
-                                          });
-                                        }
+                                        openoverlay = true;
+                                      });
+                                      // showDialog(
+                                      //   context: context,
+                                      //   builder: (BuildContext context) {
+                                      //     return AlertDialog(
+                                      //       content:
+                                      //     );
+                                      //   },
+                                      // );
+                                    },
+                                    child: Text('Filter by course'),
+                                  ),
+                                  ElevatedButton(
+                                    style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStateProperty.all<Color>(
+                                              Colors.purple),
+                                      foregroundColor:
+                                          MaterialStateProperty.all<Color>(
+                                              Colors.white),
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        selectedCourses.clear();
+                                        updateCollectionStream();
                                       });
                                     },
-                                    child: Padding(
-                                      padding: EdgeInsets.only(
-                                          left: 0.w, right: 0.w),
-                                      child: Container(
-                                        width: 30.w,
-                                        padding: EdgeInsets.fromLTRB(
-                                            1.w, 0.2.h, 0.w, 0.2.h),
-                                        color: _updatedDocuments
-                                                .contains(document.id)
-                                            ? Color.fromARGB(255, 157, 239, 159)
-                                            : selectedTileIndex == document.id
+                                    child: Text('Clear Selection'),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          Expanded(
+                              child: StreamBuilder<QuerySnapshot>(
+                            stream: role == "student"
+                                ? _collectionStream1
+                                : _collectionStream,
+                            builder: (BuildContext context,
+                                AsyncSnapshot<QuerySnapshot> snapshot) {
+                              if (snapshot.hasError) {
+                                return Text('Error: ${snapshot.error}');
+                              }
+
+                              switch (snapshot.connectionState) {
+                                case ConnectionState.waiting:
+                                  return Center(
+                                    child: Image.asset(
+                                        "assets/page-1/images/loader.gif"),
+                                  );
+                                default:
+                                  return ListView.builder(
+                                    itemCount: snapshot.data!.docs.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      DocumentSnapshot document =
+                                          snapshot.data!.docs[index];
+                                      Map<String, dynamic> data = document
+                                          .data() as Map<String, dynamic>;
+
+                                      return GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            Constants.isales = false;
+                                            _messageStream = FirebaseFirestore
+                                                .instance
+                                                .collection("groups")
+                                                .doc(document.id)
+                                                .collection("chats")
+                                                .orderBy('time',
+                                                    descending: true)
+                                                .snapshots();
+                                            selectedTileIndex = document.id;
+                                            idcurr = document.id;
+                                            name = document["name"].toString();
+                                            time = document["student_name"]
+                                                .toString();
+                                            if (_updatedDocuments
+                                                .contains(document.id)) {
+                                              setState(() {
+                                                _updatedDocuments
+                                                    .remove(document.id);
+                                              });
+                                            }
+                                          });
+                                        },
+                                        child: Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 0.w, right: 0.w),
+                                          child: Container(
+                                            width: 30.w,
+                                            padding: EdgeInsets.fromLTRB(
+                                                1.w, 0.2.h, 0.w, 0.2.h),
+                                            color: _updatedDocuments
+                                                    .contains(document.id)
                                                 ? Color.fromARGB(
-                                                    255, 237, 213, 248)
-                                                : Colors.transparent,
-                                        child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              margin: EdgeInsets.fromLTRB(
-                                                  0 * fem,
-                                                  0 * fem,
-                                                  2.h,
-                                                  0 * fem),
-                                              width: 4.w,
-                                              height: 4.w,
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        100.sp),
-                                                child: Image.asset(
-                                                  'assets/icon.jpeg',
-                                                  fit: BoxFit.cover,
+                                                    255, 157, 239, 159)
+                                                : selectedTileIndex ==
+                                                        document.id
+                                                    ? Color.fromARGB(
+                                                        255, 237, 213, 248)
+                                                    : Colors.transparent,
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Container(
+                                                  margin: EdgeInsets.fromLTRB(
+                                                      0 * fem,
+                                                      0 * fem,
+                                                      2.h,
+                                                      0 * fem),
+                                                  width: 4.w,
+                                                  height: 4.w,
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            100.sp),
+                                                    child: Image.asset(
+                                                      'assets/icon.jpeg',
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
                                                 ),
-                                              ),
-                                            ),
-                                            Container(
-                                              width: 23.w,
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Container(
-                                                    child: Row(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Container(
-                                                          width: 16.w,
-                                                          child: Text(
-                                                            "${document["name"]}",
-                                                            style: TextStyle(
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              fontFamily:
-                                                                  'Inter',
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              color: Color(
-                                                                  0xff011627),
+                                                Container(
+                                                  width: 23.w,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Container(
+                                                        child: Row(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Container(
+                                                              width: 16.w,
+                                                              child: Text(
+                                                                "${document["name"]}",
+                                                                style:
+                                                                    TextStyle(
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                  fontFamily:
+                                                                      'Inter',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                  color: Color(
+                                                                      0xff011627),
+                                                                ),
+                                                              ),
                                                             ),
-                                                          ),
-                                                        ),
-                                                        Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  left: 1.w),
-                                                          child: Text(
-                                                            (document["time"]
-                                                                            .toDate()
-                                                                            .day ==
-                                                                        now
-                                                                            .day) &&
-                                                                    (document["time"]
-                                                                            .toDate()
-                                                                            .month ==
-                                                                        now
-                                                                            .month) &&
-                                                                    (document["time"]
-                                                                            .toDate()
-                                                                            .year ==
-                                                                        now
-                                                                            .year)
-                                                                ? "Today"
-                                                                : (document["time"].toDate().day ==
-                                                                            (now.day -
-                                                                                1)) &&
+                                                            Padding(
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      left:
+                                                                          1.w),
+                                                              child: Text(
+                                                                (document["time"].toDate().day == now.day) &&
                                                                         (document["time"].toDate().month ==
                                                                             now
                                                                                 .month) &&
                                                                         (document["time"].toDate().year ==
-                                                                            now.year)
-                                                                    ? "Yesterday"
-                                                                    : "${document["time"].toDate().day}/${document["time"].toDate().month}/${document["time"].toDate().year}",
+                                                                            now
+                                                                                .year)
+                                                                    ? "Today"
+                                                                    : (document["time"].toDate().day == (now.day - 1)) &&
+                                                                            (document["time"].toDate().month ==
+                                                                                now.month) &&
+                                                                            (document["time"].toDate().year == now.year)
+                                                                        ? "Yesterday"
+                                                                        : "${document["time"].toDate().day}/${document["time"].toDate().month}/${document["time"].toDate().year}",
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontFamily:
+                                                                      'Inter',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                  color: Color(
+                                                                      0xff707991),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      Row(
+                                                        children: [
+                                                          Text(
+                                                            "${document["student_name"]}",
                                                             style: TextStyle(
                                                               fontFamily:
                                                                   'Inter',
@@ -1072,348 +1095,399 @@ class _ChatPageState extends State<ChatPage> {
                                                                   0xff707991),
                                                             ),
                                                           ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      Text(
-                                                        "${document["student_name"]}",
-                                                        style: TextStyle(
-                                                          fontFamily: 'Inter',
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          color:
-                                                              Color(0xff707991),
-                                                        ),
+                                                          Spacer(),
+                                                          !(data.containsKey(
+                                                                  'last'))
+                                                              ? Text(
+                                                                  "NEW!!!",
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontFamily:
+                                                                        'Inter',
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    color: Color
+                                                                        .fromARGB(
+                                                                            255,
+                                                                            144,
+                                                                            5,
+                                                                            149),
+                                                                  ),
+                                                                )
+                                                              : Spacer(),
+                                                        ],
                                                       ),
-                                                      Spacer(),
-                                                      !(data.containsKey(
-                                                              'last'))
-                                                          ? Text(
-                                                              "NEW!!!",
-                                                              style: TextStyle(
-                                                                fontFamily:
-                                                                    'Inter',
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                color: Color
-                                                                    .fromARGB(
-                                                                        255,
-                                                                        144,
-                                                                        5,
-                                                                        149),
-                                                              ),
-                                                            )
-                                                          : Spacer(),
                                                     ],
                                                   ),
-                                                ],
-                                              ),
+                                                ),
+                                              ],
                                             ),
-                                          ],
+                                          ),
                                         ),
-                                      ),
-                                    ),
+                                      );
+                                    },
                                   );
-                                },
-                              );
-                          }
-                        },
-                      ))
+                              }
+                            },
+                          ))
+                        ],
+                      ),
+                      // Positioned(
+                      //     bottom: 0,
+                      //     child: Container(
+                      //       height: 10.h,
+                      //       width: 30.w,
+                      //       color: Colors.white,
+                      //       child: ElevatedButton(
+                      //         onPressed: () {
+                      //           setState(() {
+                      //             Constants.isales = true;
+                      //           });
+                      //         },
+                      //         style: ElevatedButton.styleFrom(
+                      //           primary: Colors.purple,
+                      //           onPrimary: Colors.white,
+                      //         ),
+                      //         child: Text(
+                      //           'Chat with Sale',
+                      //           style: TextStyle(
+                      //             fontWeight: FontWeight.bold,
+                      //           ),
+                      //         ),
+                      //       ),
+                      //     ))
                     ],
                   ),
                 ),
-                Container(
-                  width: 70.w,
-                  child: Column(
-                    children: [
-                      name == ""
-                          ? Container()
-                          : Container(
-                              width: double.infinity,
-                              height: 10.h,
-                              child: Container(
-                                // topbartFx (1:345)
-                                padding: EdgeInsets.fromLTRB(2.w, 1.h, 2.w, 0),
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: Color(0xffd9dce0)),
-                                  color: Color(0xffffffff),
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      // otherusera8n (1:346)
+                Constants.isales
+                    ? SalesChatScreen()
+                    : Container(
+                        width: 70.w,
+                        child: Column(
+                          children: [
+                            name == ""
+                                ? Container()
+                                : Container(
+                                    width: double.infinity,
+                                    height: 10.h,
+                                    child: Container(
+                                      // topbartFx (1:345)
                                       padding:
-                                          EdgeInsets.fromLTRB(0, 0, 2.h, 0),
-                                      height: 10.h,
+                                          EdgeInsets.fromLTRB(2.w, 1.h, 2.w, 0),
+                                      width: double.infinity,
                                       decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Color(0xffd9dce0)),
                                         color: Color(0xffffffff),
                                       ),
                                       child: Row(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
                                         children: [
-                                          Padding(
-                                            padding:
-                                                EdgeInsets.only(bottom: 0.5.h),
-                                            child: Container(
-                                              // avatarJ4n (1:347)
-                                              margin: EdgeInsets.fromLTRB(
-                                                  0, 0, 1.w, 0),
-                                              width: 5.w,
-                                              height: 5.w,
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        100 * fem),
-                                                child: Image.asset(
-                                                  'assets/icon.jpeg',
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
                                           Container(
-                                            // textszCW (1:348)
-                                            height: double.infinity,
-                                            child: Column(
+                                            // otherusera8n (1:346)
+                                            padding: EdgeInsets.fromLTRB(
+                                                0, 0, 2.h, 0),
+                                            height: 10.h,
+                                            decoration: BoxDecoration(
+                                              color: Color(0xffffffff),
+                                            ),
+                                            child: Row(
                                               crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                                  CrossAxisAlignment.center,
                                               children: [
-                                                Container(
-                                                  // datascienceanalyticswdY (1:350)
-                                                  margin: EdgeInsets.fromLTRB(
-                                                      0 * fem,
-                                                      0 * fem,
-                                                      0 * fem,
-                                                      4 * fem),
-                                                  child: Text(
-                                                    '$name',
-                                                    style: SafeGoogleFont(
-                                                      'Inter',
-                                                      fontSize: 16 * ffem,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      height: 1.25 * ffem / fem,
-                                                      color: Color(0xff011627),
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                      bottom: 0.5.h),
+                                                  child: Container(
+                                                    // avatarJ4n (1:347)
+                                                    margin: EdgeInsets.fromLTRB(
+                                                        0, 0, 1.w, 0),
+                                                    width: 5.w,
+                                                    height: 5.w,
+                                                    child: ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              100 * fem),
+                                                      child: Image.asset(
+                                                        'assets/icon.jpeg',
+                                                        fit: BoxFit.cover,
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
-                                                Text(
-                                                  // lastmessage5minsagoeXx (1:352)
-                                                  '$time',
-                                                  style: SafeGoogleFont(
-                                                    'Inter',
-                                                    fontSize: 14 * ffem,
-                                                    fontWeight: FontWeight.w400,
-                                                    height: 1.2857142857 *
-                                                        ffem /
-                                                        fem,
-                                                    color: Color(0xff707991),
+                                                Container(
+                                                  // textszCW (1:348)
+                                                  height: double.infinity,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Container(
+                                                        // datascienceanalyticswdY (1:350)
+                                                        margin:
+                                                            EdgeInsets.fromLTRB(
+                                                                0 * fem,
+                                                                0 * fem,
+                                                                0 * fem,
+                                                                4 * fem),
+                                                        child: Text(
+                                                          '$name',
+                                                          style: SafeGoogleFont(
+                                                            'Inter',
+                                                            fontSize: 16 * ffem,
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                            height: 1.25 *
+                                                                ffem /
+                                                                fem,
+                                                            color: Color(
+                                                                0xff011627),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        // lastmessage5minsagoeXx (1:352)
+                                                        '$time',
+                                                        style: SafeGoogleFont(
+                                                          'Inter',
+                                                          fontSize: 14 * ffem,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          height: 1.2857142857 *
+                                                              ffem /
+                                                              fem,
+                                                          color:
+                                                              Color(0xff707991),
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
                                                 ),
                                               ],
                                             ),
                                           ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 8 * fem,
-                                    ),
-                                    SizedBox(
-                                      width: 8 * fem,
-                                    ),
-                                    Container(
-                                      // callicon5NN (1:356)
-                                      width: 40 * fem,
-                                      height: 40 * fem,
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(100 * fem),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 8 * fem,
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                      name == ""
-                          ? Container(
-                              width: 70.w,
-                              height: 100.h,
-                              color: Color(0xFFB27ECA),
-                              //  height: double.infinity,
-                              child: Image.asset(
-                                "assets/page-1/images/bg-1.png",
-                                fit: BoxFit.cover,
-                              ),
-                            )
-                          : Container(
-                              width: 70.w,
-                              height: 90.h,
-                              decoration: BoxDecoration(
-                                color: Color(0xFFB27ECA),
-                                image: DecorationImage(
-                                  image: AssetImage(
-                                      "assets/page-1/images/bg-1.png"), // Replace with your image path
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              child: Column(
-                                children: [
-                                  Container(
-                                    width: 70.w,
-                                    height: 75.h,
-                                    child: StreamBuilder<QuerySnapshot>(
-                                      stream: _messageStream,
-                                      builder: (context, snapshot) {
-                                        if (snapshot.hasError) {
-                                          print("snapshot.error");
-                                          return CircularProgressIndicator(
-                                            color: Colors.yellow,
-                                          );
-                                        }
-
-                                        if (!snapshot.hasData) {
-                                          return Center(
-                                            child: CircularProgressIndicator(),
-                                          );
-                                        }
-                                        final messages = snapshot.data!.docs;
-                                        print(
-                                            'Number of documents: ${messages.length}');
-                                        List<MessageBubble> messageBubbles = [];
-                                        for (var message in messages) {
-                                          final data = message.data()
-                                              as Map<String, dynamic>;
-                                          final messageText =
-                                              message['message'];
-                                          final messageSender =
-                                              message['sendBy'];
-                                          final messageType = message['type'];
-                                          final messagetime = message['time'];
-                                          final mid = message.id;
-                                          final gid = idcurr;
-                                          final messageid =
-                                              data.containsKey('studentid')
-                                                  ? message['studentid']
-                                                  : "old message";
-                                          final link = messageType == "image" ||
-                                                  messageType == "audio" ||
-                                                  messageType == "video" ||
-                                                  messageType == "file"
-                                              ? message["link"]
-                                              : "";
-
-                                          final messageBubble = MessageBubble(
-                                            mid: mid,
-                                            gid: gid!,
-                                            message: messageText,
-                                            sender: messageSender,
-                                            timestamp: messagetime,
-                                            isMe: messageSender == namecurrent,
-                                            link: link,
-                                            //  recording: recording,
-                                            type: messageType,
-                                            isURL: isURL(messageText),
-                                          );
-                                          messageBubbles.add(messageBubble);
-                                        }
-                                        return Container(
-                                          height: 80.h,
-                                          width: 65.w,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(40.sp),
-                                              topRight: Radius.circular(40.sp),
-                                            ),
-                                            // color: Colors.white,
-                                          ),
-                                          child: ListView(
-                                            reverse: true,
-                                            children: messageBubbles,
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                  Divider(),
-                                  Padding(
-                                    padding: EdgeInsets.all(1.h),
-                                    child: Container(
-                                      height: 8.h,
-                                      color: Colors.white,
-                                      child: Row(
-                                        children: [
                                           SizedBox(
-                                            width: 1.w,
+                                            width: 8 * fem,
                                           ),
-                                          _isRecording
-                                              ? _buildStopRecordingButton()
-                                              : _buildMicButton(),
-                                          _isRecording
-                                              ? _buildCancelButton()
-                                              : Expanded(
-                                                  child: TextField(
-                                                    maxLines: 1,
-                                                    controller: _textController,
-                                                    onTap: () {
-                                                      _focusNode.requestFocus();
-                                                    },
-                                                    onTapOutside: (event) {
-                                                      _focusNode.unfocus();
-                                                    },
-                                                    focusNode: _focusNode,
-                                                    decoration: InputDecoration(
-                                                      hintText:
-                                                          'Type a message...',
-                                                    ),
-                                                  ),
-                                                  // ),
-                                                ),
-                                          _isRecording
-                                              ? SizedBox()
-                                              : Row(
-                                                  children: [
-                                                    IconButton(
-                                                      icon: Icon(
-                                                          Icons
-                                                              .attachment_outlined,
-                                                          color: Colors.purple),
-                                                      onPressed: _pickFileany,
-                                                    ),
-                                                    IconButton(
-                                                      icon: Icon(
-                                                          Icons
-                                                              .add_a_photo_rounded,
-                                                          color: Colors.purple),
-                                                      onPressed: _selectimage,
-                                                    ),
-                                                    IconButton(
-                                                      icon: Icon(Icons.send,
-                                                          color: Colors.purple),
-                                                      onPressed: _sendMessage,
-                                                    ),
-                                                  ],
-                                                ),
+                                          SizedBox(
+                                            width: 8 * fem,
+                                          ),
+                                          Container(
+                                            // callicon5NN (1:356)
+                                            width: 40 * fem,
+                                            height: 40 * fem,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      100 * fem),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 8 * fem,
+                                          )
                                         ],
                                       ),
                                     ),
                                   ),
-                                ],
-                              ),
-                            ),
-                    ],
-                  ),
-                )
+                            name == ""
+                                ? Container(
+                                    width: 70.w,
+                                    height: 100.h,
+                                    color: Color(0xFFB27ECA),
+                                    //  height: double.infinity,
+                                    child: Image.asset(
+                                      "assets/page-1/images/bg-1.png",
+                                      fit: BoxFit.cover,
+                                    ),
+                                  )
+                                : Container(
+                                    width: 70.w,
+                                    height: 90.h,
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFFB27ECA),
+                                      image: DecorationImage(
+                                        image: AssetImage(
+                                            "assets/page-1/images/bg-1.png"), // Replace with your image path
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                          width: 70.w,
+                                          height: 75.h,
+                                          child: StreamBuilder<QuerySnapshot>(
+                                            stream: _messageStream,
+                                            builder: (context, snapshot) {
+                                              if (snapshot.hasError) {
+                                                print("snapshot.error");
+                                                return CircularProgressIndicator(
+                                                  color: Colors.yellow,
+                                                );
+                                              }
+
+                                              if (!snapshot.hasData) {
+                                                return Center(
+                                                  child:
+                                                      CircularProgressIndicator(),
+                                                );
+                                              }
+                                              final messages =
+                                                  snapshot.data!.docs;
+                                              print(
+                                                  'Number of documents: ${messages.length}');
+                                              List<MessageBubble>
+                                                  messageBubbles = [];
+                                              for (var message in messages) {
+                                                final data = message.data()
+                                                    as Map<String, dynamic>;
+                                                final messageText =
+                                                    message['message'];
+                                                final messageSender =
+                                                    message['sendBy'];
+                                                final messageType =
+                                                    message['type'];
+                                                final messagetime =
+                                                    message['time'];
+                                                final mid = message.id;
+                                                final gid = idcurr;
+                                                final messageid =
+                                                    data.containsKey(
+                                                            'studentid')
+                                                        ? message['studentid']
+                                                        : "old message";
+                                                final link = messageType ==
+                                                            "image" ||
+                                                        messageType ==
+                                                            "audio" ||
+                                                        messageType ==
+                                                            "video" ||
+                                                        messageType == "file"
+                                                    ? message["link"]
+                                                    : "";
+
+                                                final messageBubble =
+                                                    MessageBubble(
+                                                  mid: mid,
+                                                  gid: gid!,
+                                                  message: messageText,
+                                                  sender: messageSender,
+                                                  timestamp: messagetime,
+                                                  isMe: messageSender ==
+                                                      namecurrent,
+                                                  link: link,
+                                                  //  recording: recording,
+                                                  type: messageType,
+                                                  isURL: isURL(messageText),
+                                                );
+                                                messageBubbles
+                                                    .add(messageBubble);
+                                              }
+                                              return Container(
+                                                height: 80.h,
+                                                width: 65.w,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                    topLeft:
+                                                        Radius.circular(40.sp),
+                                                    topRight:
+                                                        Radius.circular(40.sp),
+                                                  ),
+                                                  // color: Colors.white,
+                                                ),
+                                                child: ListView(
+                                                  reverse: true,
+                                                  children: messageBubbles,
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                        Divider(),
+                                        Padding(
+                                          padding: EdgeInsets.all(1.h),
+                                          child: Container(
+                                            height: 8.h,
+                                            color: Colors.white,
+                                            child: Row(
+                                              children: [
+                                                SizedBox(
+                                                  width: 1.w,
+                                                ),
+                                                _isRecording
+                                                    ? _buildStopRecordingButton()
+                                                    : _buildMicButton(),
+                                                _isRecording
+                                                    ? _buildCancelButton()
+                                                    : Expanded(
+                                                        child: TextField(
+                                                          maxLines: 1,
+                                                          controller:
+                                                              _textController,
+                                                          onTap: () {
+                                                            _focusNode
+                                                                .requestFocus();
+                                                          },
+                                                          onTapOutside:
+                                                              (event) {
+                                                            _focusNode
+                                                                .unfocus();
+                                                          },
+                                                          focusNode: _focusNode,
+                                                          decoration:
+                                                              InputDecoration(
+                                                            hintText:
+                                                                'Type a message...',
+                                                          ),
+                                                        ),
+                                                        // ),
+                                                      ),
+                                                _isRecording
+                                                    ? SizedBox()
+                                                    : Row(
+                                                        children: [
+                                                          IconButton(
+                                                            icon: Icon(
+                                                                Icons
+                                                                    .attachment_outlined,
+                                                                color: Colors
+                                                                    .purple),
+                                                            onPressed:
+                                                                _pickFileany,
+                                                          ),
+                                                          IconButton(
+                                                            icon: Icon(
+                                                                Icons
+                                                                    .add_a_photo_rounded,
+                                                                color: Colors
+                                                                    .purple),
+                                                            onPressed:
+                                                                _selectimage,
+                                                          ),
+                                                          IconButton(
+                                                            icon: Icon(
+                                                                Icons.send,
+                                                                color: Colors
+                                                                    .purple),
+                                                            onPressed:
+                                                                _sendMessage,
+                                                          ),
+                                                        ],
+                                                      ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                          ],
+                        ),
+                      )
               ],
             ),
           ),

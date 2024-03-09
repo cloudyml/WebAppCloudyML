@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloudyml_app2/roles.dart';
 import 'package:flutter/material.dart';
 import "package:intl/intl.dart";
 
@@ -39,10 +40,10 @@ class _GroupTileState extends State<GroupTile> {
           .toList();
 
       // setState(() {
-        // message = item.['message'];
-        item = chat;
-        print('the data is $item');
-        // message=item.['data'].['message'];
+      // message = item.['message'];
+      item = chat;
+      print('the data is $item');
+      // message=item.['data'].['message'];
       // });
     });
   }
@@ -61,7 +62,8 @@ class _GroupTileState extends State<GroupTile> {
       child: ListTile(
         leading: CircleAvatar(
           radius: 22,
-          backgroundImage: CachedNetworkImageProvider(widget.groupData!["data"]["icon"]),
+          backgroundImage:
+              CachedNetworkImageProvider(widget.groupData!["data"]["icon"]),
         ),
         title: Text(
           widget.groupData!["data"]["name"],
@@ -72,7 +74,8 @@ class _GroupTileState extends State<GroupTile> {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            widget.userData!["role"] == "mentor"
+            (widget.userData!["role"] == Roles.mentor ||
+                    widget.userData!["role"] == Roles.admin)
                 ? Text("Student: ${widget.groupData!["data"]["student_name"]}")
                 : SizedBox(),
             // StreamBuilder(

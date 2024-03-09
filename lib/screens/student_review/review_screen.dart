@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloudyml_app2/roles.dart';
 import 'package:cloudyml_app2/screens/flutter_flow/flutter_flow_util.dart';
 import 'package:cloudyml_app2/screens/student_review/ReviewApi.dart';
 import 'package:cloudyml_app2/screens/student_review/postReviewScreen.dart';
@@ -85,7 +86,7 @@ class _StudentReviewScreenState extends State<StudentReviewScreen> {
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .get()
           .then((value) {
-        if (value.get('role') == 'mentor') {
+        if (value.get('role') == Roles.mentor) {
           isMentor = true;
         }
         try {

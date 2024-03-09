@@ -1,3 +1,4 @@
+import 'package:cloudyml_app2/roles.dart';
 import 'package:cloudyml_app2/screens/quiz/quizinstructions.dart';
 import 'package:flutter/material.dart';
 import 'package:cloudyml_app2/global_variable.dart' as globals;
@@ -256,7 +257,7 @@ class _QuizentrypageWidgetState extends State<QuizentrypageWidget> {
                               ),
                             ),
                           ),
-                          globals.role == "mentor"
+                          (globals.role == Roles.mentor || globals.role == Roles.admin)
                               // true
                               ? Expanded(
                                   child: GestureDetector(

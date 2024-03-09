@@ -33,10 +33,7 @@ final width = MediaQueryData.fromWindow(WidgetsBinding.instance.window).size.wid
         
          ),
         child: Container(
-          height:
-          width < 600 ?
-          height / 1.5 :
-          height / 1.3 ,
+         
          width: 
          width < 600 ?
         
@@ -55,27 +52,42 @@ final width = MediaQueryData.fromWindow(WidgetsBinding.instance.window).size.wid
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SizedBox(),
                  
-                  Material(
-                    color: Colors.transparent,
-                    child: AnimatedTextKit(
-                                    isRepeatingAnimation: false,
-                                    animatedTexts: [
-                                      TyperAnimatedText(title,
-                                          speed: Duration(microseconds: 10000),
-                                          textStyle: TextStyle(
-                                              color: Colors.white,
-                                              fontSize:
-                                              
-                                               20.sp,
-                                              fontWeight: FontWeight.bold))
-                                    ],
-                                  ),
+                  Center(
+                   
+                    child: Material(
+                      color: Colors.transparent,
+                      
+                      child: DefaultTextStyle(
+                        
+                        style: TextStyle(),
+                        textAlign: TextAlign.center,
+                        maxLines: 4,
+                        child: AnimatedTextKit(
+                                        isRepeatingAnimation: false,
+                        
+                                        animatedTexts: [
+                                          TyperAnimatedText(addNewlinesAfter4Words(title),
+                                          textAlign: TextAlign.center,
+                                              speed: Duration(microseconds: 10000),
+                        
+                                              textStyle: TextStyle(
+                                                  color: Colors.white,
+                        
+                                                  fontSize:
+                                                  
+                                                   16.sp,
+                                                  fontWeight: FontWeight.bold))
+                                        ],
+                                      ),
+                      ),
+                    ),
                   ),
                       GestureDetector(
                         
@@ -255,4 +267,18 @@ bool isDateInRange(DateTime startDate, DateTime endDate, DateTime dateToCheck) {
   return dateToCheck.isAfter(startDate) && dateToCheck.isBefore(endDate);
 }
 
+
+String addNewlinesAfter4Words(String inputText) {
+  List<String> words = inputText.split(' ');
+  List<String> result = [];
+
+  for (int i = 0; i < words.length; i++) {
+    result.add(words[i]);
+    if ((i + 1) % 4 == 0) {
+      result.add('\n');
+    }
+  }
+
+  return result.join(' ');
+}
 }

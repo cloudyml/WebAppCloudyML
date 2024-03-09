@@ -2,6 +2,7 @@ import 'dart:html';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloudyml_app2/Providers/UserProvider.dart';
+import 'package:cloudyml_app2/roles.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
@@ -38,282 +39,83 @@ class _LiveDoubtScreenState extends State<LiveDoubtScreen> {
       body: LayoutBuilder(
         builder: (context, constraints) => SingleChildScrollView(
           child: Center(
-            child: userProvider.userModel!.role == 'mentor'
+            child: (userProvider.userModel!.role == Roles.mentor ||
+                    userProvider.userModel!.role == Roles.admin)
                 ? Column(
-              children: [
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0, 20, 20, 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
-                        Icons.link,
-                        size: 30,
-                      ),
-                      SizedBox(width: 10),
-                      Text(
-                        'Update Link',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w600,
+                      Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(0, 20, 20, 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.link,
+                              size: 30,
+                            ),
+                            SizedBox(width: 10),
+                            Text(
+                              'Update Link',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  width: width < 500 ? null : width / 2,
-                  child: Material(
-                    child: TextFormField(
-                      controller: linkController,
-                      decoration: InputDecoration(
-                        fillColor: Color(0xffF2E9FE),
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius:
-                            BorderRadius.all(Radius.circular(10))),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Colors.deepPurpleAccent),
-                            borderRadius:
-                            BorderRadius.all(Radius.circular(10))),
-                        border: OutlineInputBorder(
-                            borderRadius:
-                            BorderRadius.all(Radius.circular(10))),
-                        hintText: 'Enter link address',
-                        hintStyle: TextStyle(
-                          color: Colors.grey,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: height / 50),
-                InkWell(
-                  onTap: () {
-                    updateLink();
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 8, horizontal: 30),
-                    decoration: BoxDecoration(
-                      color: Colors.deepPurpleAccent,
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    child: Text(
-                      'Update',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: height / 30),
-                Container(
-                  width: width < 500 ? null : width / 2,
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 15, vertical: 10),
-                  decoration: BoxDecoration(
-                    color: Color(0xFF67C5E5),
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        offset: const Offset(0, 5),
-                        blurRadius: 5,
-                        color: Colors.grey.withOpacity(0.5),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: const [
-                      Expanded(
-                        child: Text(
-                          'TA Name',
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Text(
-                          'Time',
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                taDetails.isEmpty
-                    ? Center(
-                  child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                          Color(0xFF67C5E5))),
-                )
-                    :SizedBox(
-                    height: height / 2.5,
-                    child: ListView.builder(
-                      itemCount: taDetails.length,
-                      shrinkWrap: false,
-                      scrollDirection: Axis.vertical,
-                      itemBuilder: (context, index) => Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            width: width < 500 ? null : width / 2,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 10),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    taDetails[index]['name'],
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
-                                        color: Color(0xFF444444)),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    taDetails[index]['time'],
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
-                                        color: Color(0xFF444444)),
-                                  ),
-                                ),
-                                IconButton(
-                                    splashRadius: 20,
-                                    onPressed: () =>
-                                        showUpdatePopUp(
-                                            taDetails[index]
-                                            ['name'],
-                                            taDetails[index]
-                                            ['time'],
-                                            index),
-                                    icon: Icon(Icons.edit)),
-                                IconButton(
-                                    splashRadius: 20,
-                                    onPressed: () =>
-                                        removeTaDetail(index),
-                                    icon: Icon(Icons.delete))
-                              ],
+                      SizedBox(
+                        width: width < 500 ? null : width / 2,
+                        child: Material(
+                          child: TextFormField(
+                            controller: linkController,
+                            decoration: InputDecoration(
+                              fillColor: Color(0xffF2E9FE),
+                              enabledBorder: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10))),
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.deepPurpleAccent),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10))),
+                              border: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10))),
+                              hintText: 'Enter link address',
+                              hintStyle: TextStyle(
+                                color: Colors.grey,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16,
+                              ),
                             ),
                           ),
-                          SizedBox(
-                            width: width / 2,
-                            child: const Divider(
-                              thickness: 1,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                InkWell(
-                  onTap: () {
-                    showAddPopUp();
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 8, horizontal: 30),
-                    decoration: BoxDecoration(
-                      color: Colors.deepPurpleAccent,
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    child: Text(
-                      'Add TA Details',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: height / 50,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-
-                  children: [
-                    Text(
-                      'Show TA Timing Data to Students',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    SizedBox(width: width/5,),
-
-
-                    isShow == null ?
-                    SizedBox() :
-                    Switch(
-                      value: isShow!,
-                      activeColor: Colors.deepPurpleAccent,
-                      onChanged: (value) {
-                        setState(() {
-                          showOrHideData(value);
-                        });
-                      },
-                    )
-                  ],
-                )
-              ],
-            )
-                : Padding(
-                  padding:  EdgeInsets.symmetric(horizontal: width / 20),
-                  child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                  Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0, 20, 20, 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.chat,
-                          size: height / 35,
                         ),
-                        SizedBox(width: 10),
-                        Text(
-                          'Live Chat Support Timing',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: height / 40,
-                            fontWeight: FontWeight.w600,
+                      ),
+                      SizedBox(height: height / 50),
+                      InkWell(
+                        onTap: () {
+                          updateLink();
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 8, horizontal: 30),
+                          decoration: BoxDecoration(
+                            color: Colors.deepPurpleAccent,
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: Text(
+                            'Update',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-
-                  isShow == null ?
-                  SizedBox() :
-                  !isShow! ?
-                  Center(
-                    child: Image.network('https://cdni.iconscout.com/illustration/premium/thumb/doubt-solving-in-online-business-class-4260910-3543508.png', height: height / 2, width: width /2,),
-                  ) :
-                  Column(
-                    children: [
+                      ),
+                      SizedBox(height: height / 30),
                       Container(
                         width: width < 500 ? null : width / 2,
                         padding: const EdgeInsets.symmetric(
@@ -330,31 +132,24 @@ class _LiveDoubtScreenState extends State<LiveDoubtScreen> {
                           ],
                         ),
                         child: Row(
-                          children:  [
+                          children: const [
                             Expanded(
                               child: Text(
-                                'Teaching Assistant',
-                                textAlign: TextAlign.center,
+                                'TA Name',
+                                textAlign: TextAlign.left,
                                 style: TextStyle(
-                                  fontSize: height / 50,
+                                  fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
                                 ),
                               ),
                             ),
-                           SizedBox(
-                            height: height /30,
-    child:VerticalDivider(
-      color: Colors.white,
-      thickness: 2, //thickness of divier line
-    )
-),
                             Expanded(
                               child: Text(
                                 'Time',
-                                textAlign: TextAlign.center,
+                                textAlign: TextAlign.left,
                                 style: TextStyle(
-                                    fontSize: height /50,
+                                    fontSize: 20,
                                     fontWeight: FontWeight.w600,
                                     color: Colors.white),
                               ),
@@ -364,167 +159,408 @@ class _LiveDoubtScreenState extends State<LiveDoubtScreen> {
                       ),
                       taDetails.isEmpty
                           ? Center(
-                        child: CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                                Color(0xFF67C5E5))),
-                      )
-                          : Container(
-                         constraints: BoxConstraints(
-                          maxHeight: height /4,
-                          minHeight:  height /6
-                         ),
-                          child: ListView.builder(
-                            itemCount: taDetails.length,
-                            shrinkWrap: false,
-                            scrollDirection: Axis.vertical,
-                            itemBuilder: (context, index) => Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                SizedBox(height: height / 100,),
-                                Container(
-                                  width: width < 500 ? null : width / 2,
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 15, vertical: 10),
-                                      decoration: BoxDecoration(
-                                        border: Border.all(color: Colors.black),
-                                        borderRadius: BorderRadius.circular(10)
+                              child: CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Color(0xFF67C5E5))),
+                            )
+                          : SizedBox(
+                              height: height / 2.5,
+                              child: ListView.builder(
+                                itemCount: taDetails.length,
+                                shrinkWrap: false,
+                                scrollDirection: Axis.vertical,
+                                itemBuilder: (context, index) => Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Container(
+                                      width: width < 500 ? null : width / 2,
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 15, vertical: 10),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              taDetails[index]['name'],
+                                              textAlign: TextAlign.left,
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Color(0xFF444444)),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Text(
+                                              taDetails[index]['time'],
+                                              textAlign: TextAlign.left,
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Color(0xFF444444)),
+                                            ),
+                                          ),
+                                          IconButton(
+                                              splashRadius: 20,
+                                              onPressed: () => showUpdatePopUp(
+                                                  taDetails[index]['name'],
+                                                  taDetails[index]['time'],
+                                                  index),
+                                              icon: Icon(Icons.edit)),
+                                          IconButton(
+                                              splashRadius: 20,
+                                              onPressed: () =>
+                                                  removeTaDetail(index),
+                                              icon: Icon(Icons.delete))
+                                        ],
                                       ),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          taDetails[index]['name'],
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontSize: height / 60,
-                                              fontWeight: FontWeight.w500,
-                                              color: Color(0xFF444444)),
-                                        ),
+                                    ),
+                                    SizedBox(
+                                      width: width / 2,
+                                      child: const Divider(
+                                        thickness: 1,
                                       ),
-                                        SizedBox(
-                            height: height /30,
-    child:VerticalDivider(
-      color: Colors.black,
-      thickness: 1.5, //thickness of divier line
-    )
-),
-                                     
-                                      Expanded(
-                                        child: Text(
-                                          taDetails[index]['time'],
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontSize: height /60,
-                                              fontWeight: FontWeight.w500,
-                                              color: Color(0xFF444444)),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                    )
+                                  ],
                                 ),
-                                SizedBox(height: height / 100,)
-                              ],
+                              ),
+                            ),
+                      InkWell(
+                        onTap: () {
+                          showAddPopUp();
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 8, horizontal: 30),
+                          decoration: BoxDecoration(
+                            color: Colors.deepPurpleAccent,
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: Text(
+                            'Add TA Details',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
-
-                    ],
-                  ),
-                    SizedBox(height: 100),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.video_call,
-                        size: height / 25,
                       ),
-                      SizedBox(width: 10),
-                      Text(
-                        'Join Live Doubt Session',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: height / 40,
-                          fontWeight: FontWeight.w600,
-                        ),
+                      SizedBox(
+                        height: height / 50,
                       ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 30, vertical: 20),
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade100,
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                              offset: const Offset(0, 10),
-                              blurRadius: 10,
-                              color: Colors.grey.shade300,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Show TA Timing Data to Students',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
                             ),
-                          ],
-                        ),
-                        child: Column(
-                          children: [
-                            Text(
-                              'Join everyday for live doubt support',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: height/ 45,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.deepPurpleAccent,
-                              ),
-                            ),
-                            SizedBox(height: 10),
-                            Text(
-                              '🕗 8:00 PM - 9:00 PM  🕗',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: height/40,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.deepPurpleAccent,
-                              ),
-                            ),
-                            SizedBox(height: 20),
-                            InkWell(
-                              onTap: () {
-                                try {
-                                  classUrl.isNotEmpty
-                                      ? launch(classUrl)
-                                      : null;
-                                } catch (e) {}
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 10, horizontal: 20),
-                                decoration: BoxDecoration(
-                                  color: Colors.deepPurpleAccent,
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                                child: Text(
-                                  'Click here to join',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: height/50,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                          ),
+                          SizedBox(
+                            width: width / 5,
+                          ),
+                          isShow == null
+                              ? SizedBox()
+                              : Switch(
+                                  value: isShow!,
+                                  activeColor: Colors.deepPurpleAccent,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      showOrHideData(value);
+                                    });
+                                  },
+                                )
+                        ],
+                      )
                     ],
                   )
-              ],
-            ),
-                ),
+                : Padding(
+                    padding: EdgeInsets.symmetric(horizontal: width / 20),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Padding(
+                          padding:
+                              EdgeInsetsDirectional.fromSTEB(0, 20, 20, 20),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.chat,
+                                size: height / 35,
+                              ),
+                              SizedBox(width: 10),
+                              Text(
+                                'Live Chat Support Timing',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: height / 40,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        isShow == null
+                            ? SizedBox()
+                            : !isShow!
+                                ? Center(
+                                    child: Image.network(
+                                      'https://cdni.iconscout.com/illustration/premium/thumb/doubt-solving-in-online-business-class-4260910-3543508.png',
+                                      height: height / 2,
+                                      width: width / 2,
+                                    ),
+                                  )
+                                : Column(
+                                    children: [
+                                      Container(
+                                        width: width < 500 ? null : width / 2,
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 15, vertical: 10),
+                                        decoration: BoxDecoration(
+                                          color: Color(0xFF67C5E5),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              offset: const Offset(0, 5),
+                                              blurRadius: 5,
+                                              color:
+                                                  Colors.grey.withOpacity(0.5),
+                                            ),
+                                          ],
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              child: Text(
+                                                'Teaching Assistant',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  fontSize: height / 50,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                                height: height / 30,
+                                                child: VerticalDivider(
+                                                  color: Colors.white,
+                                                  thickness:
+                                                      2, //thickness of divier line
+                                                )),
+                                            Expanded(
+                                              child: Text(
+                                                'Time',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    fontSize: height / 50,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      taDetails.isEmpty
+                                          ? Center(
+                                              child: CircularProgressIndicator(
+                                                  valueColor:
+                                                      AlwaysStoppedAnimation<
+                                                              Color>(
+                                                          Color(0xFF67C5E5))),
+                                            )
+                                          : Container(
+                                              constraints: BoxConstraints(
+                                                  maxHeight: height / 4,
+                                                  minHeight: height / 6),
+                                              child: ListView.builder(
+                                                itemCount: taDetails.length,
+                                                shrinkWrap: false,
+                                                scrollDirection: Axis.vertical,
+                                                itemBuilder: (context, index) =>
+                                                    Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    SizedBox(
+                                                      height: height / 100,
+                                                    ),
+                                                    Container(
+                                                      width: width < 500
+                                                          ? null
+                                                          : width / 2,
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          horizontal: 15,
+                                                          vertical: 10),
+                                                      decoration: BoxDecoration(
+                                                          border: Border.all(
+                                                              color:
+                                                                  Colors.black),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      10)),
+                                                      child: Row(
+                                                        children: [
+                                                          Expanded(
+                                                            child: Text(
+                                                              taDetails[index]
+                                                                  ['name'],
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                              style: TextStyle(
+                                                                  fontSize:
+                                                                      height /
+                                                                          60,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  color: Color(
+                                                                      0xFF444444)),
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                              height:
+                                                                  height / 30,
+                                                              child:
+                                                                  VerticalDivider(
+                                                                color: Colors
+                                                                    .black,
+                                                                thickness:
+                                                                    1.5, //thickness of divier line
+                                                              )),
+                                                          Expanded(
+                                                            child: Text(
+                                                              taDetails[index]
+                                                                  ['time'],
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                              style: TextStyle(
+                                                                  fontSize:
+                                                                      height /
+                                                                          60,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  color: Color(
+                                                                      0xFF444444)),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height: height / 100,
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                    ],
+                                  ),
+                        SizedBox(height: 100),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.video_call,
+                              size: height / 25,
+                            ),
+                            SizedBox(width: 10),
+                            Text(
+                              'Join Live Doubt Session',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: height / 40,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 30, vertical: 20),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade100,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    offset: const Offset(0, 10),
+                                    blurRadius: 10,
+                                    color: Colors.grey.shade300,
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    'Join everyday for live doubt support',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: height / 45,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.deepPurpleAccent,
+                                    ),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Text(
+                                    '🕗 8:00 PM - 9:00 PM  🕗',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: height / 40,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.deepPurpleAccent,
+                                    ),
+                                  ),
+                                  SizedBox(height: 20),
+                                  InkWell(
+                                    onTap: () {
+                                      try {
+                                        classUrl.isNotEmpty
+                                            ? launch(classUrl)
+                                            : null;
+                                      } catch (e) {}
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 10, horizontal: 20),
+                                      decoration: BoxDecoration(
+                                        color: Colors.deepPurpleAccent,
+                                        borderRadius: BorderRadius.circular(30),
+                                      ),
+                                      child: Text(
+                                        'Click here to join',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: height / 50,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
           ),
         ),
       ),
@@ -620,25 +656,22 @@ class _LiveDoubtScreenState extends State<LiveDoubtScreen> {
     }
   }
 
-  showOrHideData(bool value)async{
+  showOrHideData(bool value) async {
     try {
-
       isShow = value;
       final ref = FirebaseFirestore.instance.collection('LiveDoubt');
 
       await ref
           .doc('mmULgHy2n63B6SInX7tR')
           .update({'show': value}).whenComplete(() {
-
-        value ?
-        Fluttertoast.showToast(msg: 'TA Details Show') :
-        Fluttertoast.showToast(msg: 'TA Details Hide');
+        value
+            ? Fluttertoast.showToast(msg: 'TA Details Show')
+            : Fluttertoast.showToast(msg: 'TA Details Hide');
       });
       setState(() {});
     } catch (e) {
       print('Error in Editing ta details');
     }
-
   }
 
   showUpdatePopUp(String name, String time, int index) {
@@ -697,7 +730,7 @@ class _LiveDoubtScreenState extends State<LiveDoubtScreen> {
                           borderRadius: BorderRadius.all(Radius.circular(10))),
                       focusedBorder: OutlineInputBorder(
                           borderSide:
-                          BorderSide(color: Colors.deepPurpleAccent),
+                              BorderSide(color: Colors.deepPurpleAccent),
                           borderRadius: BorderRadius.all(Radius.circular(10))),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10))),
@@ -722,7 +755,7 @@ class _LiveDoubtScreenState extends State<LiveDoubtScreen> {
                           borderRadius: BorderRadius.all(Radius.circular(10))),
                       focusedBorder: OutlineInputBorder(
                           borderSide:
-                          BorderSide(color: Colors.deepPurpleAccent),
+                              BorderSide(color: Colors.deepPurpleAccent),
                           borderRadius: BorderRadius.all(Radius.circular(10))),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10))),
@@ -810,7 +843,7 @@ class _LiveDoubtScreenState extends State<LiveDoubtScreen> {
                           borderRadius: BorderRadius.all(Radius.circular(10))),
                       focusedBorder: OutlineInputBorder(
                           borderSide:
-                          BorderSide(color: Colors.deepPurpleAccent),
+                              BorderSide(color: Colors.deepPurpleAccent),
                           borderRadius: BorderRadius.all(Radius.circular(10))),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10))),
@@ -835,7 +868,7 @@ class _LiveDoubtScreenState extends State<LiveDoubtScreen> {
                           borderRadius: BorderRadius.all(Radius.circular(10))),
                       focusedBorder: OutlineInputBorder(
                           borderSide:
-                          BorderSide(color: Colors.deepPurpleAccent),
+                              BorderSide(color: Colors.deepPurpleAccent),
                           borderRadius: BorderRadius.all(Radius.circular(10))),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10))),
